@@ -75,6 +75,7 @@ class PanelPageFaculty extends StatelessWidget {
                         theme: 'w',
                         button_flag: true,
                         button_text: 'Delete Panel',
+                        isLink: true,
                       )
                     : ProjectTile(
                         info:
@@ -100,6 +101,7 @@ class PanelPageFaculty extends StatelessWidget {
                         type: 'Mid-term',
                         theme: 'w',
                         button_flag: false,
+                        isLink: true,
                       ),
                 const SizedBox(
                   height: 100,

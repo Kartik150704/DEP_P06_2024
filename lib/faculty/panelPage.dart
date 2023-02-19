@@ -1,10 +1,11 @@
 import 'package:casper/components/button.dart';
+import 'package:casper/components/marks_submission_form.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
 import '../utils.dart';
 
-class PanelPage extends StatelessWidget {
+class PanelPage extends StatefulWidget {
   final name, type, year, semester;
   final role;
 
@@ -16,6 +17,31 @@ class PanelPage extends StatelessWidget {
       required this.semester,
       this.role = 'su'})
       : super(key: key);
+
+  @override
+  State<PanelPage> createState() => _PanelPageState();
+}
+
+class _PanelPageState extends State<PanelPage> {
+  TextEditingController panelMarksInputController = TextEditingController();
+  TextEditingController panelMarksConfirmInputController =
+      TextEditingController();
+
+  void uploadPanelMarks() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+              child: MarksSubmissionForm(
+            marksInputController: panelMarksInputController,
+            marksConfirmInputController: panelMarksConfirmInputController,
+            onSubmit: () {},
+          )),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +79,7 @@ class PanelPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '$type = $year $semester',
+                          '${widget.type} = ${widget.year} ${widget.semester}',
                           style: SafeGoogleFont(
                             'Montserrat',
                             fontSize: 20,
@@ -104,7 +130,7 @@ class PanelPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                (role == 'co')
+                (widget.role == 'co')
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 20),
@@ -121,7 +147,7 @@ class PanelPage extends StatelessWidget {
                   theme: 'o',
                   button_flag: true,
                   button_text: 'Upload Marks',
-                  button_onPressed: () {},
+                  button_onPressed: uploadPanelMarks,
                 ),
                 ProjectTile(
                   info:
@@ -132,7 +158,7 @@ class PanelPage extends StatelessWidget {
                   theme: 'o',
                   button_flag: true,
                   button_text: 'Upload Marks',
-                  button_onPressed: () {},
+                  button_onPressed: uploadPanelMarks,
                 ),
                 const SizedBox(
                   height: 100,

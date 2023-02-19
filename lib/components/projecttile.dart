@@ -11,7 +11,8 @@ class ProjectTile extends StatelessWidget {
       button_text,
       theme,
       button2_flag,
-      button2_text;
+      button2_text,
+      isLink;
   var button_onPressed, button2_onPressed, title_onPressed;
 
   ProjectTile({
@@ -28,6 +29,7 @@ class ProjectTile extends StatelessWidget {
     this.button2_text = '',
     this.button2_onPressed,
     this.title_onPressed,
+    this.isLink = false,
   }) : super(key: key);
 
   @override
@@ -127,7 +129,7 @@ class ProjectTile extends StatelessWidget {
                                 fontSize: 45 * ffem,
                                 fontWeight: FontWeight.w700,
                                 height: 1.2175 * ffem / fem,
-                                color: lighttextcolor,
+                                color: (isLink ? Colors.blue : lighttextcolor),
                               ),
                             ),
                           ),
