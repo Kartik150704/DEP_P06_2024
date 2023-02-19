@@ -13,7 +13,15 @@ class FacultyOfferings extends StatefulWidget {
 
 class _FacultyOfferingsState extends State<FacultyOfferings> {
   void onPressed() {}
-  dynamic shownpage = OfferingsPageFaculty();
+  dynamic shownpage;
+  var option;
+
+  @override
+  void initState() {
+    super.initState();
+    option = 1;
+    shownpage = OfferingsPageFaculty();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +39,17 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 1;
                               shownpage = OfferingsPageFaculty();
                             },
                           );
@@ -52,9 +68,17 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 2;
                               shownpage = EnrollmentRequestsPageFaculty();
                             },
                           );

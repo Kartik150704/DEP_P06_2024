@@ -17,11 +17,13 @@ class FacultyHome extends StatefulWidget {
 class _FacultyHomeState extends State<FacultyHome> {
   void onPressed() {}
   dynamic shownpage;
+  var option;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    option = 1;
     shownpage = EnrollmentsPageFaculty(
       role: widget.role,
     );
@@ -50,9 +52,17 @@ class _FacultyHomeState extends State<FacultyHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 1;
                               shownpage = EnrollmentsPageFaculty(
                                 role: widget.role,
                               );
@@ -73,9 +83,17 @@ class _FacultyHomeState extends State<FacultyHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 2;
                               shownpage = PanelPageFaculty(
                                 role: widget.role,
                               );

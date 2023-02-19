@@ -1,3 +1,4 @@
+import 'package:casper/components/textstyle.dart';
 import 'package:casper/student/loggedinscaffoldStudent.dart';
 import 'package:casper/student/projectPage.dart';
 import 'package:casper/utils.dart';
@@ -12,6 +13,13 @@ class StudentHome extends StatefulWidget {
 
 class _StudentHomeState extends State<StudentHome> {
   void onPressed() {}
+  var option;
+
+  @override
+  void initState() {
+    super.initState();
+    option = 1;
+  }
 
   ProjectPage projectpage = ProjectPage(
     flag: true,
@@ -33,33 +41,48 @@ class _StudentHomeState extends State<StudentHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
-                          setState(() {
-                            projectpage = ProjectPage(
-                              flag: true,
-                            );
-                          });
+                          setState(
+                            () {
+                              option = 1;
+                              projectpage = ProjectPage(
+                                flag: true,
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           'CP301',
-                          style: SafeGoogleFont(
-                            'Montserrat',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
+                          style: CustomTextStyle(),
                         ),
                       ),
                     ),
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
-                          setState(() {
-                            projectpage = ProjectPage(
-                              flag: false,
-                            );
-                          });
+                          setState(
+                            () {
+                              option = 2;
+                              projectpage = ProjectPage(
+                                flag: false,
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           'CP302',
@@ -75,7 +98,23 @@ class _StudentHomeState extends State<StudentHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
-                        onPressed: onPressed,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 3 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(
+                            () {
+                              option = 3;
+                              projectpage = ProjectPage(
+                                flag: false,
+                              );
+                            },
+                          );
+                        },
                         child: Text(
                           'CP303',
                           style: SafeGoogleFont(
