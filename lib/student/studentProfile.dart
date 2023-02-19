@@ -2,6 +2,7 @@ import 'package:casper/student/loggedinscaffoldStudent.dart';
 import 'package:casper/student/projectPage.dart';
 import 'package:casper/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:casper/components/confirm_action.dart';
 
 class studentProfile extends StatefulWidget {
   const studentProfile({Key? key}) : super(key: key);
@@ -11,7 +12,20 @@ class studentProfile extends StatefulWidget {
 }
 
 class _studentProfileState extends State<studentProfile> {
-  void onPressed() {}
+  void confirmAction() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: ConfirmAction(
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   ProjectPage projectpage = ProjectPage(
     flag: true,
@@ -80,14 +94,14 @@ class _studentProfileState extends State<studentProfile> {
                       height: 40,
                       child: Center(
                         child: TextButton(
-                          onPressed: onPressed,
+                          onPressed: () {},
                           child: Text(
                             'NAME-1',
                             style: SafeGoogleFont(
                               'Montserrat',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xff1b93d6),
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -97,14 +111,14 @@ class _studentProfileState extends State<studentProfile> {
                       height: 40,
                       child: Center(
                         child: TextButton(
-                          onPressed: onPressed,
+                          onPressed: () {},
                           child: Text(
                             'NAME-2',
                             style: SafeGoogleFont(
                               'Montserrat',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xff1b93d6),
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -125,7 +139,7 @@ class _studentProfileState extends State<studentProfile> {
                                   borderRadius: BorderRadius.circular(8)),
                               height: 40,
                               child: TextButton(
-                                onPressed: onPressed,
+                                onPressed: null,
                                 child: Center(
                                   child: Text(
                                     'Join A Team',
@@ -148,7 +162,7 @@ class _studentProfileState extends State<studentProfile> {
                                   borderRadius: BorderRadius.circular(8)),
                               height: 40,
                               child: TextButton(
-                                onPressed: onPressed,
+                                onPressed: confirmAction,
                                 child: Center(
                                   child: Text(
                                     'Leave Team',

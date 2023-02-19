@@ -1,3 +1,4 @@
+import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/utils.dart';
 import 'package:casper/components/weektile.dart';
@@ -6,12 +7,33 @@ import 'package:flutter/material.dart';
 
 import '../components/textfield.dart';
 
-class OfferingsPageStudent extends StatelessWidget {
+class OfferingsPageStudent extends StatefulWidget {
   OfferingsPageStudent({Key? key}) : super(key: key);
+
+  @override
+  State<OfferingsPageStudent> createState() => _OfferingsPageStudentState();
+}
+
+class _OfferingsPageStudentState extends State<OfferingsPageStudent> {
   final semester_controller = TextEditingController(),
       year_controller = TextEditingController(),
       supervisor_name_controller = TextEditingController(),
       project_title_controller = TextEditingController();
+
+  void confirmAction() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: ConfirmAction(
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +136,7 @@ class OfferingsPageStudent extends StatelessWidget {
                   title: 'Project Title',
                   type: 'CP303',
                   button_flag: true,
-                  button_onPressed: () {},
+                  button_onPressed: confirmAction,
                   button_text: 'Apply Now',
                   status: '(Offering)',
                   theme: 'w',
@@ -133,7 +155,7 @@ class OfferingsPageStudent extends StatelessWidget {
                   title: 'Project Title',
                   type: 'CP303',
                   button_flag: true,
-                  button_onPressed: () {},
+                  button_onPressed: confirmAction,
                   button_text: 'Apply Now',
                   status: '(Offering)',
                   theme: 'w',
