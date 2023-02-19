@@ -5,7 +5,12 @@ import '../utils.dart';
 class CustomTextField extends StatelessWidget {
   final texteditingcontroller, hinttext;
   bool obscure = false;
-  CustomTextField({Key? key, required TextEditingController this.texteditingcontroller, required this.hinttext, this.obscure = false}) : super(key: key);
+  CustomTextField({
+    Key? key,
+    required TextEditingController this.texteditingcontroller,
+    required this.hinttext,
+    this.obscure = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,6 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.w400,
             height: 1.2175 * ffem / fem,
             color: Color(0xff000000),
-
           ),
         ),
       ),

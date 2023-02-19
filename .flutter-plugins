@@ -1,6 +1,6 @@
 # This is a generated file; do not edit or check into version control.
-path_provider=/opt/homebrew/Caskroom/flutter/3.3.10/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.12/
-path_provider_android=/opt/homebrew/Caskroom/flutter/3.3.10/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.22/
-path_provider_foundation=/opt/homebrew/Caskroom/flutter/3.3.10/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_foundation-2.1.1/
-path_provider_linux=/opt/homebrew/Caskroom/flutter/3.3.10/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.8/
-path_provider_windows=/opt/homebrew/Caskroom/flutter/3.3.10/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.1.3/
+path_provider=/home/optimalknight/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.12/
+path_provider_android=/home/optimalknight/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.22/
+path_provider_foundation=/home/optimalknight/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_foundation-2.1.1/
+path_provider_linux=/home/optimalknight/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.8/
+path_provider_windows=/home/optimalknight/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.1.3/
