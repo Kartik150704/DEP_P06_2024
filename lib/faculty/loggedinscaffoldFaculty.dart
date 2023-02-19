@@ -8,9 +8,13 @@ import 'facultyHome.dart';
 
 class LoggedInScaffoldFaculty extends StatelessWidget {
   final scaffoldbody;
+  final role;
 
-  const LoggedInScaffoldFaculty({Key? key, required this.scaffoldbody})
-      : super(key: key);
+  const LoggedInScaffoldFaculty({
+    Key? key,
+    required this.scaffoldbody,
+    this.role = 'su',
+  }) : super(key: key);
 
   @override
   void onPressed() {
@@ -60,7 +64,10 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FacultyHome()),
+                  MaterialPageRoute(
+                      builder: (context) => FacultyHome(
+                            role: role,
+                          )),
                 );
               },
               child: Text(

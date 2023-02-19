@@ -206,12 +206,12 @@ class ProjectTile extends StatelessWidget {
                                     width: 127 * fem,
                                     height: 43 * fem,
                                     decoration: BoxDecoration(
-                                      color: topBarColor,
+                                      color: Color(0xff1a1d2d),
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: topBarColor,
+                                          color: Color(0xff1a1d2d),
                                           offset: Offset(0 * fem, 4 * fem),
                                           // blurRadius: 2 * fem,
                                         ),
@@ -225,7 +225,7 @@ class ProjectTile extends StatelessWidget {
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,
-                                          color: lighttextcolor,
+                                          color: const Color(0xffffffff),
                                         ),
                                       ),
                                     ),
@@ -250,12 +250,12 @@ class ProjectTile extends StatelessWidget {
                                     width: 127 * fem,
                                     height: 43 * fem,
                                     decoration: BoxDecoration(
-                                      color: topBarColor,
+                                      color: Color(0xff1a1d2d),
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: topBarColor,
+                                          color: Color(0xff1a1d2d),
                                           offset: Offset(0 * fem, 4 * fem),
                                           // blurRadius: 2 * fem,
                                         ),
@@ -269,7 +269,7 @@ class ProjectTile extends StatelessWidget {
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,
-                                          color: lighttextcolor,
+                                          color: const Color(0xffffffff),
                                         ),
                                       ),
                                     ),

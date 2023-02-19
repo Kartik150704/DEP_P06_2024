@@ -1,3 +1,4 @@
+import 'package:casper/components/add_project_form.dart';
 import 'package:casper/components/button.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/utils.dart';
@@ -5,26 +6,41 @@ import 'package:flutter/material.dart';
 
 import '../components/textfield.dart';
 
-class OfferingsPageFaculty extends StatelessWidget {
+class OfferingsPageFaculty extends StatefulWidget {
   OfferingsPageFaculty({Key? key}) : super(key: key);
+
+  @override
+  State<OfferingsPageFaculty> createState() => _OfferingsPageFacultyState();
+}
+
+class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
   final semester_controller = TextEditingController(),
       year_controller = TextEditingController(),
       supervisor_name_controller = TextEditingController(),
       project_title_controller = TextEditingController();
 
-  void addProjectOnPressed(context) {
-    // final textFieldController = TextEditingController();
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return Center(
-    //       child: TextField(
-    //         controller: textFieldController,
-    //         decoration: InputDecoration(hintText: "Text Field in Dialog"),
-    //       ),
-    //     );
-    //   },
-    // );
+  final projectNameController = TextEditingController(),
+      projectSemesterController = TextEditingController(),
+      projectYearController = TextEditingController(),
+      projectDescriptionController = TextEditingController();
+
+  void addProject() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: AddProjectForm(
+              projectNameController: projectNameController,
+              projectSemesterController: projectSemesterController,
+              projectYearController: projectYearController,
+              projectDescriptionController: projectDescriptionController,
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -128,9 +144,7 @@ class OfferingsPageFaculty extends StatelessWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: CustomButton(
                                   buttonText: 'Add Project',
-                                  onPressed: () {
-                                    addProjectOnPressed(context);
-                                  },
+                                  onPressed: addProject,
                                 ),
                               ),
                             ],

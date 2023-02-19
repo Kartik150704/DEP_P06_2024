@@ -181,6 +181,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   },
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -188,6 +189,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -195,6 +197,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -202,6 +205,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 const SizedBox(
                   height: 100,
