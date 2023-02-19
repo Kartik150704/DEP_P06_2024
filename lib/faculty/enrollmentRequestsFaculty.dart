@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:casper/components/confirm_action.dart';
 
 import '../components/projecttile.dart';
 
-class EnrollmentRequestsPageFaculty extends StatelessWidget {
+class EnrollmentRequestsPageFaculty extends StatefulWidget {
   const EnrollmentRequestsPageFaculty({Key? key}) : super(key: key);
+
+  @override
+  State<EnrollmentRequestsPageFaculty> createState() =>
+      _EnrollmentRequestsPageFacultyState();
+}
+
+class _EnrollmentRequestsPageFacultyState
+    extends State<EnrollmentRequestsPageFaculty> {
+  void confirmAction() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: ConfirmAction(
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +43,10 @@ class EnrollmentRequestsPageFaculty extends StatelessWidget {
                 theme: 'w',
                 button_flag: true,
                 button_text: 'Accept',
-                button_onPressed: () {},
+                button_onPressed: confirmAction,
                 button2_flag: true,
                 button2_text: 'Reject',
-                button2_onPressed: () {},
+                button2_onPressed: confirmAction,
               ),
             ],
           )),
