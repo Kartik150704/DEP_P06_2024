@@ -1,8 +1,7 @@
 import 'package:casper/utils.dart';
 import 'package:casper/components/weektile.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/textfield.dart';
-import 'package:casper/components/button.dart';
+import 'package:casper/components/marks_submission_form.dart';
 
 class ProjectPage extends StatefulWidget {
   final flag;
@@ -24,80 +23,11 @@ class _ProjectPageState extends State<ProjectPage> {
       builder: (context) {
         return AlertDialog(
           title: Center(
-            child: Container(
-              width: 400,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Enter Obtained Marks',
-                        style: SafeGoogleFont(
-                          'Montserrat',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff000000),
-                        ),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    texteditingcontroller: weeklyMarksInputController,
-                    hinttext: 'Marks',
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Confirm Obtained Marks',
-                        style: SafeGoogleFont(
-                          'Montserrat',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff000000),
-                        ),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    texteditingcontroller: weeklyMarksConfirmInputController,
-                    hinttext: 'Confirm Marks',
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomButton(
-                        buttonText: 'Submit',
-                        onPressed: () {},
-                      ),
-                      CustomButton(
-                        buttonText: 'Cancel',
-                        onPressed: () => {Navigator.pop(context)},
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                ],
-              ),
-            ),
-          ),
+              child: MarksSubmissionForm(
+            marksInputController: weeklyMarksInputController,
+            marksConfirmInputController: weeklyMarksConfirmInputController,
+            onSubmit: () {},
+          )),
         );
       },
     );
