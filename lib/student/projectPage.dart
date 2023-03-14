@@ -1,4 +1,4 @@
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:casper/components/weektile.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/marks_submission_form.dart';

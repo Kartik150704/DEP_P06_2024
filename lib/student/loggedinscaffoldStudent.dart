@@ -2,7 +2,7 @@ import 'package:casper/main.dart';
 import 'package:casper/student/studentHome.dart';
 import 'package:casper/student/studentOfferings.dart';
 import 'package:casper/student/studentProfile.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class LoggedInScaffoldStudent extends StatelessWidget {

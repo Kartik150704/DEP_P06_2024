@@ -3,7 +3,7 @@ import 'package:casper/components/marks_submission_form.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
-import '../utils.dart';
+import '../utilites.dart';
 
 class PanelPage extends StatefulWidget {
   final name, type, year, semester;

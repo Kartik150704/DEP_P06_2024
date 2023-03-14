@@ -1,7 +1,7 @@
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/loggedinscaffoldStudent.dart';
 import 'package:casper/student/projectPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class FacultyProfile extends StatefulWidget {
@@ -21,10 +21,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery
-        .of(context)
-        .size
-        .width / baseWidth;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return LoggedInScaffoldFaculty(
       scaffoldbody: Row(
@@ -52,7 +49,6 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 40,
                       child: Center(
@@ -67,7 +63,6 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ],
@@ -76,7 +71,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
           Expanded(
             child: Container(
               padding:
-              EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
+                  EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
               height: double.infinity,
               color: const Color(0xff302c42),
               child: Row(

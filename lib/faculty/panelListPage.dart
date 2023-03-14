@@ -3,7 +3,7 @@ import 'package:casper/faculty/panelPage.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
-import '../utils.dart';
+import '../utilites.dart';
 import 'loggedinscaffoldFaculty.dart';
 
 class PanelPageFaculty extends StatelessWidget {

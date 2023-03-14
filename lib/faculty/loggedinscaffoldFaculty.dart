@@ -1,7 +1,7 @@
 import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
 import 'package:casper/main.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 import 'facultyHome.dart';

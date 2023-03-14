@@ -1,7 +1,7 @@
 import 'package:casper/student/studentHome.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/login.dart';
+import 'package:casper/login_page.dart';
 import 'package:casper/components/loginbox.dart';
 
 class LandingPage extends StatelessWidget {

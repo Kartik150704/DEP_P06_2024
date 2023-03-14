@@ -2,7 +2,7 @@ import 'package:casper/components/button.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/projectPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

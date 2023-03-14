@@ -1,7 +1,7 @@
 import 'package:casper/components/textstyle.dart';
 import 'package:casper/student/loggedinscaffoldStudent.dart';
 import 'package:casper/student/projectPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class StudentHome extends StatefulWidget {

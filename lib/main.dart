@@ -1,5 +1,5 @@
-import 'package:casper/login.dart';
-import 'package:casper/loginScaffold.dart';
+import 'package:casper/login_page.dart';
+import 'package:casper/login_scaffold.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

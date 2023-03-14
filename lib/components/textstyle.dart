@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
+import '../utilites.dart';
 
 CustomTextStyle() {
   return SafeGoogleFont(

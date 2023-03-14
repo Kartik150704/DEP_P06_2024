@@ -1,5 +1,5 @@
 import 'package:casper/components/button.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/cupertino.dart';
 
 class WeekTile extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:casper/faculty/enrollmentsPageFaculty.dart';
 import 'package:casper/faculty/panelListPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 import 'loggedinscaffoldFaculty.dart';

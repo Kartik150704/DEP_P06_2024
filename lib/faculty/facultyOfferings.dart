@@ -1,7 +1,7 @@
 import 'package:casper/faculty/enrollmentRequestsFaculty.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/faculty/offeringsPageFaculty.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class FacultyOfferings extends StatefulWidget {

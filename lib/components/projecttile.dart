@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
+import '../utilites.dart';
 
 class ProjectTile extends StatelessWidget {
   final title,

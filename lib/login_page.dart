@@ -1,13 +1,10 @@
 import 'package:casper/faculty/facultyHome.dart';
 import 'package:casper/student/studentHome.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/gestures.dart';
-import 'dart:ui';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,34 +16,32 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    const double spacerHeightBig = 25, spacerHeightSmall = 10;
-    void signUserIn() async {}
+    const double spacerHeightBig = 25;
 
-    void forgotPassword() async {}
-
-    void signUserUp() async {}
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+
+    void signUserIn() {}
+
+    void forgotPassword() {}
+
+    void signUserUp() {}
+
     return Container(
-      color: Color(0xff302c42),
+      color: const Color(0xff302c42),
       child: Center(
         child: Container(
           width: 800,
-          height: 450,
+          height: 430,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
           ),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                // frame68jDu (225:318)
-                // margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 36 * fem),
-                // width: 691 * fem,
-                // height: 60 * fem,
-                height: 70,
+                height: 90,
                 decoration: BoxDecoration(
                   color: const Color(0xff1a1e2e),
                   border: Border.all(color: const Color(0xff1a1e2e)),
@@ -57,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: Center(
                   child: Text(
-                    'Welcome To Casper',
+                    'Welcome back, we missed you too',
                     style: SafeGoogleFont(
                       'Montserrat',
                       fontSize: 30,
@@ -90,10 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                // frame71J43 (225:328)
-                // margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 20 * fem),
                 margin: EdgeInsets.symmetric(horizontal: 50),
-
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10 * fem),
@@ -143,10 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                // frame71J43 (225:328)
-                // margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 20 * fem),
                 margin: EdgeInsets.symmetric(horizontal: 50),
-
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10 * fem),
@@ -235,24 +224,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: spacerHeightBig,
-              // ),
-              // TextButton(
-              //   onPressed: (signUserUp),
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 50),
-              //     child: Align(
-              //       alignment: Alignment.centerRight,
-              //       child: Text(
-              //         'New here? Sign up',
-              //         style: TextStyle(
-              //           color: Colors.blue[500],
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

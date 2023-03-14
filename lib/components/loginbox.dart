@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 
 class LoginBox extends StatelessWidget {
   @override
