@@ -1,4 +1,4 @@
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class LogInScaffold extends StatelessWidget {
