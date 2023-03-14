@@ -87,7 +87,7 @@ class _StudentHomeState extends State<StudentHome> {
                         child: Text(
                           'CP302',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -118,7 +118,7 @@ class _StudentHomeState extends State<StudentHome> {
                         child: Text(
                           'CP303',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

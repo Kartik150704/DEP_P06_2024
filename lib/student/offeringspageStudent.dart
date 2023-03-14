@@ -54,7 +54,7 @@ class _OfferingsPageStudentState extends State<OfferingsPageStudent> {
                   child: Text(
                     'Projects',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 50,
                       fontWeight: FontWeight.w700,
                       color: Color(0xffffffff),

@@ -62,7 +62,7 @@ class _PanelPageState extends State<PanelPage> {
                   child: Text(
                     'Panel A',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 50,
                       fontWeight: FontWeight.w700,
                       color: Color(0xffffffff),
@@ -81,7 +81,7 @@ class _PanelPageState extends State<PanelPage> {
                         Text(
                           '${widget.type} = ${widget.year} ${widget.semester}',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -98,7 +98,7 @@ class _PanelPageState extends State<PanelPage> {
                                 Text(
                                   'EVALUATOR 1',
                                   style: SafeGoogleFont(
-                                    'Montserrat',
+                                    'Ubuntu',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xffffffff),
@@ -107,7 +107,7 @@ class _PanelPageState extends State<PanelPage> {
                                 Text(
                                   'EVALUATOR 2',
                                   style: SafeGoogleFont(
-                                    'Montserrat',
+                                    'Ubuntu',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xffffffff),
@@ -116,7 +116,7 @@ class _PanelPageState extends State<PanelPage> {
                                 Text(
                                   'EVALUATOR 3',
                                   style: SafeGoogleFont(
-                                    'Montserrat',
+                                    'Ubuntu',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xffffffff),

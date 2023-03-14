@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:casper/faculty/facultyHome.dart';
 import 'package:casper/student/studentHome.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     const double spacerHeightBig = 25;
+    final List<String> imageList = [
+      'assets/images/carousel_image_1.jpeg',
+      'assets/images/carousel_image_2.jpg',
+    ];
 
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
@@ -29,38 +34,86 @@ class _LoginPageState extends State<LoginPage> {
     void signUserUp() {}
 
     return Container(
-      color: const Color(0xff302c42),
+      color: const Color(0xff302C42),
       child: Center(
         child: Container(
-          width: 800,
-          height: 430,
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 50),
+          width: 550,
+          height: 710,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
+            border: Border.all(
+              color: Colors.white,
+              width: 2,
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black38,
+                spreadRadius: 5,
+                blurRadius: 20,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
           child: Column(
             children: [
               Container(
-                height: 90,
-                decoration: BoxDecoration(
-                  color: const Color(0xff1a1e2e),
-                  border: Border.all(color: const Color(0xff1a1e2e)),
-                  borderRadius: const BorderRadius.only(
+                height: 70,
+                decoration: const BoxDecoration(
+                  color: Color(0xff12141D),
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
                 ),
                 child: Center(
                   child: Text(
-                    'Welcome back, we missed you too',
+                    'Casper, IIT Ropar',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      height: 1.2175 * ffem / fem,
-                      color: Color(0xffffffff),
+                      height: 1.2175,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xffffffff),
                     ),
                   ),
+                ),
+              ),
+              Container(
+                height: 270,
+                color: const Color(0xffffffff),
+                margin: const EdgeInsets.symmetric(vertical: 15),
+                child: CarouselSlider.builder(
+                  itemCount: imageList.length,
+                  options: CarouselOptions(
+                    enlargeCenterPage: true,
+                    height: 300,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 5),
+                    reverse: false,
+                    aspectRatio: 5.0,
+                  ),
+                  itemBuilder: (context, i, id) {
+                    return GestureDetector(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.white,
+                            )),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            imageList[i],
+                            width: 500,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      onTap: () {},
+                    );
+                  },
                 ),
               ),
               const SizedBox(
@@ -69,12 +122,11 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Container(
-                  // usernamewzs (225:332)
                   margin: const EdgeInsets.symmetric(horizontal: 50),
                   child: Text(
                     'Username',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 25,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -85,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 50),
+                margin: const EdgeInsets.symmetric(horizontal: 50),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10 * fem),
@@ -105,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintStyle: TextStyle(color: Color(0xff818488)),
                   ),
                   style: SafeGoogleFont(
-                    'Montserrat',
+                    'Ubuntu',
                     fontSize: 15 * ffem,
                     fontWeight: FontWeight.w400,
                     height: 1.2175 * ffem / fem,
@@ -124,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'Password',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 25,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -156,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintStyle: TextStyle(color: Color(0xff818488)),
                   ),
                   style: SafeGoogleFont(
-                    'Montserrat',
+                    'Ubuntu',
                     fontSize: 15 * ffem,
                     fontWeight: FontWeight.w400,
                     height: 1.2175 * ffem / fem,
@@ -197,16 +249,16 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.zero,
                 ),
                 child: Container(
-                  width: 200,
+                  width: 250,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Color(0xff1a1e2e),
-                    borderRadius: BorderRadius.circular(10 * fem),
-                    boxShadow: [
+                    color: const Color(0xff12141D),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
                       BoxShadow(
-                        color: Color(0x3f000000),
-                        offset: Offset(0 * fem, 4 * fem),
-                        blurRadius: 2 * fem,
+                        color: Colors.black54,
+                        offset: Offset(1, 3.5),
+                        blurRadius: 3,
                       ),
                     ],
                   ),
@@ -214,11 +266,11 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'Sign In',
                       style: SafeGoogleFont(
-                        'Montserrat',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2175 * ffem / fem,
-                        color: Color(0xffffffff),
+                        'Ubuntu',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2175,
+                        color: const Color(0xffffffff),
                       ),
                     ),
                   ),

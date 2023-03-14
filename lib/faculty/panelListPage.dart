@@ -32,7 +32,7 @@ class PanelPageFaculty extends StatelessWidget {
                       child: Text(
                         'Panels',
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 50,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xffffffff),

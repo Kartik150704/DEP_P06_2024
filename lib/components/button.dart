@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
           child: Text(
             buttonText,
             style: SafeGoogleFont(
-              'Montserrat',
+              'Ubuntu',
               fontSize: 13 * ffem,
               fontWeight: FontWeight.w700,
               height: 1.2175 * ffem / fem,

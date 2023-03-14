@@ -42,7 +42,7 @@ class LoginBox extends StatelessWidget {
                   child: Text(
                     'Welcome To Casper',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 45 * ffem,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -58,7 +58,7 @@ class LoginBox extends StatelessWidget {
                 child: Text(
                   'Username',
                   style: SafeGoogleFont(
-                    'Montserrat',
+                    'Ubuntu',
                     fontSize: 25 * ffem,
                     fontWeight: FontWeight.w700,
                     height: 1.2175 * ffem / fem,
@@ -97,7 +97,7 @@ class LoginBox extends StatelessWidget {
                           hintStyle: TextStyle(color: Color(0xff818488)),
                         ),
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 15 * ffem,
                           fontWeight: FontWeight.w400,
                           height: 1.2175 * ffem / fem,
@@ -112,7 +112,7 @@ class LoginBox extends StatelessWidget {
                       child: Text(
                         'Password',
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 25 * ffem,
                           fontWeight: FontWeight.w700,
                           height: 1.2175 * ffem / fem,
@@ -144,7 +144,7 @@ class LoginBox extends StatelessWidget {
                           hintStyle: TextStyle(color: Color(0xff818488)),
                         ),
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 15 * ffem,
                           fontWeight: FontWeight.w400,
                           height: 1.2175 * ffem / fem,
@@ -179,7 +179,7 @@ class LoginBox extends StatelessWidget {
                             child: Text(
                               'Sign In',
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 10 * ffem,
                                 fontWeight: FontWeight.w700,
                                 height: 1.2175 * ffem / fem,

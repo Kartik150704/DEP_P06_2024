@@ -68,7 +68,7 @@ class _studentProfileState extends State<studentProfile> {
                         child: Text(
                           'TEAM ID - TEAM ID',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: const Color(0xffffffff),
@@ -82,7 +82,7 @@ class _studentProfileState extends State<studentProfile> {
                         child: Text(
                           'Team Members -',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: const Color(0xffffffff),
@@ -98,7 +98,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'NAME-1',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -115,7 +115,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'NAME-2',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -144,7 +144,7 @@ class _studentProfileState extends State<studentProfile> {
                                   child: Text(
                                     'Join A Team',
                                     style: SafeGoogleFont(
-                                      'Montserrat',
+                                      'Ubuntu',
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
                                       color: const Color(0xffb0b0b0),
@@ -167,7 +167,7 @@ class _studentProfileState extends State<studentProfile> {
                                   child: Text(
                                     'Leave Team',
                                     style: SafeGoogleFont(
-                                      'Montserrat',
+                                      'Ubuntu',
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
                                       color: const Color(0xffffffff),
@@ -206,7 +206,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'Profile',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 50 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -220,7 +220,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'Name - NAME',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -235,7 +235,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'Program - PROGRAM',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -249,7 +249,7 @@ class _studentProfileState extends State<studentProfile> {
                           child: Text(
                             'Contact - CONTACT',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -260,7 +260,7 @@ class _studentProfileState extends State<studentProfile> {
                         Text(
                           'CGPA - CGPA',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 25 * ffem,
                             fontWeight: FontWeight.w700,
                             height: 1.2175 * ffem / fem,
@@ -311,7 +311,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: RichText(
                                 text: TextSpan(
                                   style: SafeGoogleFont(
-                                    'Montserrat',
+                                    'Ubuntu',
                                     fontSize: 35 * ffem,
                                     fontWeight: FontWeight.w700,
                                     height: 1.2175 * ffem / fem,
@@ -324,7 +324,7 @@ class _studentProfileState extends State<studentProfile> {
                                     TextSpan(
                                       text: '(Completed)',
                                       style: SafeGoogleFont(
-                                        'Montserrat',
+                                        'Ubuntu',
                                         fontSize: 25 * ffem,
                                         fontWeight: FontWeight.w700,
                                         height: 1.2175 * ffem / fem,
@@ -341,7 +341,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Grade - GRADE',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,
@@ -355,7 +355,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Semester - SEMESTER',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,
@@ -369,7 +369,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Year - YEAR',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,
@@ -416,7 +416,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: RichText(
                                 text: TextSpan(
                                   style: SafeGoogleFont(
-                                    'Montserrat',
+                                    'Ubuntu',
                                     fontSize: 35 * ffem,
                                     fontWeight: FontWeight.w700,
                                     height: 1.2175 * ffem / fem,
@@ -429,7 +429,7 @@ class _studentProfileState extends State<studentProfile> {
                                     TextSpan(
                                       text: '(Ongoing)',
                                       style: SafeGoogleFont(
-                                        'Montserrat',
+                                        'Ubuntu',
                                         fontSize: 25 * ffem,
                                         fontWeight: FontWeight.w700,
                                         height: 1.2175 * ffem / fem,
@@ -446,7 +446,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Grade - NA',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,
@@ -460,7 +460,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Semester - SEMESTER',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,
@@ -474,7 +474,7 @@ class _studentProfileState extends State<studentProfile> {
                               child: Text(
                                 'Year - YEAR',
                                 style: SafeGoogleFont(
-                                  'Montserrat',
+                                  'Ubuntu',
                                   fontSize: 25 * ffem,
                                   fontWeight: FontWeight.w700,
                                   height: 1.2175 * ffem / fem,

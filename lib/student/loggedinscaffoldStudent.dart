@@ -23,7 +23,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
         // title: Text(
         //   'Casper',
         //   style: SafeGoogleFont(
-        //     'Montserrat',
+        //     'Ubuntu',
         //     fontSize: 20,
         //     fontWeight: FontWeight.w700,
         //     color: const Color(0xffffffff),
@@ -45,7 +45,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               child: Text(
                 'PROFILE',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xffffffff),
@@ -65,7 +65,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               child: Text(
                 'HOME',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xffffffff),
@@ -86,7 +86,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               child: Text(
                 'OFFERINGS',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xffffffff),
@@ -129,7 +129,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
             Text(
               "Casper",
               style: SafeGoogleFont(
-                'Montserrat',
+                'Ubuntu',
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: const Color(0xffffffff),

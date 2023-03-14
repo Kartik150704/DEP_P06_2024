@@ -17,13 +17,23 @@ class LogInScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff0d0e14),
+        backgroundColor: const Color(0xff12141D),
       ),
       body: scaffoldbody,
       bottomSheet: Container(
         height: 55,
         width: double.infinity,
-        color: const Color(0xff0d0e14),
+        decoration: const BoxDecoration(
+          color: Color(0xff12141D),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              spreadRadius: 4,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -35,7 +45,6 @@ class LogInScaffold extends StatelessWidget {
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,
-                fontWeight: FontWeight.w700,
                 color: const Color(0xffffffff),
               ),
             ),

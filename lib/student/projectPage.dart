@@ -53,7 +53,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     child: Text(
                       'Fair Clustering Algorithms',
                       style: SafeGoogleFont(
-                        'Montserrat',
+                        'Ubuntu',
                         fontSize: 50,
                         fontWeight: FontWeight.w700,
                         color: Color(0xffffffff),
@@ -69,7 +69,7 @@ class _ProjectPageState extends State<ProjectPage> {
                         child: Text(
                           'Dr Shweta Jain - 2023 II',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 25,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -85,7 +85,7 @@ class _ProjectPageState extends State<ProjectPage> {
                             child: Text(
                               'Aman Kumar',
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xffffffff),
@@ -98,7 +98,7 @@ class _ProjectPageState extends State<ProjectPage> {
                             child: Text(
                               'Ojassvi Kumar',
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xffffffff),
@@ -144,7 +144,7 @@ class _ProjectPageState extends State<ProjectPage> {
               child: Text(
                 'No project found!',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 25,
                   fontWeight: FontWeight.w700,
                   color: Color(0xffffffff),

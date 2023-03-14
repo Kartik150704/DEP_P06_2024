@@ -4,7 +4,7 @@ import '../utilites.dart';
 
 CustomTextStyle() {
   return SafeGoogleFont(
-    'Montserrat',
+    'Ubuntu',
     fontSize: 20,
     fontWeight: FontWeight.w700,
     color: Color(0xffffffff),

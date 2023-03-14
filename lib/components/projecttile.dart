@@ -125,7 +125,7 @@ class ProjectTile extends StatelessWidget {
                             child: Text(
                               title,
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 45 * ffem,
                                 fontWeight: FontWeight.w700,
                                 height: 1.2175 * ffem / fem,
@@ -139,7 +139,7 @@ class ProjectTile extends StatelessWidget {
                           child: Text(
                             status,
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 20 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -158,7 +158,7 @@ class ProjectTile extends StatelessWidget {
                       type,
                       textAlign: TextAlign.right,
                       style: SafeGoogleFont(
-                        'Montserrat',
+                        'Ubuntu',
                         fontSize: 20 * ffem,
                         fontWeight: FontWeight.w700,
                         height: 1.2175 * ffem / fem,
@@ -180,7 +180,7 @@ class ProjectTile extends StatelessWidget {
                   Text(
                     info,
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 25 * ffem,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -221,7 +221,7 @@ class ProjectTile extends StatelessWidget {
                                       child: Text(
                                         button_text,
                                         style: SafeGoogleFont(
-                                          'Montserrat',
+                                          'Ubuntu',
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,
@@ -265,7 +265,7 @@ class ProjectTile extends StatelessWidget {
                                       child: Text(
                                         button2_text,
                                         style: SafeGoogleFont(
-                                          'Montserrat',
+                                          'Ubuntu',
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,

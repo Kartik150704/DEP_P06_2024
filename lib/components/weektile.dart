@@ -72,7 +72,7 @@ class WeekTile extends StatelessWidget {
                     child: Text(
                       weekname,
                       style: SafeGoogleFont(
-                        'Montserrat',
+                        'Ubuntu',
                         fontSize: 50 * ffem,
                         fontWeight: FontWeight.w700,
                         height: 1.2175 * ffem / fem,
@@ -84,7 +84,7 @@ class WeekTile extends StatelessWidget {
                     // v3d (212:170)
                     '$datefrom - $dateto',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 20 * ffem,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -100,7 +100,7 @@ class WeekTile extends StatelessWidget {
               child: Text(
                 'Marks Obtained - $marksobtained',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 25 * ffem,
                   fontWeight: FontWeight.w700,
                   height: 1.2175 * ffem / fem,
@@ -118,7 +118,7 @@ class WeekTile extends StatelessWidget {
                   child: Text(
                     'Remarks - $remarks',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 25 * ffem,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,

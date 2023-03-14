@@ -44,7 +44,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   child: Text(
                     'Enrollments',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 50,
                       fontWeight: FontWeight.w700,
                       color: Color(0xffffffff),
@@ -143,7 +143,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                                           Text(
                                             'My Enrolments Only',
                                             style: SafeGoogleFont(
-                                              'Montserrat',
+                                              'Ubuntu',
                                               fontSize: 10,
                                               fontWeight: FontWeight.w700,
                                               color: const Color(0xffffffff),

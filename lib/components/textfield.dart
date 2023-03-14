@@ -43,7 +43,7 @@ class CustomTextField extends StatelessWidget {
             hintStyle: TextStyle(color: Color(0xff676767)),
           ),
           style: SafeGoogleFont(
-            'Montserrat',
+            'Ubuntu',
             fontSize: 15 * ffem,
             fontWeight: FontWeight.w400,
             height: 1.2175 * ffem / fem,

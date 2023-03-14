@@ -48,7 +48,7 @@ class _EnrollmentRequestsPageState extends State<EnrollmentRequestsPage> {
                       child: Text(
                         'Enrollment Requests',
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 50,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xffffffff),

@@ -57,7 +57,7 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                         child: Text(
                           'Projects',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -86,7 +86,7 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                         child: Text(
                           'Enrollment Requests',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

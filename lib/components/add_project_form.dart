@@ -42,7 +42,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
               Text(
                 'Enter the project name',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),
@@ -65,7 +65,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
               Text(
                 'Enter the project semester',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),
@@ -88,7 +88,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
               Text(
                 'Enter the project year',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),
@@ -111,7 +111,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
               Text(
                 'Enter the project description',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),

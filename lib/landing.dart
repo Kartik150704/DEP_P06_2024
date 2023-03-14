@@ -19,7 +19,7 @@ class LandingPage extends StatelessWidget {
         title: Text(
           'Casper',
           style: SafeGoogleFont(
-            'Montserrat',
+            'Ubuntu',
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: const Color(0xffffffff),

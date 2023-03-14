@@ -72,7 +72,7 @@ class _FacultyHomeState extends State<FacultyHome> {
                         child: Text(
                           'Enrollments',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -103,7 +103,7 @@ class _FacultyHomeState extends State<FacultyHome> {
                         child: Text(
                           'Panels',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

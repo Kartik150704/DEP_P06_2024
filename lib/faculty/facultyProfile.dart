@@ -55,7 +55,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         child: Text(
                           'Faculty ID -',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: const Color(0xffffffff),
@@ -89,7 +89,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Profile',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 50 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -103,7 +103,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Name - NAME',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -118,7 +118,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Department - DEPARTMENT',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -132,7 +132,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Contact - CONTACT',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,

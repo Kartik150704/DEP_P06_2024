@@ -37,7 +37,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
               Text(
                 'Enter Obtained Marks',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),
@@ -60,7 +60,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
               Text(
                 'Confirm Obtained Marks',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),

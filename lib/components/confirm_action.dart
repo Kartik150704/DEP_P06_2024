@@ -33,7 +33,7 @@ class _ConfirmActionState extends State<ConfirmAction> {
               Text(
                 'Are you sure?',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xff000000),
