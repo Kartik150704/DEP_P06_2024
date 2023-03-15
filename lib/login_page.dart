@@ -23,10 +23,6 @@ class _LoginPageState extends State<LoginPage> {
       'assets/images/carousel_image_2.jpg',
     ];
 
-    double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-
     void signUserIn() {}
 
     void forgotPassword() {}
@@ -131,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                           'Ubuntu',
                           fontSize: 25,
                           fontWeight: FontWeight.w700,
-                          height: 1.2175 * ffem / fem,
+                          height: 1.2175,
                           color: const Color(0xff000000),
                         ),
                         textAlign: TextAlign.left,
@@ -142,9 +138,9 @@ class _LoginPageState extends State<LoginPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 50),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10 * fem),
-                      border: Border.all(color: Color(0xff000000)),
-                      color: Color(0xffe1e3e8),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xff000000)),
+                      color: const Color(0xffe1e3e8),
                     ),
                     child: TextField(
                       controller: usernameController,
@@ -160,9 +156,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       style: SafeGoogleFont(
                         'Ubuntu',
-                        fontSize: 15 * ffem,
+                        fontSize: 15,
                         fontWeight: FontWeight.w400,
-                        height: 1.2175 * ffem / fem,
+                        height: 1.2175,
                         color: Color(0xff000000),
                       ),
                     ),
@@ -173,7 +169,6 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Container(
-                      // usernamewzs (225:332)
                       margin: const EdgeInsets.symmetric(horizontal: 50),
                       child: Text(
                         'Password',
@@ -181,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                           'Ubuntu',
                           fontSize: 25,
                           fontWeight: FontWeight.w700,
-                          height: 1.2175 * ffem / fem,
+                          height: 1.2175,
                           color: const Color(0xff000000),
                         ),
                         textAlign: TextAlign.left,
@@ -189,12 +184,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 50),
+                    margin: const EdgeInsets.symmetric(horizontal: 50),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10 * fem),
-                      border: Border.all(color: Color(0xff000000)),
-                      color: Color(0xffe1e3e8),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xff000000)),
+                      color: const Color(0xffe1e3e8),
                     ),
                     child: TextField(
                       obscureText: true,
@@ -211,10 +206,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       style: SafeGoogleFont(
                         'Ubuntu',
-                        fontSize: 15 * ffem,
+                        fontSize: 15,
                         fontWeight: FontWeight.w400,
-                        height: 1.2175 * ffem / fem,
-                        color: Color(0xff000000),
+                        height: 1.2175,
+                        color: const Color(0xff000000),
                       ),
                     ),
                   ),
