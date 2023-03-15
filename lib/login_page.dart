@@ -145,6 +145,16 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       controller: usernameController,
                       decoration: const InputDecoration(
+                        // focusedBorder: OutlineInputBorder(
+                        //   borderSide: BorderSide(
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
+                        // enabledBorder: OutlineInputBorder(
+                        //   borderSide: BorderSide(
+                        //     color: Colors.grey,
+                        //   ),
+                        // ),
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -159,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         height: 1.2175,
-                        color: Color(0xff000000),
+                        color: const Color(0xff000000),
                       ),
                     ),
                   ),

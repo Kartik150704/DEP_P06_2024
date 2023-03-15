@@ -4,7 +4,7 @@ import 'package:casper/components/projecttile.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
-import '../components/textfield.dart';
+import '../components/text_field.dart';
 
 class OfferingsPageFaculty extends StatefulWidget {
   OfferingsPageFaculty({Key? key}) : super(key: key);

@@ -5,7 +5,7 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../components/textfield.dart';
+import '../components/text_field.dart';
 
 class EnrollmentsPageFaculty extends StatefulWidget {
   final String role;
