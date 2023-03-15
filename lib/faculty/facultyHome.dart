@@ -39,6 +39,7 @@ class _FacultyHomeState extends State<FacultyHome> {
     //   },
     // );
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(

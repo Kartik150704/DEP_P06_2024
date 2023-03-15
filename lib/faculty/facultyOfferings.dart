@@ -5,7 +5,9 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class FacultyOfferings extends StatefulWidget {
-  const FacultyOfferings({Key? key}) : super(key: key);
+  final role;
+
+  const FacultyOfferings({Key? key, required this.role}) : super(key: key);
 
   @override
   State<FacultyOfferings> createState() => _FacultyOfferingsState();
@@ -26,6 +28,7 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
   @override
   Widget build(BuildContext context) {
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(

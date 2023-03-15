@@ -5,7 +5,9 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class FacultyProfile extends StatefulWidget {
-  const FacultyProfile({Key? key}) : super(key: key);
+  final role;
+
+  const FacultyProfile({Key? key, required this.role}) : super(key: key);
 
   @override
   State<FacultyProfile> createState() => _FacultyProfileState();
@@ -24,6 +26,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(

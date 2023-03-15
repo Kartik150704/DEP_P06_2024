@@ -1,4 +1,3 @@
-import 'package:casper/components/button.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/projectPage.dart';
@@ -169,13 +168,14 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoggedInScaffoldFaculty(
+                            role: widget.role,
                             scaffoldbody: Row(
-                          children: [
-                            ProjectPage(
-                              flag: true,
-                            )
-                          ],
-                        )),
+                              children: [
+                                ProjectPage(
+                                  flag: true,
+                                )
+                              ],
+                            )),
                       ),
                     );
                   },

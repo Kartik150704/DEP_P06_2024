@@ -9,7 +9,7 @@ import 'loggedinscaffoldFaculty.dart';
 class PanelPageFaculty extends StatelessWidget {
   final role;
 
-  const PanelPageFaculty({Key? key, this.role = 'su'}) : super(key: key);
+  const PanelPageFaculty({Key? key, required this.role}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +57,18 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
+                                  role: role,
                                   scaffoldbody: Row(
-                                children: [
-                                  PanelPage(
-                                    name: 'Panel A',
-                                    type: 'Mid-Term',
-                                    year: '2023',
-                                    semester: '||',
-                                    role: role,
-                                  ),
-                                ],
-                              )),
+                                    children: [
+                                      PanelPage(
+                                        name: 'Panel A',
+                                        type: 'Mid-Term',
+                                        year: '2023',
+                                        semester: '||',
+                                        role: role,
+                                      ),
+                                    ],
+                                  )),
                             ),
                           );
                         },
@@ -86,15 +87,16 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
+                                  role: role,
                                   scaffoldbody: Row(
-                                children: const [
-                                  PanelPage(
-                                      name: 'Panel A',
-                                      type: 'Mid-Term',
-                                      year: '2023',
-                                      semester: '||'),
-                                ],
-                              )),
+                                    children: const [
+                                      PanelPage(
+                                          name: 'Panel A',
+                                          type: 'Mid-Term',
+                                          year: '2023',
+                                          semester: '||'),
+                                    ],
+                                  )),
                             ),
                           );
                         },

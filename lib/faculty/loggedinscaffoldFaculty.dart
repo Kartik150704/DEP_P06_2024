@@ -13,7 +13,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
   const LoggedInScaffoldFaculty({
     Key? key,
     required this.scaffoldbody,
-    this.role = 'su',
+    required this.role,
   }) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const FacultyProfile()),
+                      builder: (context) => FacultyProfile(role: role)),
                 );
               },
               child: Text(
@@ -65,9 +65,10 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => FacultyHome(
-                            role: role,
-                          )),
+                    builder: (context) => FacultyHome(
+                      role: role,
+                    ),
+                  ),
                 );
               },
               child: Text(
@@ -88,7 +89,8 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const FacultyOfferings()),
+                    builder: (context) => FacultyOfferings(role: role),
+                  ),
                 );
               },
               child: Text(
@@ -110,8 +112,10 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
               while (Navigator.canPop(context)) {
                 Navigator.pop(context);
               }
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => myActualApp()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => myActualApp()),
+              );
             },
             icon: const Icon(Icons.logout),
           ),
