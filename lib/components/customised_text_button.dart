@@ -2,6 +2,7 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class CustomisedTextButton extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final text, onPressed;
 
   const CustomisedTextButton({

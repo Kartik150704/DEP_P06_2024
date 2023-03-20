@@ -58,7 +58,7 @@ TextStyle SafeGoogleFont(
     );
   } catch (ex) {
     return GoogleFonts.getFont(
-      "Source Sans Pro",
+      'Source Sans Pro',
       textStyle: textStyle,
       color: color,
       backgroundColor: backgroundColor,

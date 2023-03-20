@@ -139,7 +139,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
               width: 50,
             ),
             Text(
-              "Casper",
+              'Casper',
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,

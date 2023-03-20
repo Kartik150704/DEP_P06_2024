@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   CustomisedTextField(
                     textEditingController: usernameController,
-                    hintText: "Username",
+                    hintText: 'Username',
                     obscureText: false,
                   ),
                   const SizedBox(
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   CustomisedTextField(
                     textEditingController: passwordController,
-                    hintText: "Password",
+                    hintText: 'Password',
                     obscureText: true,
                   ),
                   const SizedBox(
@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                   CustomisedButton(
                     width: 250,
                     height: 50,
-                    text: "Sign In",
+                    text: 'Sign In',
                     onPressed: signUserIn,
                   ),
                 ],

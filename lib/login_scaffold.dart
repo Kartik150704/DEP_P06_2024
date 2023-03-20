@@ -41,7 +41,7 @@ class LoginScaffold extends StatelessWidget {
               width: 50,
             ),
             Text(
-              "\u00a9 Casper 2023",
+              '\u00a9 Casper 2023',
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,

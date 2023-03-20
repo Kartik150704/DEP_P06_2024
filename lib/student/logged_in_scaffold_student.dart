@@ -2,7 +2,7 @@ import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/main.dart';
 import 'package:casper/student/student_home_page.dart';
 import 'package:casper/student/studentOfferings.dart';
-import 'package:casper/student/studentProfile.dart';
+import 'package:casper/student/student_profile_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +10,9 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
 
-  final appBarOptions = ["PROFILE", "HOME", "OFFERINGS"];
+  final appBarOptions = ['PROFILE', 'HOME', 'OFFERINGS'];
   final appBarFunctions = const [
-    studentProfile(),
+    StudentProfilePage(),
     StudentHomePage(),
     StudentOfferings(),
   ];
@@ -88,7 +88,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               width: 50,
             ),
             Text(
-              "\u00a9 Casper 2023",
+              '\u00a9 Casper 2023',
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,

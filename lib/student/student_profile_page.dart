@@ -4,14 +4,14 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/confirm_action.dart';
 
-class studentProfile extends StatefulWidget {
-  const studentProfile({Key? key}) : super(key: key);
+class StudentProfilePage extends StatefulWidget {
+  const StudentProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<studentProfile> createState() => _studentProfileState();
+  State<StudentProfilePage> createState() => _StudentProfilePageState();
 }
 
-class _studentProfileState extends State<studentProfile> {
+class _StudentProfilePageState extends State<StudentProfilePage> {
   void confirmAction() {
     showDialog(
       context: context,
