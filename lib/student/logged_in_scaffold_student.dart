@@ -11,7 +11,11 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
 
-  final appBarOptions = ['PROFILE', 'HOME', 'OFFERINGS'];
+  final appBarOptions = [
+    'PROFILE',
+    'HOME',
+    'OFFERINGS',
+  ];
   final appBarFunctions = const [
     StudentProfilePage(),
     StudentHomePage(),
@@ -24,11 +28,14 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   }) : super(key: key);
 
   void signUserOut(context) {
+<<<<<<< HEAD
     // while (Navigator.canPop(context)) {
     //   Navigator.pop(context);
     // }
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => myActualApp()));
+=======
+>>>>>>> c1ccc183d8d8d1e20697f9c63e75ecbfa332cc61
     FirebaseAuth.instance.signOut();
   }
 
@@ -60,7 +67,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
             ],
           ],
         ),
-        leadingWidth: 500,
+        leadingWidth: 350,
         actions: [
           IconButton(
             onPressed: () => signUserOut(context),
