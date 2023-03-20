@@ -78,7 +78,7 @@ class _OfferingsPageStudentState extends State<OfferingsPageStudent> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomTextField(
-                                  hinttext: 'Semeseter',
+                                  hinttext: 'Semester',
                                   texteditingcontroller: semester_controller,
                                 ),
                                 CustomTextField(

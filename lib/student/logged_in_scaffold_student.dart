@@ -28,14 +28,6 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   }) : super(key: key);
 
   void signUserOut(context) {
-<<<<<<< HEAD
-    // while (Navigator.canPop(context)) {
-    //   Navigator.pop(context);
-    // }
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => myActualApp()));
-=======
->>>>>>> c1ccc183d8d8d1e20697f9c63e75ecbfa332cc61
     FirebaseAuth.instance.signOut();
   }
 
