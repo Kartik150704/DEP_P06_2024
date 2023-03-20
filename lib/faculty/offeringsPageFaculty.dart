@@ -87,7 +87,7 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CustomTextField(
-                                  hinttext: 'Semeseter',
+                                  hinttext: 'Semester',
                                   texteditingcontroller: semester_controller,
                                 ),
                                 CustomTextField(
