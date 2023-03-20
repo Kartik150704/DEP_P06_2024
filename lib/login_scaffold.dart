@@ -1,11 +1,11 @@
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
-class LogInScaffold extends StatelessWidget {
+class LoginScaffold extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final scaffoldbody;
 
-  const LogInScaffold({
+  const LoginScaffold({
     Key? key,
     required this.scaffoldbody,
   }) : super(key: key);

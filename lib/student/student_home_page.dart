@@ -1,5 +1,5 @@
 import 'package:casper/components/textstyle.dart';
-import 'package:casper/student/loggedinscaffoldStudent.dart';
+import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/projectPage.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +12,16 @@ class StudentHomePage extends StatefulWidget {
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
-  void onPressed() {}
-  var option;
+  // ignore: prefer_typing_uninitialized_variables
+  var selectedOption;
 
   @override
   void initState() {
     super.initState();
-    option = 1;
+    selectedOption = 1;
   }
+
+  void onPressed() {}
 
   ProjectPage projectpage = ProjectPage(
     flag: true,
@@ -43,7 +45,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              option == 1 ? const Color(0xff302c42) : null),
+                              selectedOption == 1
+                                  ? const Color(0xff302c42)
+                                  : null),
                           shape: MaterialStateProperty.all(
                             const ContinuousRectangleBorder(),
                           ),
@@ -51,7 +55,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         onPressed: () {
                           setState(
                             () {
-                              option = 1;
+                              selectedOption = 1;
                               projectpage = ProjectPage(
                                 flag: true,
                               );
@@ -69,7 +73,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              option == 2 ? const Color(0xff302c42) : null),
+                              selectedOption == 2
+                                  ? const Color(0xff302c42)
+                                  : null),
                           shape: MaterialStateProperty.all(
                             const ContinuousRectangleBorder(),
                           ),
@@ -77,7 +83,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         onPressed: () {
                           setState(
                             () {
-                              option = 2;
+                              selectedOption = 2;
                               projectpage = ProjectPage(
                                 flag: false,
                               );
@@ -100,7 +106,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       child: TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              option == 3 ? const Color(0xff302c42) : null),
+                              selectedOption == 3
+                                  ? const Color(0xff302c42)
+                                  : null),
                           shape: MaterialStateProperty.all(
                             const ContinuousRectangleBorder(),
                           ),
@@ -108,7 +116,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         onPressed: () {
                           setState(
                             () {
-                              option = 3;
+                              selectedOption = 3;
                               projectpage = ProjectPage(
                                 flag: false,
                               );

@@ -20,7 +20,7 @@ class myActualApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Casper',
       debugShowCheckedModeBanner: false,
-      home: LogInScaffold(scaffoldbody: LoginPage()),
+      home: LoginScaffold(scaffoldbody: LoginPage()),
     );
   }
 }
