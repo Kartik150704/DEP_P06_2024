@@ -2,6 +2,7 @@ import 'package:casper/login_page.dart';
 import 'package:casper/login_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'auth_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,10 +18,10 @@ class myActualApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Casper',
       debugShowCheckedModeBanner: false,
-      home: LoginScaffold(scaffoldbody: LoginPage()),
+      home: AuthPage(),
     );
   }
 }

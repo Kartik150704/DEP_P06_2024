@@ -4,6 +4,7 @@ import 'package:casper/student/student_home_page.dart';
 import 'package:casper/student/studentOfferings.dart';
 import 'package:casper/student/student_profile_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoggedInScaffoldStudent extends StatelessWidget {
@@ -27,11 +28,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   }) : super(key: key);
 
   void signUserOut(context) {
-    while (Navigator.canPop(context)) {
-      Navigator.pop(context);
-    }
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => myActualApp()));
+    FirebaseAuth.instance.signOut();
   }
 
   @override
