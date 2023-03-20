@@ -1,3 +1,5 @@
+import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/textstyle.dart';
 import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/projectPage.dart';
@@ -29,112 +31,44 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
+    final courses = [
+      'CP301',
+      'CP302',
+      'CP303',
+    ];
+
+    void selectCourse(selectOption) {
+      setState(() {
+        selectedOption = selectOption;
+        // TODO INSERT QUERY TO GET PROJECT ID
+        projectpage = ProjectPage(
+          flag: (selectOption == 1),
+        );
+      });
+    }
+
     return SelectionArea(
       child: LoggedInScaffoldStudent(
         studentScaffoldBody: Row(
           children: [
             Container(
-              width: 300,
-              color: Color(0xff545161),
+              width: 300 * fem,
+              color: const Color(0xff545161),
               child: ListView(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 1
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 1;
-                                projectpage = ProjectPage(
-                                  flag: true,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP301',
-                            style: CustomTextStyle(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 2
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 2;
-                                projectpage = ProjectPage(
-                                  flag: false,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP302',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 3
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 3;
-                                projectpage = ProjectPage(
-                                  flag: false,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP303',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
+                      for (int i = 0; i < courses.length; i++) ...[
+                        CustomisedSidebarButton(
+                          text: courses[i],
+                          isSelected: (selectedOption == (i + 1)),
+                          onPressed: () => selectCourse(i + 1),
+                        )
+                      ],
                     ],
                   ),
                 ],
