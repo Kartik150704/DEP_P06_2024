@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD0a5XdG31qC2Zh-z19Lyiob58TcnVzObs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>404983897210</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.dep.casper</string>
+	<key>PROJECT_ID</key>
+	<string>casper-5a3e9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>casper-5a3e9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:404983897210:ios:cd5f6e3b922039b7af2fc3</string>
+</dict>
+</plist>

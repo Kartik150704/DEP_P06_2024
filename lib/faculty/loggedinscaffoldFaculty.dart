@@ -2,6 +2,7 @@ import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
 import 'package:casper/main.dart';
 import 'package:casper/utilites.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'facultyHome.dart';
@@ -109,13 +110,14 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              while (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => myActualApp()),
-              );
+              // while (Navigator.canPop(context)) {
+              //   Navigator.pop(context);
+              // }
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => myActualApp()),
+              // );
+              FirebaseAuth.instance.signOut();
             },
             icon: const Icon(Icons.logout),
           ),

@@ -39,6 +39,7 @@ dependencies:
   carousel_slider: ^4.2.1
   google_fonts: ^3.0.1
   cloud_firestore: any
+  firebase_auth: ^4.3.0
 
 
 dev_dependencies:

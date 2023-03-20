@@ -3,6 +3,7 @@ import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/faculty/offeringsPageFaculty.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FacultyOfferings extends StatefulWidget {
   final role;

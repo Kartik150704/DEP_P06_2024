@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "404983897210",
+    "project_id": "casper-5a3e9",
+    "storage_bucket": "casper-5a3e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404983897210:android:abcf19c8cd0ac560af2fc3",
+        "android_client_info": {
+          "package_name": "com.dep.casper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404983897210-fotqpcq35mi09nm27iernvckj525c7s9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6Sn1bFyX8jfveH1Vqc82ltesY8wb9N_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404983897210-fotqpcq35mi09nm27iernvckj525c7s9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
