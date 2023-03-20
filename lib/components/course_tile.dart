@@ -2,9 +2,14 @@ import 'package:casper/components/customised_text.dart';
 import 'package:flutter/material.dart';
 
 class CourseTile extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final code, status, details;
 
-  final parameters = ['Grade: ', 'Semester: ', 'Year: '];
+  final parameters = [
+    'Grade: ',
+    'Semester: ',
+    'Year: ',
+  ];
 
   CourseTile({
     super.key,
@@ -16,10 +21,14 @@ class CourseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 500,
-      height: 300,
+      width: 450,
+      height: 250,
       decoration: BoxDecoration(
-        color: (status == '1' ? const Color(0xfffabb18) : Color(0xff45c646)),
+        color: (status == '0'
+            ? Colors.white
+            : (status == '1'
+                ? const Color(0xfffabb18)
+                : const Color(0xff45c646))),
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
@@ -34,20 +43,25 @@ class CourseTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 500,
-            height: 100,
+            margin: EdgeInsets.all(5),
+            width: 450,
+            height: 80,
             decoration: BoxDecoration(
-              color: (status == '1' ? Color(0xffe0c596) : Color(0xff7ae37b)),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
+              color: (status == '0'
+                  ? const Color.fromARGB(255, 22, 25, 41)
+                  : (status == '1'
+                      ? const Color(0xffe0c596)
+                      : const Color(0xff7ae37b))),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: CustomisedText(
-                text: code + (status == '1' ? '(On Going)' : '(Completed)'),
-                fontSize: 45,
-                color: Colors.black,
+                text: code +
+                    (status == '0'
+                        ? ''
+                        : (status == '1' ? ' (On-Going)' : ' (Completed)')),
+                fontSize: 40,
+                color: (status == '0' ? Colors.white : Colors.black),
               ),
             ),
           ),
@@ -59,8 +73,8 @@ class CourseTile extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
               child: CustomisedText(
                 text: parameters[i] + details[i],
-                fontSize: 30,
-                color: Color(0xff3f3f3f),
+                fontSize: 25,
+                color: const Color(0xff3f3f3f),
               ),
             ),
             const SizedBox(

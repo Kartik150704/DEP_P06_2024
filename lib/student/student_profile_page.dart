@@ -20,7 +20,23 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     'CGPA: 8.19',
     'Contact: 1234567890',
   ];
-  var courseDetails = [];
+  var courseDetails = [
+    [
+      'CP301',
+      '2',
+      ['A-', '2', '2022']
+    ],
+    [
+      'CP302',
+      '1',
+      ['NA', '1', '2023']
+    ],
+    [
+      'CP303',
+      '0',
+      ['NA', 'NA', 'NA']
+    ],
+  ];
 
   void confirmAction() {
     showDialog(
@@ -104,12 +120,12 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                 child: Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.fromLTRB(60, 30, 150 * fem, 0),
+                      margin: EdgeInsets.fromLTRB(60, 30, 200 * fem, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const CustomisedText(
-                            text: 'Ojassvi\'s Profile',
+                            text: 'Aman\'s Profile',
                             fontSize: 50,
                           ),
                           const SizedBox(
@@ -131,7 +147,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ),
                     ),
                     Container(
-                      width: 550 * fem,
+                      width: 500 * fem,
                       margin: const EdgeInsets.fromLTRB(0, 30, 0, 85),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -155,39 +171,18 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               const SizedBox(
                                 height: 50,
                               ),
-                              CourseTile(
-                                code: 'CP301',
-                                status: '2',
-                                details: const [
-                                  'A-',
-                                  '2',
-                                  '2022',
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              CourseTile(
-                                code: 'CP302',
-                                status: '1',
-                                details: const [
-                                  'NA',
-                                  '1',
-                                  '2023',
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              CourseTile(
-                                code: 'CP302',
-                                status: '1',
-                                details: const [
-                                  'NA',
-                                  '1',
-                                  '2023',
-                                ],
-                              ),
+                              for (int i = 0;
+                                  i < courseDetails.length;
+                                  i++) ...[
+                                CourseTile(
+                                  code: courseDetails[i][0],
+                                  status: courseDetails[i][1],
+                                  details: courseDetails[i][2],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
                               const SizedBox(
                                 height: 40,
                               ),
