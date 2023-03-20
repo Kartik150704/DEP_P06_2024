@@ -1,3 +1,5 @@
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/projectPage.dart';
 import 'package:casper/utilites.dart';
@@ -12,6 +14,14 @@ class StudentProfilePage extends StatefulWidget {
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
+  var canJoinNewTeam = false;
+  var studentDetails = [
+    'Name: Ojassvi Kumar',
+    'Program: CSE',
+    'CGPA: 8.19',
+    'Contact: 9250131555',
+  ];
+
   void confirmAction() {
     showDialog(
       context: context,
@@ -27,159 +37,60 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     );
   }
 
-  ProjectPage projectpage = ProjectPage(
-    flag: true,
-  );
+  void joinNewTeam() {}
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
     return LoggedInScaffoldStudent(
       studentScaffoldBody: Row(
         children: [
           Container(
-            width: 300,
+            width: 300 * fem,
             color: const Color(0xff545161),
             child: ListView(
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: 200.0,
-                        width: 120.0,
+                        height: 200,
+                        width: 200,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
-                                'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg'),
+                              'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg',
+                            ),
                             fit: BoxFit.fitHeight,
                           ),
-                          shape: BoxShape.rectangle,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          'TEAM ID - TEAM ID',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xffffffff),
-                          ),
-                        ),
+                    if (canJoinNewTeam) ...[
+                      CustomisedButton(
+                        width: 200,
+                        height: 50,
+                        text: 'Join A New Team',
+                        onPressed: joinNewTeam,
+                      )
+                    ] else ...const [
+                      CustomisedText(text: 'Team ID - CS48'),
+                      SizedBox(
+                        height: 15,
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          'Team Members -',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xffffffff),
-                          ),
-                        ),
+                      CustomisedText(text: 'Team Members'),
+                      SizedBox(
+                        height: 4,
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: Center(
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'NAME-1',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      CustomisedText(
+                        text: 'Ojassvi Kumar\nAman Kumar',
+                        fontSize: 17,
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: Center(
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'NAME-2',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      // margin: EdgeInsets.fromLTRB(20, 5, 40, 0),
-                      width: 50,
-                      height: 50,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: const Color(0xff6f6f6f),
-                                  borderRadius: BorderRadius.circular(8)),
-                              height: 40,
-                              child: TextButton(
-                                onPressed: null,
-                                child: Center(
-                                  child: Text(
-                                    'Join A Team',
-                                    style: SafeGoogleFont(
-                                      'Ubuntu',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xffb0b0b0),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: const Color(0xff1a1e2e),
-                                  borderRadius: BorderRadius.circular(8)),
-                              height: 40,
-                              child: TextButton(
-                                onPressed: confirmAction,
-                                child: Center(
-                                  child: Text(
-                                    'Leave Team',
-                                    style: SafeGoogleFont(
-                                      'Ubuntu',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xffffffff),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ],
                 ),
               ],
@@ -187,86 +98,35 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           ),
           Expanded(
             child: Container(
-              padding:
-                  EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
               height: double.infinity,
               color: const Color(0xff302c42),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 289 * fem, 0 * fem),
+                    margin: const EdgeInsets.fromLTRB(40, 25, 400, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              66 * fem, 0 * fem, 0 * fem, 70 * fem),
-                          child: Text(
-                            'Profile',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 50 * ffem,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2175 * ffem / fem,
-                              color: const Color(0xffffffff),
+                        const CustomisedText(
+                          text: 'Ojassvi\'s Profile',
+                          fontSize: 50,
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        for (int i = 0; i < studentDetails.length; i++) ...[
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                            child: CustomisedText(
+                              text: studentDetails[i],
+                              fontSize: 30,
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0 * fem, 0 * fem, 0 * fem, 9 * fem),
-                          child: Text(
-                            'Name - NAME',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 25 * ffem,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2175 * ffem / fem,
-                              color: const Color(0xffffffff),
-                            ),
+                          const SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        Container(
-                          // programprogram5jG (225:254)
-                          margin: EdgeInsets.fromLTRB(
-                              0 * fem, 0 * fem, 0 * fem, 9 * fem),
-                          child: Text(
-                            'Program - PROGRAM',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 25 * ffem,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2175 * ffem / fem,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0 * fem, 0 * fem, 0 * fem, 9 * fem),
-                          child: Text(
-                            'Contact - CONTACT',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 25 * ffem,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2175 * ffem / fem,
-                              color: const Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'CGPA - CGPA',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 25 * ffem,
-                            fontWeight: FontWeight.w700,
-                            height: 1.2175 * ffem / fem,
-                            color: const Color(0xffffffff),
-                          ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -274,12 +134,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        // frame66q6A (225:257)
-                        margin: EdgeInsets.fromLTRB(
-                            3 * fem, 0 * fem, 0 * fem, 25 * fem),
-                        padding: EdgeInsets.fromLTRB(
-                            0 * fem, 0 * fem, 0 * fem, 51 * fem),
-                        width: 450 * fem,
+                        margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        width: 400 * fem,
                         decoration: BoxDecoration(
                           color: const Color(0xff45c646),
                           borderRadius: BorderRadius.circular(10 * fem),
@@ -312,9 +168,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 text: TextSpan(
                                   style: SafeGoogleFont(
                                     'Ubuntu',
-                                    fontSize: 35 * ffem,
+                                    fontSize: 35 * fem,
                                     fontWeight: FontWeight.w700,
-                                    height: 1.2175 * ffem / fem,
+                                    height: 1.2175 * fem / fem,
                                     color: const Color(0xff000000),
                                   ),
                                   children: [
@@ -325,9 +181,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                       text: '(Completed)',
                                       style: SafeGoogleFont(
                                         'Ubuntu',
-                                        fontSize: 25 * ffem,
+                                        fontSize: 25 * fem,
                                         fontWeight: FontWeight.w700,
-                                        height: 1.2175 * ffem / fem,
+                                        height: 1.2175 * fem / fem,
                                         color: const Color(0xff000000),
                                       ),
                                     ),
@@ -342,9 +198,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Grade - GRADE',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),
@@ -356,9 +212,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Semester - SEMESTER',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),
@@ -370,9 +226,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Year - YEAR',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),
@@ -417,9 +273,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 text: TextSpan(
                                   style: SafeGoogleFont(
                                     'Ubuntu',
-                                    fontSize: 35 * ffem,
+                                    fontSize: 35 * fem,
                                     fontWeight: FontWeight.w700,
-                                    height: 1.2175 * ffem / fem,
+                                    height: 1.2175 * fem / fem,
                                     color: const Color(0xff000000),
                                   ),
                                   children: [
@@ -430,9 +286,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                       text: '(Ongoing)',
                                       style: SafeGoogleFont(
                                         'Ubuntu',
-                                        fontSize: 25 * ffem,
+                                        fontSize: 25 * fem,
                                         fontWeight: FontWeight.w700,
-                                        height: 1.2175 * ffem / fem,
+                                        height: 1.2175 * fem / fem,
                                         color: const Color(0xff000000),
                                       ),
                                     ),
@@ -447,9 +303,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Grade - NA',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),
@@ -461,9 +317,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Semester - SEMESTER',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),
@@ -475,9 +331,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Year - YEAR',
                                 style: SafeGoogleFont(
                                   'Ubuntu',
-                                  fontSize: 25 * ffem,
+                                  fontSize: 25 * fem,
                                   fontWeight: FontWeight.w700,
-                                  height: 1.2175 * ffem / fem,
+                                  height: 1.2175 * fem / fem,
                                   color: const Color(0xff3f3f3f),
                                 ),
                               ),

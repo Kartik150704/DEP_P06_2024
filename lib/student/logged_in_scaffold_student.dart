@@ -10,7 +10,11 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
 
-  final appBarOptions = ['PROFILE', 'HOME', 'OFFERINGS'];
+  final appBarOptions = [
+    'PROFILE',
+    'HOME',
+    'OFFERINGS',
+  ];
   final appBarFunctions = const [
     StudentProfilePage(),
     StudentHomePage(),
@@ -58,7 +62,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
             ],
           ],
         ),
-        leadingWidth: 500,
+        leadingWidth: 350,
         actions: [
           IconButton(
             onPressed: () => signUserOut(context),
