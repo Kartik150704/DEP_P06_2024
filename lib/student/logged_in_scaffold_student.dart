@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/main.dart';
 import 'package:casper/student/student_home_page.dart';
 import 'package:casper/student/studentOfferings.dart';
@@ -6,121 +7,80 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class LoggedInScaffoldStudent extends StatelessWidget {
-  final scaffoldbody;
+  // ignore: prefer_typing_uninitialized_variables
+  final studentScaffoldBody;
 
-  const LoggedInScaffoldStudent({Key? key, required this.scaffoldbody})
-      : super(key: key);
+  final appBarOptions = ["PROFILE", "HOME", "OFFERINGS"];
+  final appBarFunctions = const [
+    studentProfile(),
+    StudentHomePage(),
+    StudentOfferings(),
+  ];
 
-  @override
-  void onPressed() {
-    // showDialog(context: context, builder: AlertDialog(title: 'ok',));
+  LoggedInScaffoldStudent({
+    Key? key,
+    required this.studentScaffoldBody,
+  }) : super(key: key);
+
+  void signUserOut(context) {
+    while (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => myActualApp()));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff12141d),
-        // title: Text(
-        //   'Casper',
-        //   style: SafeGoogleFont(
-        //     'Ubuntu',
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.w700,
-        //     color: const Color(0xffffffff),
-        //   ),
-        // ),
         leading: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 30,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const studentProfile()),
-                );
-              },
-              child: Text(
-                'PROFILE',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
+            for (int i = 0; i < appBarOptions.length; i++) ...[
+              CustomisedTextButton(
+                text: appBarOptions[i],
+                onPressed: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => appBarFunctions[i],
+                    ),
+                  )
+                },
               ),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StudentHomePage()),
-                );
-              },
-              child: Text(
-                'HOME',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
+              const SizedBox(
+                width: 15,
               ),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StudentOfferings()),
-                );
-              },
-              child: Text(
-                'OFFERINGS',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
-              ),
-            ),
+            ],
           ],
         ),
-        leadingWidth: 400,
+        leadingWidth: 500,
         actions: [
           IconButton(
-            onPressed: () {
-              while (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => myActualApp()));
-            },
+            onPressed: () => signUserOut(context),
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
-      body: scaffoldbody,
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: const Color(0xff1a1e2e),
-      //   // unselectedLabelStyle: TextStyle(color: Color(0xffffffff)),
-      //   unselectedItemColor: const Color(0xffffffff),
-      //   selectedItemColor: const Color(0xffffffff), items: const [],
-      // ),
+      body: studentScaffoldBody,
       bottomSheet: Container(
-        height: 50,
+        height: 55,
         width: double.infinity,
-        color: const Color(0xff12141d),
+        decoration: const BoxDecoration(
+          color: Color(0xff12141D),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              spreadRadius: 4,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -128,11 +88,10 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               width: 50,
             ),
             Text(
-              "Casper",
+              "\u00a9 Casper 2023",
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,
-                fontWeight: FontWeight.w700,
                 color: const Color(0xffffffff),
               ),
             ),

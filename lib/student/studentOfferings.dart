@@ -25,7 +25,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
   @override
   Widget build(BuildContext context) {
     return LoggedInScaffoldStudent(
-      scaffoldbody: Row(
+      studentScaffoldBody: Row(
         children: [
           Container(
             width: 300,

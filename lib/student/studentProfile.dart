@@ -37,7 +37,7 @@ class _studentProfileState extends State<studentProfile> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return LoggedInScaffoldStudent(
-      scaffoldbody: Row(
+      studentScaffoldBody: Row(
         children: [
           Container(
             width: 300,

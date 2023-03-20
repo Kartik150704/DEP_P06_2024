@@ -30,7 +30,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     return LoggedInScaffoldStudent(
-      scaffoldbody: Row(
+      studentScaffoldBody: Row(
         children: [
           Container(
             width: 300,
