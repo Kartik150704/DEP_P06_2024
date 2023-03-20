@@ -1,4 +1,4 @@
-import 'package:casper/student/loggedinscaffoldStudent.dart';
+import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/projectPage.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';

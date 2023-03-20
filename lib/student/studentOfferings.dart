@@ -1,4 +1,4 @@
-import 'package:casper/student/loggedinscaffoldStudent.dart';
+import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/enrollmentRequests.dart';
 import 'package:casper/student/offeringspageStudent.dart';
 import 'package:casper/utilites.dart';
