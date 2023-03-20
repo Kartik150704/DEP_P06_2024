@@ -1,4 +1,5 @@
 import 'package:casper/components/customised_text_field.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:casper/faculty/facultyHome.dart';
 import 'package:casper/student/studentHome.dart';
@@ -189,62 +190,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 2 * spacerHeightBig,
                   ),
-                  ElevatedButton(
+                  CustomisedButton(
+                    text: "Sign In",
                     onPressed: signUserIn,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff12141D),
-                      elevation: 10,
-                    ),
-                    child: Container(
-                      width: 250,
-                      height: 50,
-                      child: Center(
-                        child: Text(
-                          "Sign In",
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            height: 1.2175,
-                            color: const Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
                   ),
-                  // TextButton(
-                  //   onPressed: signUserIn,
-                  //   style: TextButton.styleFrom(
-                  //     backgroundColor: const Color(0xff12141D),
-                  //     padding: EdgeInsets.zero,
-                  //   ),
-                  //   child: Container(
-                  //     width: 250,
-                  //     height: 50,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(10),
-                  //       boxShadow: const [
-                  //         BoxShadow(
-                  //           color: Colors.black54,
-                  //           offset: Offset(1, 3.5),
-                  //           blurRadius: 3,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     child: Center(
-                  //       child: Text(
-                  //         'Sign In',
-                  //         style: SafeGoogleFont(
-                  //           'Ubuntu',
-                  //           fontSize: 18,
-                  //           fontWeight: FontWeight.w500,
-                  //           height: 1.2175,
-                  //           color: const Color(0xffffffff),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
