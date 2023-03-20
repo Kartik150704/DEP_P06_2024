@@ -12,7 +12,7 @@ class myActualApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Casper',
       debugShowCheckedModeBanner: false,
       home: LogInScaffold(scaffoldbody: LoginPage()),

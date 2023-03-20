@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_text_field.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:casper/faculty/facultyHome.dart';
 import 'package:casper/student/studentHome.dart';
@@ -23,11 +24,32 @@ class _LoginPageState extends State<LoginPage> {
       'assets/images/carousel_image_2.jpg',
     ];
 
-    void signUserIn() {}
+    void signUserIn() {
+      if (usernameController.text.trim() == 'student') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const StudentHome()),
+        );
+      } else if (usernameController.text.trim() == 'supervisor') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const FacultyHome(
+                    role: 'su',
+                  )),
+        );
+      } else if (usernameController.text.trim() == 'coordinator') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const FacultyHome(
+                    role: 'co',
+                  )),
+        );
+      }
+    }
 
     void forgotPassword() {}
-
-    void signUserUp() {}
 
     return Scaffold(
       backgroundColor: const Color(0xff302C42),
@@ -134,44 +156,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 50),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xff000000)),
-                      color: const Color(0xffe1e3e8),
-                    ),
-                    child: TextField(
-                      controller: usernameController,
-                      decoration: const InputDecoration(
-                        // focusedBorder: OutlineInputBorder(
-                        //   borderSide: BorderSide(
-                        //     color: Colors.black,
-                        //   ),
-                        // ),
-                        // enabledBorder: OutlineInputBorder(
-                        //   borderSide: BorderSide(
-                        //     color: Colors.grey,
-                        //   ),
-                        // ),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                        hintText: 'Username',
-                        hintStyle: TextStyle(color: Color(0xff818488)),
-                      ),
-                      style: SafeGoogleFont(
-                        'Ubuntu',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        height: 1.2175,
-                        color: const Color(0xff000000),
-                      ),
-                    ),
+                  CustomisedTextField(
+                    textEditingController: usernameController,
+                    hintText: "Username",
+                    obscureText: false,
                   ),
                   const SizedBox(
                     height: 20,
@@ -193,87 +181,26 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 50),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xff000000)),
-                      color: const Color(0xffe1e3e8),
-                    ),
-                    child: TextField(
-                      obscureText: true,
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                        hintText: 'Password',
-                        hintStyle: TextStyle(color: Color(0xff818488)),
-                      ),
-                      style: SafeGoogleFont(
-                        'Ubuntu',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        height: 1.2175,
-                        color: const Color(0xff000000),
-                      ),
-                    ),
+                  CustomisedTextField(
+                    textEditingController: passwordController,
+                    hintText: "Password",
+                    obscureText: true,
                   ),
                   const SizedBox(
                     height: 2 * spacerHeightBig,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      if (usernameController.text.trim() == 'student') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const StudentHome()),
-                        );
-                      } else if (usernameController.text.trim() ==
-                          'supervisor') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FacultyHome(
-                                    role: 'su',
-                                  )),
-                        );
-                      } else if (usernameController.text.trim() ==
-                          'coordinator') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FacultyHome(
-                                    role: 'co',
-                                  )),
-                        );
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
+                  ElevatedButton(
+                    onPressed: signUserIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff12141D),
+                      elevation: 10,
                     ),
                     child: Container(
                       width: 250,
                       height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color(0xff12141D),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black54,
-                            offset: Offset(1, 3.5),
-                            blurRadius: 3,
-                          ),
-                        ],
-                      ),
                       child: Center(
                         child: Text(
-                          'Sign In',
+                          "Sign In",
                           style: SafeGoogleFont(
                             'Ubuntu',
                             fontSize: 18,
@@ -285,6 +212,39 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  // TextButton(
+                  //   onPressed: signUserIn,
+                  //   style: TextButton.styleFrom(
+                  //     backgroundColor: const Color(0xff12141D),
+                  //     padding: EdgeInsets.zero,
+                  //   ),
+                  //   child: Container(
+                  //     width: 250,
+                  //     height: 50,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       boxShadow: const [
+                  //         BoxShadow(
+                  //           color: Colors.black54,
+                  //           offset: Offset(1, 3.5),
+                  //           blurRadius: 3,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     child: Center(
+                  //       child: Text(
+                  //         'Sign In',
+                  //         style: SafeGoogleFont(
+                  //           'Ubuntu',
+                  //           fontSize: 18,
+                  //           fontWeight: FontWeight.w500,
+                  //           height: 1.2175,
+                  //           color: const Color(0xffffffff),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
