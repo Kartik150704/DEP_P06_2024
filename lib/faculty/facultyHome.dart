@@ -1,6 +1,6 @@
 import 'package:casper/faculty/enrollmentsPageFaculty.dart';
 import 'package:casper/faculty/panelListPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 import 'loggedinscaffoldFaculty.dart';
@@ -17,11 +17,13 @@ class FacultyHome extends StatefulWidget {
 class _FacultyHomeState extends State<FacultyHome> {
   void onPressed() {}
   dynamic shownpage;
+  var option;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    option = 1;
     shownpage = EnrollmentsPageFaculty(
       role: widget.role,
     );
@@ -37,6 +39,7 @@ class _FacultyHomeState extends State<FacultyHome> {
     //   },
     // );
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
@@ -50,9 +53,17 @@ class _FacultyHomeState extends State<FacultyHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 1;
                               shownpage = EnrollmentsPageFaculty(
                                 role: widget.role,
                               );
@@ -62,7 +73,7 @@ class _FacultyHomeState extends State<FacultyHome> {
                         child: Text(
                           'Enrollments',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -73,9 +84,17 @@ class _FacultyHomeState extends State<FacultyHome> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 2;
                               shownpage = PanelPageFaculty(
                                 role: widget.role,
                               );
@@ -85,7 +104,7 @@ class _FacultyHomeState extends State<FacultyHome> {
                         child: Text(
                           'Panels',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

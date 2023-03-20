@@ -1,17 +1,14 @@
-import 'package:casper/student/studentHome.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/student/student_home_page.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/login.dart';
-import 'package:casper/components/loginbox.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
 
   @override
-  void onPressed() {
-    // showDialog(context: context, builder: AlertDialog(title: 'ok',));
-  }
+  void onPressed() {}
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -19,7 +16,7 @@ class LandingPage extends StatelessWidget {
         title: Text(
           'Casper',
           style: SafeGoogleFont(
-            'Montserrat',
+            'Ubuntu',
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: const Color(0xffffffff),
@@ -29,12 +26,12 @@ class LandingPage extends StatelessWidget {
           children: [
             TextButton(
               onPressed: onPressed,
-              child: Text('Home'),
+              child: const Text('Home'),
             ),
           ],
         ),
       ),
-      body: const StudentHome(),
+      body: const StudentHomePage(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff1a1e2e),
         items: const [
@@ -51,7 +48,6 @@ class LandingPage extends StatelessWidget {
             label: 'Contact',
           ),
         ],
-        // unselectedLabelStyle: TextStyle(color: Color(0xffffffff)),
         unselectedItemColor: const Color(0xffffffff),
         selectedItemColor: const Color(0xffffffff),
       ),

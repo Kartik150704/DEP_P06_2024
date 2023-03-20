@@ -1,19 +1,44 @@
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:casper/components/weektile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:casper/components/marks_submission_form.dart';
 
-class ProjectPage extends StatelessWidget {
+class ProjectPage extends StatefulWidget {
   final flag;
 
   ProjectPage({Key? key, this.flag = true}) : super(key: key);
+
+  @override
+  State<ProjectPage> createState() => _ProjectPageState();
+}
+
+class _ProjectPageState extends State<ProjectPage> {
+  TextEditingController weeklyMarksInputController = TextEditingController();
+  TextEditingController weeklyMarksConfirmInputController =
+      TextEditingController();
+
+  void uploadWeeklyMarks() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+              child: MarksSubmissionForm(
+            marksInputController: weeklyMarksInputController,
+            marksConfirmInputController: weeklyMarksConfirmInputController,
+            onSubmit: () {},
+          )),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    if (flag) {
+    if (widget.flag) {
       return Expanded(
         child: Container(
           color: Color(0xff302c42),
@@ -28,7 +53,7 @@ class ProjectPage extends StatelessWidget {
                     child: Text(
                       'Fair Clustering Algorithms',
                       style: SafeGoogleFont(
-                        'Montserrat',
+                        'Ubuntu',
                         fontSize: 50,
                         fontWeight: FontWeight.w700,
                         color: Color(0xffffffff),
@@ -44,7 +69,7 @@ class ProjectPage extends StatelessWidget {
                         child: Text(
                           'Dr Shweta Jain - 2023 II',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 25,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -60,7 +85,7 @@ class ProjectPage extends StatelessWidget {
                             child: Text(
                               'Aman Kumar',
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xffffffff),
@@ -73,7 +98,7 @@ class ProjectPage extends StatelessWidget {
                             child: Text(
                               'Ojassvi Kumar',
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xffffffff),
@@ -92,7 +117,7 @@ class ProjectPage extends StatelessWidget {
                     marksobtained: 'Marks Not Uploaded Yet',
                     flag: false,
                     buttonflag: true,
-                    buttonOnPressed: () {},
+                    buttonOnPressed: uploadWeeklyMarks,
                     buttontext: 'Add Marks',
                   ),
                   const WeekTile(
@@ -119,7 +144,7 @@ class ProjectPage extends StatelessWidget {
               child: Text(
                 'No project found!',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 25,
                   fontWeight: FontWeight.w700,
                   color: Color(0xffffffff),

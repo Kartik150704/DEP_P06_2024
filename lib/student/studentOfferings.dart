@@ -1,8 +1,7 @@
-import 'package:casper/student/loggedinscaffoldStudent.dart';
-import 'package:casper/student/projectPage.dart';
+import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/enrollmentRequests.dart';
 import 'package:casper/student/offeringspageStudent.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class StudentOfferings extends StatefulWidget {
@@ -14,12 +13,19 @@ class StudentOfferings extends StatefulWidget {
 
 class _StudentOfferingsState extends State<StudentOfferings> {
   void onPressed() {}
+  var option;
   dynamic shownpage = OfferingsPageStudent();
+
+  @override
+  void initState() {
+    super.initState();
+    option = 1;
+  }
 
   @override
   Widget build(BuildContext context) {
     return LoggedInScaffoldStudent(
-      scaffoldbody: Row(
+      studentScaffoldBody: Row(
         children: [
           Container(
             width: 300,
@@ -32,9 +38,17 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 1;
                               shownpage = OfferingsPageStudent();
                             },
                           );
@@ -42,7 +56,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                         child: Text(
                           'Projects',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -53,9 +67,17 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 2;
                               shownpage = const EnrollmentRequestsPage();
                             },
                           );
@@ -63,7 +85,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                         child: Text(
                           'Enrollment Requests',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

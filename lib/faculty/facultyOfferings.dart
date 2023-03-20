@@ -1,11 +1,14 @@
 import 'package:casper/faculty/enrollmentRequestsFaculty.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/faculty/offeringsPageFaculty.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FacultyOfferings extends StatefulWidget {
-  const FacultyOfferings({Key? key}) : super(key: key);
+  final role;
+
+  const FacultyOfferings({Key? key, required this.role}) : super(key: key);
 
   @override
   State<FacultyOfferings> createState() => _FacultyOfferingsState();
@@ -13,11 +16,20 @@ class FacultyOfferings extends StatefulWidget {
 
 class _FacultyOfferingsState extends State<FacultyOfferings> {
   void onPressed() {}
-  dynamic shownpage = OfferingsPageFaculty();
+  dynamic shownpage;
+  var option;
+
+  @override
+  void initState() {
+    super.initState();
+    option = 1;
+    shownpage = OfferingsPageFaculty();
+  }
 
   @override
   Widget build(BuildContext context) {
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
@@ -31,9 +43,17 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 1 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 1;
                               shownpage = OfferingsPageFaculty();
                             },
                           );
@@ -41,7 +61,7 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                         child: Text(
                           'Projects',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),
@@ -52,9 +72,17 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                     SizedBox(
                       height: 80,
                       child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              option == 2 ? const Color(0xff302c42) : null),
+                          shape: MaterialStateProperty.all(
+                            const ContinuousRectangleBorder(),
+                          ),
+                        ),
                         onPressed: () {
                           setState(
                             () {
+                              option = 2;
                               shownpage = EnrollmentRequestsPageFaculty();
                             },
                           );
@@ -62,7 +90,7 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                         child: Text(
                           'Enrollment Requests',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: Color(0xffffffff),

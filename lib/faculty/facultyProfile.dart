@@ -1,11 +1,13 @@
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
-import 'package:casper/student/loggedinscaffoldStudent.dart';
+import 'package:casper/student/logged_in_scaffold_student.dart';
 import 'package:casper/student/projectPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class FacultyProfile extends StatefulWidget {
-  const FacultyProfile({Key? key}) : super(key: key);
+  final role;
+
+  const FacultyProfile({Key? key, required this.role}) : super(key: key);
 
   @override
   State<FacultyProfile> createState() => _FacultyProfileState();
@@ -21,12 +23,10 @@ class _FacultyProfileState extends State<FacultyProfile> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery
-        .of(context)
-        .size
-        .width / baseWidth;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return LoggedInScaffoldFaculty(
+      role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
@@ -52,14 +52,13 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 40,
                       child: Center(
                         child: Text(
                           'Faculty ID -',
                           style: SafeGoogleFont(
-                            'Montserrat',
+                            'Ubuntu',
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: const Color(0xffffffff),
@@ -67,7 +66,6 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ],
@@ -76,7 +74,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
           Expanded(
             child: Container(
               padding:
-              EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
+                  EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
               height: double.infinity,
               color: const Color(0xff302c42),
               child: Row(
@@ -94,7 +92,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Profile',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 50 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -108,7 +106,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Name - NAME',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -123,7 +121,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Department - DEPARTMENT',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -137,7 +135,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                           child: Text(
                             'Contact - CONTACT',
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 25 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,

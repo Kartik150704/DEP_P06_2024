@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
+import '../utilites.dart';
 
 class ProjectTile extends StatelessWidget {
   final title,
@@ -11,7 +11,8 @@ class ProjectTile extends StatelessWidget {
       button_text,
       theme,
       button2_flag,
-      button2_text;
+      button2_text,
+      isLink;
   var button_onPressed, button2_onPressed, title_onPressed;
 
   ProjectTile({
@@ -28,6 +29,7 @@ class ProjectTile extends StatelessWidget {
     this.button2_text = '',
     this.button2_onPressed,
     this.title_onPressed,
+    this.isLink = false,
   }) : super(key: key);
 
   @override
@@ -123,11 +125,11 @@ class ProjectTile extends StatelessWidget {
                             child: Text(
                               title,
                               style: SafeGoogleFont(
-                                'Montserrat',
+                                'Ubuntu',
                                 fontSize: 45 * ffem,
                                 fontWeight: FontWeight.w700,
                                 height: 1.2175 * ffem / fem,
-                                color: lighttextcolor,
+                                color: (isLink ? Colors.blue : lighttextcolor),
                               ),
                             ),
                           ),
@@ -137,7 +139,7 @@ class ProjectTile extends StatelessWidget {
                           child: Text(
                             status,
                             style: SafeGoogleFont(
-                              'Montserrat',
+                              'Ubuntu',
                               fontSize: 20 * ffem,
                               fontWeight: FontWeight.w700,
                               height: 1.2175 * ffem / fem,
@@ -156,7 +158,7 @@ class ProjectTile extends StatelessWidget {
                       type,
                       textAlign: TextAlign.right,
                       style: SafeGoogleFont(
-                        'Montserrat',
+                        'Ubuntu',
                         fontSize: 20 * ffem,
                         fontWeight: FontWeight.w700,
                         height: 1.2175 * ffem / fem,
@@ -178,7 +180,7 @@ class ProjectTile extends StatelessWidget {
                   Text(
                     info,
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 25 * ffem,
                       fontWeight: FontWeight.w700,
                       height: 1.2175 * ffem / fem,
@@ -204,12 +206,12 @@ class ProjectTile extends StatelessWidget {
                                     width: 127 * fem,
                                     height: 43 * fem,
                                     decoration: BoxDecoration(
-                                      color: topBarColor,
+                                      color: Color(0xff1a1d2d),
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: topBarColor,
+                                          color: Color(0xff1a1d2d),
                                           offset: Offset(0 * fem, 4 * fem),
                                           // blurRadius: 2 * fem,
                                         ),
@@ -219,11 +221,11 @@ class ProjectTile extends StatelessWidget {
                                       child: Text(
                                         button_text,
                                         style: SafeGoogleFont(
-                                          'Montserrat',
+                                          'Ubuntu',
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,
-                                          color: lighttextcolor,
+                                          color: const Color(0xffffffff),
                                         ),
                                       ),
                                     ),
@@ -248,12 +250,12 @@ class ProjectTile extends StatelessWidget {
                                     width: 127 * fem,
                                     height: 43 * fem,
                                     decoration: BoxDecoration(
-                                      color: topBarColor,
+                                      color: Color(0xff1a1d2d),
                                       borderRadius:
                                           BorderRadius.circular(10 * fem),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: topBarColor,
+                                          color: Color(0xff1a1d2d),
                                           offset: Offset(0 * fem, 4 * fem),
                                           // blurRadius: 2 * fem,
                                         ),
@@ -263,11 +265,11 @@ class ProjectTile extends StatelessWidget {
                                       child: Text(
                                         button2_text,
                                         style: SafeGoogleFont(
-                                          'Montserrat',
+                                          'Ubuntu',
                                           fontSize: 10 * ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.2175 * ffem / fem,
-                                          color: lighttextcolor,
+                                          color: const Color(0xffffffff),
                                         ),
                                       ),
                                     ),

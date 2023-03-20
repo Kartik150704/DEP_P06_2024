@@ -3,13 +3,13 @@ import 'package:casper/faculty/panelPage.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
-import '../utils.dart';
+import '../utilites.dart';
 import 'loggedinscaffoldFaculty.dart';
 
 class PanelPageFaculty extends StatelessWidget {
   final role;
 
-  const PanelPageFaculty({Key? key, this.role = 'su'}) : super(key: key);
+  const PanelPageFaculty({Key? key, required this.role}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class PanelPageFaculty extends StatelessWidget {
                       child: Text(
                         'Panels',
                         style: SafeGoogleFont(
-                          'Montserrat',
+                          'Ubuntu',
                           fontSize: 50,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xffffffff),
@@ -57,17 +57,18 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
+                                  role: role,
                                   scaffoldbody: Row(
-                                children: [
-                                  PanelPage(
-                                    name: 'Panel A',
-                                    type: 'Mid-Term',
-                                    year: '2023',
-                                    semester: '||',
-                                    role: role,
-                                  ),
-                                ],
-                              )),
+                                    children: [
+                                      PanelPage(
+                                        name: 'Panel A',
+                                        type: 'Mid-Term',
+                                        year: '2023',
+                                        semester: '||',
+                                        role: role,
+                                      ),
+                                    ],
+                                  )),
                             ),
                           );
                         },
@@ -75,6 +76,7 @@ class PanelPageFaculty extends StatelessWidget {
                         theme: 'w',
                         button_flag: true,
                         button_text: 'Delete Panel',
+                        isLink: true,
                       )
                     : ProjectTile(
                         info:
@@ -85,21 +87,23 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
+                                  role: role,
                                   scaffoldbody: Row(
-                                children: const [
-                                  PanelPage(
-                                      name: 'Panel A',
-                                      type: 'Mid-Term',
-                                      year: '2023',
-                                      semester: '||'),
-                                ],
-                              )),
+                                    children: const [
+                                      PanelPage(
+                                          name: 'Panel A',
+                                          type: 'Mid-Term',
+                                          year: '2023',
+                                          semester: '||'),
+                                    ],
+                                  )),
                             ),
                           );
                         },
                         type: 'Mid-term',
                         theme: 'w',
                         button_flag: false,
+                        isLink: true,
                       ),
                 const SizedBox(
                   height: 100,

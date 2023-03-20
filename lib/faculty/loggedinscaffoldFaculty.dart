@@ -1,16 +1,21 @@
 import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
 import 'package:casper/main.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'facultyHome.dart';
 
 class LoggedInScaffoldFaculty extends StatelessWidget {
   final scaffoldbody;
+  final role;
 
-  const LoggedInScaffoldFaculty({Key? key, required this.scaffoldbody})
-      : super(key: key);
+  const LoggedInScaffoldFaculty({
+    Key? key,
+    required this.scaffoldbody,
+    required this.role,
+  }) : super(key: key);
 
   @override
   void onPressed() {
@@ -24,7 +29,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
         // title: Text(
         //   'Casper',
         //   style: SafeGoogleFont(
-        //     'Montserrat',
+        //     'Ubuntu',
         //     fontSize: 20,
         //     fontWeight: FontWeight.w700,
         //     color: const Color(0xffffffff),
@@ -40,33 +45,13 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const FacultyProfile()),
+                      builder: (context) => FacultyProfile(role: role)),
                 );
               },
               child: Text(
                 'PROFILE',
                 style: SafeGoogleFont(
-                  'Montserrat',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FacultyHome()),
-                );
-              },
-              child: Text(
-                'HOME',
-                style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xffffffff),
@@ -81,13 +66,38 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const FacultyOfferings()),
+                    builder: (context) => FacultyHome(
+                      role: role,
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                'HOME',
+                style: SafeGoogleFont(
+                  'Ubuntu',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xffffffff),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FacultyOfferings(role: role),
+                  ),
                 );
               },
               child: Text(
                 'OFFERINGS',
                 style: SafeGoogleFont(
-                  'Montserrat',
+                  'Ubuntu',
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xffffffff),
@@ -100,11 +110,14 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              while (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => myActualApp()));
+              // while (Navigator.canPop(context)) {
+              //   Navigator.pop(context);
+              // }
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => myActualApp()),
+              // );
+              FirebaseAuth.instance.signOut();
             },
             icon: const Icon(Icons.logout),
           ),
@@ -128,9 +141,9 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
               width: 50,
             ),
             Text(
-              "Casper",
+              'Casper',
               style: SafeGoogleFont(
-                'Montserrat',
+                'Ubuntu',
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: const Color(0xffffffff),

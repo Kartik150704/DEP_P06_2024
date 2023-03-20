@@ -1,12 +1,11 @@
-import 'package:casper/components/button.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/projectPage.dart';
-import 'package:casper/utils.dart';
+import 'package:casper/utilites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../components/textfield.dart';
+import '../components/text_field.dart';
 
 class EnrollmentsPageFaculty extends StatefulWidget {
   final String role;
@@ -44,7 +43,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   child: Text(
                     'Enrollments',
                     style: SafeGoogleFont(
-                      'Montserrat',
+                      'Ubuntu',
                       fontSize: 50,
                       fontWeight: FontWeight.w700,
                       color: Color(0xffffffff),
@@ -69,7 +68,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CustomTextField(
-                                  hinttext: 'Semeseter',
+                                  hinttext: 'Semester',
                                   texteditingcontroller: semester_controller,
                                 ),
                                 CustomTextField(
@@ -143,7 +142,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                                           Text(
                                             'My Enrolments Only',
                                             style: SafeGoogleFont(
-                                              'Montserrat',
+                                              'Ubuntu',
                                               fontSize: 10,
                                               fontWeight: FontWeight.w700,
                                               color: const Color(0xffffffff),
@@ -169,18 +168,20 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoggedInScaffoldFaculty(
+                            role: widget.role,
                             scaffoldbody: Row(
-                          children: [
-                            ProjectPage(
-                              flag: true,
-                            )
-                          ],
-                        )),
+                              children: [
+                                ProjectPage(
+                                  flag: true,
+                                )
+                              ],
+                            )),
                       ),
                     );
                   },
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -188,6 +189,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -195,6 +197,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 ProjectTile(
                   info:
@@ -202,6 +205,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   title: 'Project Title',
                   type: 'CP303',
                   theme: 'w',
+                  isLink: true,
                 ),
                 const SizedBox(
                   height: 100,

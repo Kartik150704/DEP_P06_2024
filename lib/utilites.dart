@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
@@ -10,6 +10,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
+// ignore: non_constant_identifier_names
 TextStyle SafeGoogleFont(
   String fontFamily, {
   TextStyle? textStyle,
@@ -57,7 +58,7 @@ TextStyle SafeGoogleFont(
     );
   } catch (ex) {
     return GoogleFonts.getFont(
-      "Source Sans Pro",
+      'Source Sans Pro',
       textStyle: textStyle,
       color: color,
       backgroundColor: backgroundColor,
