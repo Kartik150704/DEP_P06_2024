@@ -2,7 +2,7 @@ import 'package:casper/components/customised_text_field.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:casper/faculty/facultyHome.dart';
-import 'package:casper/student/studentHome.dart';
+import 'package:casper/student/student_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/utilites.dart';
 
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       if (usernameController.text.trim() == 'student') {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const StudentHome()),
+          MaterialPageRoute(builder: (context) => const StudentHomePage()),
         );
       } else if (usernameController.text.trim() == 'supervisor') {
         Navigator.push(

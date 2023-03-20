@@ -4,14 +4,14 @@ import 'package:casper/student/projectPage.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
-class StudentHome extends StatefulWidget {
-  const StudentHome({Key? key}) : super(key: key);
+class StudentHomePage extends StatefulWidget {
+  const StudentHomePage({Key? key}) : super(key: key);
 
   @override
-  State<StudentHome> createState() => _StudentHomeState();
+  State<StudentHomePage> createState() => _StudentHomePageState();
 }
 
-class _StudentHomeState extends State<StudentHome> {
+class _StudentHomePageState extends State<StudentHomePage> {
   void onPressed() {}
   var option;
 

@@ -1,5 +1,5 @@
 import 'package:casper/main.dart';
-import 'package:casper/student/studentHome.dart';
+import 'package:casper/student/student_home_page.dart';
 import 'package:casper/student/studentOfferings.dart';
 import 'package:casper/student/studentProfile.dart';
 import 'package:casper/utilites.dart';
@@ -59,7 +59,8 @@ class LoggedInScaffoldStudent extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const StudentHome()),
+                  MaterialPageRoute(
+                      builder: (context) => const StudentHomePage()),
                 );
               },
               child: Text(
