@@ -3,9 +3,11 @@ import 'package:casper/utilites.dart';
 
 class CustomisedButton extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final text, onPressed;
+  final width, height, text, onPressed;
   const CustomisedButton({
     super.key,
+    required this.width,
+    required this.height,
     required this.text,
     required this.onPressed,
   });
@@ -20,8 +22,8 @@ class CustomisedButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: Container(
-        width: 250,
-        height: 50,
+        width: width,
+        height: height,
         child: Center(
           child: Text(
             text,

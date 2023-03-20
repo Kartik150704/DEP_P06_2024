@@ -191,6 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                     height: 2 * spacerHeightBig,
                   ),
                   CustomisedButton(
+                    width: 250,
+                    height: 50,
                     text: "Sign In",
                     onPressed: signUserIn,
                   ),
