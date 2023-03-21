@@ -2,9 +2,12 @@ import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../components/customised_text.dart';
 import '../components/text_field.dart';
 
 class EnrollmentsPageFaculty extends StatefulWidget {
@@ -23,6 +26,116 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
       project_title_controller = TextEditingController();
 
   bool? ischecked = false;
+
+  Future<Map<String, dynamic>?> getDoc(String collection, String id) async {
+    var doc =
+        await FirebaseFirestore.instance.collection(collection).doc(id).get();
+    return doc.data();
+  }
+
+  StreamBuilder supervisorEnrollments() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('instructors')
+          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemCount: snapshot.data?.docs[0]['number_of_projects_as_head'],
+            itemBuilder: (context, index) {
+              // return Text('0');
+              return FutureBuilder(
+                future: getDoc('projects',
+                    snapshot.data?.docs[0]['project_as_head_ids'][index]),
+                builder: (context, snaphot) {
+                  if (snapshot.hasData) {
+                    // print(snaphot.data);
+                    return ProjectTile(
+                      info:
+                          'Student Name(s) - ${snaphot.data?['student_name'][0]}, ${snaphot.data?['student_name'][1]} \nSemester - ${snaphot.data?['semester']}\nYear - ${snaphot.data?['year']}\nProject Description - ${snaphot.data?['description']}',
+                      title: '${snaphot.data?['title']}',
+                      title_onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoggedInScaffoldFaculty(
+                                role: widget.role,
+                                scaffoldbody: Row(
+                                  children: const [
+                                    ProjectPage(
+                                      project: ['', '', '', '', '', '', '', ''],
+                                    )
+                                  ],
+                                )),
+                          ),
+                        );
+                      },
+                      type: '${snaphot.data?['type']}',
+                      theme: 'w',
+                      isLink: true,
+                    );
+                  } else {
+                    return Text('loading...');
+                  }
+                },
+              );
+            },
+          );
+        } else {
+          return const CustomisedText(text: 'loading...');
+        }
+      },
+    );
+  }
+
+  StreamBuilder allEnrollments() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('projects').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              print(snapshot.data?.docs[index]);
+              // var doc = snapshot.data?.docs[index];
+
+              return ProjectTile(
+                info:
+                    'Student Name(s) - ${snapshot.data?.docs[index]['student_name'][0]}, ${snapshot.data?.docs[index]['student_name'][1]} \nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
+                title: '${snapshot.data?.docs[index]['title']}',
+                title_onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoggedInScaffoldFaculty(
+                          role: widget.role,
+                          scaffoldbody: Row(
+                            children: const [
+                              ProjectPage(
+                                project: ['', '', '', '', '', '', '', ''],
+                              )
+                            ],
+                          )),
+                    ),
+                  );
+                },
+                type: '${snapshot.data?.docs[index]['type']}',
+                theme: 'w',
+                isLink: true,
+              );
+            },
+          );
+        } else {
+          return const CustomisedText(text: 'loading...');
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,54 +272,11 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                     ),
                   ),
                 ),
-                ProjectTile(
-                  info:
-                      'Student Name(s) - NAME\nSemester - SEMESTER\nYear - YEAR\nProject Description - DESCRIPTION',
-                  title: 'Project Title',
-                  title_onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoggedInScaffoldFaculty(
-                            role: widget.role,
-                            scaffoldbody: Row(
-                              children: [
-                                ProjectPage(
-                                  project: ['', '', '', '', '', '', '', ''],
-                                )
-                              ],
-                            )),
-                      ),
-                    );
-                  },
-                  type: 'CP303',
-                  theme: 'w',
-                  isLink: true,
-                ),
-                ProjectTile(
-                  info:
-                      'Student Name(s) - NAME\nSemester - SEMESTER\nYear - YEAR\nProject Description - DESCRIPTION',
-                  title: 'Project Title',
-                  type: 'CP303',
-                  theme: 'w',
-                  isLink: true,
-                ),
-                ProjectTile(
-                  info:
-                      'Student Name(s) - NAME\nSemester - SEMESTER\nYear - YEAR\nProject Description - DESCRIPTION',
-                  title: 'Project Title',
-                  type: 'CP303',
-                  theme: 'w',
-                  isLink: true,
-                ),
-                ProjectTile(
-                  info:
-                      'Student Name(s) - NAME\nSemester - SEMESTER\nYear - YEAR\nProject Description - DESCRIPTION',
-                  title: 'Project Title',
-                  type: 'CP303',
-                  theme: 'w',
-                  isLink: true,
-                ),
+                // supervisorEnrollments(),
+                // allEnrollments(),
+                (widget.role == 'su')
+                    ? supervisorEnrollments()
+                    : allEnrollments(),
                 const SizedBox(
                   height: 100,
                 ),
