@@ -1,4 +1,5 @@
 import 'package:casper/components/button.dart';
+import 'package:casper/components/confirm_action.dart';
 import 'package:casper/faculty/panelPage.dart';
 import 'package:flutter/material.dart';
 
@@ -6,10 +7,30 @@ import '../components/projecttile.dart';
 import '../utilites.dart';
 import 'loggedinscaffoldFaculty.dart';
 
-class PanelPageFaculty extends StatelessWidget {
+class PanelPageFaculty extends StatefulWidget {
   final role;
 
   const PanelPageFaculty({Key? key, required this.role}) : super(key: key);
+
+  @override
+  State<PanelPageFaculty> createState() => _PanelPageFacultyState();
+}
+
+class _PanelPageFacultyState extends State<PanelPageFaculty> {
+  void confirmAction() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: ConfirmAction(
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +60,7 @@ class PanelPageFaculty extends StatelessWidget {
                         ),
                       ),
                     ),
-                    (role == 'co')
+                    (widget.role == 'co')
                         ? CustomButton(
                             buttonText: 'Add Panel',
                             onPressed: () {},
@@ -47,7 +68,7 @@ class PanelPageFaculty extends StatelessWidget {
                         : Container(),
                   ],
                 ),
-                (role == 'co')
+                (widget.role == 'co')
                     ? ProjectTile(
                         info:
                             'Number of Evaluations - NUMBER\nNumber of Teams Assigned - NUMBER\nNumber of evaluations completed - NUMBER',
@@ -57,7 +78,7 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
-                                  role: role,
+                                  role: widget.role,
                                   scaffoldbody: Row(
                                     children: [
                                       PanelPage(
@@ -65,7 +86,7 @@ class PanelPageFaculty extends StatelessWidget {
                                         type: 'Mid-Term',
                                         year: '2023',
                                         semester: '||',
-                                        role: role,
+                                        role: widget.role,
                                       ),
                                     ],
                                   )),
@@ -76,6 +97,7 @@ class PanelPageFaculty extends StatelessWidget {
                         theme: 'w',
                         button_flag: true,
                         button_text: 'Delete Panel',
+                        button_onPressed: confirmAction,
                         isLink: true,
                       )
                     : ProjectTile(
@@ -87,7 +109,7 @@ class PanelPageFaculty extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoggedInScaffoldFaculty(
-                                  role: role,
+                                  role: widget.role,
                                   scaffoldbody: Row(
                                     children: const [
                                       PanelPage(
