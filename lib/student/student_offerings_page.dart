@@ -1,8 +1,7 @@
 import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/student/student_enrollment_requests.dart';
 import 'package:casper/student/student_logged_in_scaffold.dart';
-import 'package:casper/student/enrollmentRequests.dart';
 import 'package:casper/student/student_offerings.dart';
-import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 class StudentOfferingsPage extends StatefulWidget {
@@ -13,6 +12,7 @@ class StudentOfferingsPage extends StatefulWidget {
 }
 
 class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
+  // ignore: prefer_typing_uninitialized_variables
   var selectedOption, displayedPage;
 
   var pages = [
@@ -24,14 +24,15 @@ class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
   void initState() {
     super.initState();
     selectedOption = 1;
-    displayedPage = StudentOfferings();
+    displayedPage = const StudentOfferings();
   }
 
   void selectPage(selectOption) {
     setState(() {
       selectedOption = selectOption;
-      displayedPage =
-          (selectedOption == 1 ? StudentOfferings() : EnrollmentRequestsPage());
+      displayedPage = (selectedOption == 1
+          ? const StudentOfferings()
+          : const StudentEnrollmentRequests());
     });
   }
 

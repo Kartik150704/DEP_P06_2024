@@ -158,6 +158,8 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                                             snapshot.data?.docs[index]
                                                 ['description'],
                                           ],
+                                          text:
+                                              'You want to apply in this project?',
                                         ),
                                       );
                                     },

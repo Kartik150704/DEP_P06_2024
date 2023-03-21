@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class OfferingTile extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final status, header, secondaryHeader, details;
+  final status, header, secondaryHeader, details, text, isStatus;
 
   const OfferingTile({
     super.key,
@@ -13,6 +13,8 @@ class OfferingTile extends StatefulWidget {
     required this.header,
     required this.secondaryHeader,
     required this.details,
+    required this.text,
+    this.isStatus = false,
   });
 
   @override
@@ -34,7 +36,7 @@ class _OfferingTileState extends State<OfferingTile> {
         return AlertDialog(
           title: Center(
             child: ConfirmAction(
-              text: 'You want to apply in this project?',
+              text: widget.text,
               onSubmit: () {},
             ),
           ),
@@ -57,7 +59,9 @@ class _OfferingTileState extends State<OfferingTile> {
             ? Colors.white
             : (widget.status == '1'
                 ? const Color(0xfffabb18)
-                : const Color(0xff45c646))),
+                : (widget.status == '2'
+                    ? const Color(0xff45c646)
+                    : const Color(0xfff23936)))),
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
@@ -80,7 +84,9 @@ class _OfferingTileState extends State<OfferingTile> {
                   ? const Color.fromARGB(255, 22, 25, 41)
                   : (widget.status == '1'
                       ? const Color(0xffe0c596)
-                      : const Color(0xff7ae37b))),
+                      : (widget.status == '2'
+                          ? const Color(0xff7ae37b)
+                          : const Color(0xff902e2e)))),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -128,7 +134,7 @@ class _OfferingTileState extends State<OfferingTile> {
             child: CustomisedButton(
               width: 90,
               height: 50,
-              text: 'Apply',
+              text: (widget.isStatus ? 'Withdraw' : 'Apply'),
               onPressed: confirmAction,
             ),
           ),
