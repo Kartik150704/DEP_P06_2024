@@ -177,6 +177,9 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                 }
               },
             ),
+            const SizedBox(
+              height: 100,
+            ),
           ],
         ),
       ),
