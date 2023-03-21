@@ -3,20 +3,21 @@ import 'package:casper/utilites.dart';
 
 class CustomisedTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final textEditingController, hintText, obscureText;
+  final textEditingController, hintText, obscureText, width;
 
   const CustomisedTextField({
     super.key,
     required this.textEditingController,
     required this.hintText,
     required this.obscureText,
+    this.width = double.infinity,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 50),
-      width: double.infinity,
+      width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
         border: Border.all(color: const Color(0xff000000)),

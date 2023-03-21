@@ -1,6 +1,7 @@
+import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/enrollmentRequests.dart';
-import 'package:casper/student/offeringspageStudent.dart';
+import 'package:casper/student/student_offerings.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
@@ -12,93 +13,57 @@ class StudentOfferingsPage extends StatefulWidget {
 }
 
 class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
-  void onPressed() {}
-  var option;
-  dynamic shownpage = OfferingsPageStudent();
+  var selectedOption, displayedPage;
+
+  var pages = [
+    'Available Projects',
+    'Enrollment Requests',
+  ];
 
   @override
   void initState() {
     super.initState();
-    option = 1;
+    selectedOption = 1;
+    displayedPage = StudentOfferings();
+  }
+
+  void selectPage(selectOption) {
+    setState(() {
+      selectedOption = selectOption;
+      displayedPage =
+          (selectedOption == 1 ? StudentOfferings() : EnrollmentRequestsPage());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
     return StudentLoggedInScaffold(
       studentScaffoldBody: Row(
         children: [
           Container(
-            width: 300,
-            color: Color(0xff545161),
+            width: 300 * fem,
+            color: const Color(0xff545161),
             child: ListView(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 1 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 1;
-                              shownpage = OfferingsPageStudent();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Projects',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 2 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 2;
-                              shownpage = const EnrollmentRequestsPage();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Enrollment Requests',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
+                    for (int i = 0; i < pages.length; i++) ...[
+                      CustomisedSidebarButton(
+                        text: pages[i],
+                        isSelected: (selectedOption == (i + 1)),
+                        onPressed: () => selectPage(i + 1),
+                      )
+                    ],
                   ],
                 ),
               ],
             ),
           ),
-          shownpage,
+          displayedPage,
         ],
       ),
     );
