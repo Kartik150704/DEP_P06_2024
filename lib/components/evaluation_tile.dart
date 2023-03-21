@@ -1,20 +1,20 @@
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:flutter/material.dart';
 
-class CourseTile extends StatelessWidget {
+class EvaluationTile extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final code, status, details;
+  final status, week, details;
 
   final parameters = [
-    'Grade: ',
-    'Semester: ',
-    'Year: ',
+    'Marks Obtained: ',
+    'Remarks: ',
   ];
 
-  CourseTile({
+  EvaluationTile({
     super.key,
-    required this.code,
     required this.status,
+    required this.week,
     required this.details,
   });
 
@@ -24,8 +24,9 @@ class CourseTile extends StatelessWidget {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return Container(
-      width: 350 * fem,
-      height: 250,
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
+      width: 850 * fem,
+      // height: 250,
       decoration: BoxDecoration(
         color: (status == '0'
             ? Colors.white
@@ -47,7 +48,7 @@ class CourseTile extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(5),
-            width: 350 * fem,
+            width: 850 * fem,
             height: 80,
             decoration: BoxDecoration(
               color: (status == '0'
@@ -57,15 +58,27 @@ class CourseTile extends StatelessWidget {
                       : const Color(0xff7ae37b))),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: CustomisedText(
-                text: code +
-                    (status == '0'
-                        ? ''
-                        : (status == '1' ? ' (On-Going)' : ' (Completed)')),
-                fontSize: 40,
-                color: (status == '0' ? Colors.white : Colors.black),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                  child: CustomisedText(
+                    text: week,
+                    fontSize: 40,
+                    color: (status == '0' ? Colors.white : Colors.black),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                  child: const CustomisedText(
+                    text: '03/01/2023 - 09/01/2023',
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                )
+              ],
             ),
           ),
           const SizedBox(
@@ -83,7 +96,17 @@ class CourseTile extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-          ]
+          ],
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+            alignment: Alignment.bottomRight,
+            child: CustomisedButton(
+              width: 150,
+              height: 50,
+              text: 'Upload Marks',
+              onPressed: () => {},
+            ),
+          ),
         ],
       ),
     );

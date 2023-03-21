@@ -1,6 +1,7 @@
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/student/no_projects_found_page.dart';
+import 'package:casper/components/evaluation_tile.dart';
 import 'package:casper/components/weektile.dart';
+import 'package:casper/student/no_projects_found_page.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/marks_submission_form.dart';
 
@@ -20,6 +21,29 @@ class _ProjectPageState extends State<ProjectPage> {
   TextEditingController weeklyMarksInputController = TextEditingController();
   TextEditingController weeklyMarksConfirmInputController =
       TextEditingController();
+
+  var evaluationDetails = [
+    [
+      '1',
+      'Week 4',
+      ['97/100', 'Good work'],
+    ],
+    [
+      '1',
+      'Week 3',
+      ['97/100', 'Good work'],
+    ],
+    [
+      '2',
+      'Week 2',
+      ['97/100', 'Good work'],
+    ],
+    [
+      '2',
+      'Week 1',
+      ['97/100', 'Good work'],
+    ],
+  ];
 
   void uploadWeeklyMarks() {
     showDialog(
@@ -51,7 +75,7 @@ class _ProjectPageState extends State<ProjectPage> {
           child: ListView(
             children: [
               Container(
-                margin: EdgeInsets.fromLTRB(60, 30, 200 * fem, 0),
+                margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,36 +99,64 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                         ),
                         Column(
-                          children: const [
-                            SizedBox(
-                              height: 30,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            CustomisedText(
+                              text: widget.project[4][0],
+                            ),
+                            const SizedBox(
+                              height: 5,
                             ),
                             CustomisedText(
-                              text: 'Ojassvi Kumar',
+                              text: widget.project[4][1],
                             ),
                           ],
                         )
                       ],
                     ),
-                    WeekTile(
-                      datefrom: '03/01/2023',
-                      dateto: '09/01/2023',
-                      weekname: 'Week 1',
-                      remarks: 'Good!',
-                      marksobtained: 'Marks Not Uploaded Yet',
-                      flag: false,
-                      buttonflag: true,
-                      buttonOnPressed: uploadWeeklyMarks,
-                      buttontext: 'Add Marks',
+                    const SizedBox(
+                      height: 20,
                     ),
-                    const WeekTile(
-                      datefrom: '03/01/2023',
-                      dateto: '09/01/2023',
-                      weekname: 'Week 2',
-                      remarks: 'Good!',
-                      marksobtained: '97/100',
-                      flag: true,
-                    )
+                    Container(
+                      height: 650,
+                      width: 1200 * fem,
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 85),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black38,
+                          ),
+                          BoxShadow(
+                            color: Color.fromARGB(255, 70, 67, 83),
+                            spreadRadius: -3,
+                            blurRadius: 7,
+                          ),
+                        ],
+                      ),
+                      child: SingleChildScrollView(
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              for (int i = 0;
+                                  i < evaluationDetails.length;
+                                  i++) ...[
+                                EvaluationTile(
+                                  status: evaluationDetails[i][0],
+                                  week: evaluationDetails[i][1],
+                                  details: evaluationDetails[i][2],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )

@@ -14,14 +14,16 @@ class CustomisedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: SafeGoogleFont(
-        'Ubuntu',
-        fontSize: fontSize,
-        fontWeight: FontWeight.w700,
-        color: color,
+    return SelectionArea(
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: SafeGoogleFont(
+          'Ubuntu',
+          fontSize: fontSize,
+          fontWeight: FontWeight.w700,
+          color: color,
+        ),
       ),
     );
   }

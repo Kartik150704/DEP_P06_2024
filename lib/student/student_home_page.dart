@@ -22,6 +22,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     'Dr. Shweta Jain',
     '2023',
     'II',
+    ['Ojassvi Kumar', 'Aman Kumar'],
   ];
 
   @override
@@ -56,33 +57,31 @@ class _StudentHomePageState extends State<StudentHomePage> {
       });
     }
 
-    return SelectionArea(
-      child: LoggedInScaffoldStudent(
-        studentScaffoldBody: Row(
-          children: [
-            Container(
-              width: 300 * fem,
-              color: const Color(0xff545161),
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      for (int i = 0; i < courses.length; i++) ...[
-                        CustomisedSidebarButton(
-                          text: courses[i],
-                          isSelected: (selectedOption == (i + 1)),
-                          onPressed: () => selectCourse(i + 1),
-                        )
-                      ],
+    return LoggedInScaffoldStudent(
+      studentScaffoldBody: Row(
+        children: [
+          Container(
+            width: 300 * fem,
+            color: const Color(0xff545161),
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (int i = 0; i < courses.length; i++) ...[
+                      CustomisedSidebarButton(
+                        text: courses[i],
+                        isSelected: (selectedOption == (i + 1)),
+                        onPressed: () => selectCourse(i + 1),
+                      )
                     ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            projectPage,
-          ],
-        ),
+          ),
+          projectPage,
+        ],
       ),
     );
   }
