@@ -30,6 +30,7 @@ class CustomisedSidebarButton extends StatelessWidget {
         child: CustomisedText(
           text: text,
           fontSize: 25,
+          selectable: false,
         ),
       ),
     );

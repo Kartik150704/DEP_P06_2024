@@ -36,6 +36,7 @@ class NoProjectsFoundPage extends StatelessWidget {
                       text: 'Click Here',
                       fontSize: 40,
                       color: Colors.blue,
+                      selectable: false,
                     )),
                 const CustomisedText(
                   text: 'to view available offerings',
