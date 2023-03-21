@@ -1,13 +1,16 @@
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/button.dart';
 
 class ConfirmAction extends StatefulWidget {
-  final onSubmit;
+  // ignore: prefer_typing_uninitialized_variables
+  final text, onSubmit;
 
   const ConfirmAction({
     super.key,
-    this.onSubmit,
+    required this.onSubmit,
+    this.text = '',
   });
 
   @override
@@ -17,6 +20,9 @@ class ConfirmAction extends StatefulWidget {
 class _ConfirmActionState extends State<ConfirmAction> {
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
     return SizedBox(
       width: 400,
       child: Column(
@@ -30,29 +36,43 @@ class _ConfirmActionState extends State<ConfirmAction> {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Are you sure?',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff000000),
+              Container(
+                width: 250 * fem,
+                margin: EdgeInsets.fromLTRB(25 * fem, 0, 0, 0),
+                child: Text(
+                  'Are you sure? ${widget.text}',
+                  textAlign: TextAlign.center,
+                  style: SafeGoogleFont(
+                    'Ubuntu',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
                 ),
+
+                // CustomisedText(
+                //   text: 'Are you sure? ${widget.text}',
+                //   color: Colors.black,
+                // ),
               ),
             ],
           ),
           const SizedBox(
-            height: 20,
+            height: 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                buttonText: 'Yes',
-                onPressed: widget.onSubmit,
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Yes',
+                onPressed: () => {},
               ),
-              CustomButton(
-                buttonText: 'No',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'No',
                 onPressed: () => {
                   Navigator.pop(context),
                 },
@@ -60,7 +80,7 @@ class _ConfirmActionState extends State<ConfirmAction> {
             ],
           ),
           const SizedBox(
-            height: 25,
+            height: 15,
           ),
         ],
       ),

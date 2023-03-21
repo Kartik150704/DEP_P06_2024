@@ -34,6 +34,7 @@ class _OfferingTileState extends State<OfferingTile> {
         return AlertDialog(
           title: Center(
             child: ConfirmAction(
+              text: 'You want to apply in this project?',
               onSubmit: () {},
             ),
           ),
