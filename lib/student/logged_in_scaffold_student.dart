@@ -29,6 +29,7 @@ class LoggedInScaffoldStudent extends StatelessWidget {
 
   void signUserOut(context) {
     FirebaseAuth.instance.signOut();
+    Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
   @override

@@ -110,14 +110,8 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // while (Navigator.canPop(context)) {
-              //   Navigator.pop(context);
-              // }
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => myActualApp()),
-              // );
               FirebaseAuth.instance.signOut();
+              Navigator.popUntil(context, ModalRoute.withName("/"));
             },
             icon: const Icon(Icons.logout),
           ),

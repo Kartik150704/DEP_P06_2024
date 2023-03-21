@@ -1,6 +1,7 @@
 import 'package:casper/faculty/facultyHome.dart';
 import 'package:casper/login_page.dart';
 import 'package:casper/login_scaffold.dart';
+import 'package:casper/main.dart';
 import 'package:casper/student/student_home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,11 @@ class AuthPage extends StatelessWidget {
               },
             );
           } else {
+            // while (Navigator.canPop(context)) {
+            //   Navigator.pop(context);
+            // }
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => const myActualApp()));
             return const LoginScaffold(scaffoldbody: LoginPage());
           }
         },
