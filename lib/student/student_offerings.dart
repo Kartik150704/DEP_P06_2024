@@ -1,10 +1,9 @@
 import 'package:casper/components/confirm_action.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_field.dart';
-import 'package:casper/components/projecttile.dart';
+import 'package:casper/components/offering_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../components/customised_text.dart';
 
 class StudentOfferings extends StatefulWidget {
   const StudentOfferings({Key? key}) : super(key: key);
@@ -55,53 +54,38 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     text: 'Available Projects',
                     fontSize: 50,
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        height: 50,
-                        margin: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                        child: CustomisedTextField(
-                          textEditingController: supervisorNameController,
-                          hintText: 'Supervisor Name',
-                          obscureText: false,
-                          width: 100 * fem,
-                        ),
+                      CustomisedTextField(
+                        textEditingController: supervisorNameController,
+                        hintText: 'Supervisor Name',
+                        obscureText: false,
+                        width: 150 * fem,
                       ),
-                      Container(
-                        height: 50,
-                        margin: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                        child: CustomisedTextField(
-                          textEditingController: projectTitleController,
-                          hintText: 'Project Title',
-                          obscureText: false,
-                          width: 100 * fem,
-                        ),
+                      CustomisedTextField(
+                        textEditingController: projectTitleController,
+                        hintText: 'Project Title',
+                        obscureText: false,
+                        width: 150 * fem,
                       ),
-                      Container(
-                        height: 50,
-                        margin: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                        child: CustomisedTextField(
-                          textEditingController: semesterController,
-                          hintText: 'Semester',
-                          obscureText: false,
-                          width: 100 * fem,
-                        ),
+                      CustomisedTextField(
+                        textEditingController: semesterController,
+                        hintText: 'Semester',
+                        obscureText: false,
+                        width: 150 * fem,
                       ),
-                      Container(
-                        height: 50,
-                        margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                        child: CustomisedTextField(
-                          textEditingController: yearController,
-                          hintText: 'Year',
-                          obscureText: false,
-                          width: 100 * fem,
-                        ),
+                      CustomisedTextField(
+                        textEditingController: yearController,
+                        hintText: 'Year',
+                        obscureText: false,
+                        width: 150 * fem,
                       ),
-                      Container(
+                      SizedBox(
                         height: 50,
                         width: 55,
-                        margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -118,40 +102,70 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                       )
                     ],
                   ),
-                  // StreamBuilder(
-                  //   stream: db
-                  //       .collection('offerings')
-                  //       .where(
-                  //         'status',
-                  //         isEqualTo: 'open',
-                  //       )
-                  //       .snapshots(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       return ListView.builder(
-                  //         shrinkWrap: true,
-                  //         physics: const ClampingScrollPhysics(),
-                  //         itemCount: snapshot.data?.docs.length,
-                  //         itemBuilder: (context, index) {
-                  //           return ProjectTile(
-                  //             info:
-                  //                 'Supervisor Name - ${snapshot.data?.docs[index]['instructor_name']}\nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
-                  //             title: '${snapshot.data?.docs[index]['title']}',
-                  //             type: '${snapshot.data?.docs[index]['type']}',
-                  //             button_flag: true,
-                  //             button_onPressed: confirmAction,
-                  //             button_text: 'Apply Now',
-                  //             status:
-                  //                 '(${snapshot.data?.docs[index]['status']})',
-                  //             theme: 'w',
-                  //           );
-                  //         },
-                  //       );
-                  //     } else {
-                  //       return const CustomisedText(text: 'loading...');
-                  //     }
-                  //   },
-                  // ),
+                  Container(
+                    height: 670,
+                    width: 1200 * fem,
+                    margin: const EdgeInsets.fromLTRB(0, 25, 0, 65),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black38,
+                        ),
+                        BoxShadow(
+                          color: Color.fromARGB(255, 70, 67, 83),
+                          spreadRadius: -3,
+                          blurRadius: 7,
+                        ),
+                      ],
+                    ),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                        child: StreamBuilder(
+                          stream: db
+                              .collection('offerings')
+                              .where(
+                                'status',
+                                isEqualTo: 'open',
+                              )
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const ClampingScrollPhysics(),
+                                    itemCount: snapshot.data?.docs.length,
+                                    itemBuilder: (context, index) {
+                                      return OfferingTile(
+                                        status: '0',
+                                        header: snapshot.data?.docs[index]
+                                            ['title'],
+                                        secondaryHeader: '',
+                                        details: [
+                                          snapshot.data?.docs[index]
+                                              ['instructor_name'],
+                                          snapshot.data?.docs[index]
+                                              ['semester'],
+                                          snapshot.data?.docs[index]['year'],
+                                          snapshot.data?.docs[index]
+                                              ['description'],
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const CustomisedText(text: 'Loading...');
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
