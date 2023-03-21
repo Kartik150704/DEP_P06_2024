@@ -21,12 +21,12 @@ class _ProjectPageState extends State<ProjectPage> {
     [
       '1',
       'Week 4',
-      ['97/100', 'Good work'],
+      ['NA', 'NA'],
     ],
     [
       '1',
       'Week 3',
-      ['97/100', 'Good work'],
+      ['NA', 'NA'],
     ],
     [
       '2',

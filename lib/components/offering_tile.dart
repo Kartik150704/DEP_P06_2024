@@ -128,16 +128,18 @@ class _OfferingTileState extends State<OfferingTile> {
               height: 10,
             ),
           ],
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
-            alignment: Alignment.bottomRight,
-            child: CustomisedButton(
-              width: 90,
-              height: 50,
-              text: (widget.isStatus ? 'Withdraw' : 'Apply'),
-              onPressed: confirmAction,
+          if (widget.status == '1') ...[
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+              alignment: Alignment.bottomRight,
+              child: CustomisedButton(
+                width: 90,
+                height: 50,
+                text: (widget.isStatus ? 'Withdraw' : 'Apply'),
+                onPressed: confirmAction,
+              ),
             ),
-          ),
+          ]
         ],
       ),
     );
