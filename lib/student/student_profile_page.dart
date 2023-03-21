@@ -140,7 +140,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                           ],
                         ],

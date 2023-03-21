@@ -52,16 +52,15 @@ class AuthPage extends StatelessWidget {
                     );
                   }
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+                  );
                 }
               },
             );
           } else {
-            // while (Navigator.canPop(context)) {
-            //   Navigator.pop(context);
-            // }
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => const myActualApp()));
             return const LoginScaffold(scaffoldbody: LoginPage());
           }
         },
