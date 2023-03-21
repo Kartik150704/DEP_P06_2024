@@ -1,17 +1,13 @@
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/marks_submission_form.dart';
 import 'package:flutter/material.dart';
 
-class EvaluationTile extends StatelessWidget {
+class EvaluationTile extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final status, week, details;
 
-  final parameters = [
-    'Marks Obtained: ',
-    'Remarks: ',
-  ];
-
-  EvaluationTile({
+  const EvaluationTile({
     super.key,
     required this.status,
     required this.week,
@@ -19,18 +15,47 @@ class EvaluationTile extends StatelessWidget {
   });
 
   @override
+  State<EvaluationTile> createState() => _EvaluationTileState();
+}
+
+class _EvaluationTileState extends State<EvaluationTile> {
+  final evaluationMarksController = TextEditingController();
+  final confirmEvaluationMarksController = TextEditingController();
+  final parameters = [
+    'Marks Obtained: ',
+    'Remarks: ',
+  ];
+
+  void uploadEvaluationMarks() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: MarksSubmissionForm(
+              marksInputController: evaluationMarksController,
+              marksConfirmInputController: confirmEvaluationMarksController,
+              onSubmit: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
       width: 850 * fem,
       // height: 250,
       decoration: BoxDecoration(
-        color: (status == '0'
+        color: (widget.status == '0'
             ? Colors.white
-            : (status == '1'
+            : (widget.status == '1'
                 ? const Color(0xfffabb18)
                 : const Color(0xff45c646))),
         borderRadius: BorderRadius.circular(12),
@@ -51,9 +76,9 @@ class EvaluationTile extends StatelessWidget {
             width: 850 * fem,
             height: 80,
             decoration: BoxDecoration(
-              color: (status == '0'
+              color: (widget.status == '0'
                   ? const Color.fromARGB(255, 22, 25, 41)
-                  : (status == '1'
+                  : (widget.status == '1'
                       ? const Color(0xffe0c596)
                       : const Color(0xff7ae37b))),
               borderRadius: BorderRadius.circular(12),
@@ -65,9 +90,9 @@ class EvaluationTile extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                   child: CustomisedText(
-                    text: week,
+                    text: widget.week,
                     fontSize: 40,
-                    color: (status == '0' ? Colors.white : Colors.black),
+                    color: (widget.status == '0' ? Colors.white : Colors.black),
                   ),
                 ),
                 Container(
@@ -88,7 +113,7 @@ class EvaluationTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(70, 0, 0, 0),
               child: CustomisedText(
-                text: parameters[i] + details[i],
+                text: parameters[i] + widget.details[i],
                 fontSize: 25,
                 color: const Color(0xff3f3f3f),
               ),
@@ -104,7 +129,7 @@ class EvaluationTile extends StatelessWidget {
               width: 150,
               height: 50,
               text: 'Upload Marks',
-              onPressed: () => {},
+              onPressed: uploadEvaluationMarks,
             ),
           ),
         ],

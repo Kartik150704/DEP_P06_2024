@@ -1,7 +1,7 @@
-import 'package:casper/utilites.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/customised_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
-import 'package:casper/components/button.dart';
 
 class MarksSubmissionForm extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -21,69 +21,69 @@ class MarksSubmissionForm extends StatefulWidget {
 class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 400,
+    double baseWidth = 1440;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 198, 189, 207),
+      ),
+      width: 350 * fem,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
             height: 10,
           ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Enter Obtained Marks',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff000000),
-                ),
-              ),
-            ],
+          Container(
+            margin: EdgeInsets.fromLTRB(45 * fem, 0, 0, 0),
+            child: const CustomisedText(
+              text: 'Enter Obtained Marks',
+              color: Colors.black,
+            ),
           ),
-          CustomTextField(
-            texteditingcontroller: widget.marksInputController,
-            hinttext: 'Marks',
+          const SizedBox(
+            height: 5,
+          ),
+          CustomisedTextField(
+            textEditingController: widget.marksInputController,
+            hintText: "Marks",
+            obscureText: false,
           ),
           const SizedBox(
             height: 30,
           ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Confirm Obtained Marks',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff000000),
-                ),
-              ),
-            ],
-          ),
-          CustomTextField(
-            texteditingcontroller: widget.marksConfirmInputController,
-            hinttext: 'Confirm Marks',
+          Container(
+            margin: EdgeInsets.fromLTRB(45 * fem, 0, 0, 0),
+            child: const CustomisedText(
+              text: 'Confirm Obtained Marks',
+              color: Colors.black,
+            ),
           ),
           const SizedBox(
-            height: 30,
+            height: 5,
+          ),
+          CustomisedTextField(
+            textEditingController: widget.marksConfirmInputController,
+            hintText: "Confirm Marks",
+            obscureText: false,
+          ),
+          const SizedBox(
+            height: 40,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              CustomButton(
-                buttonText: 'Submit',
-                onPressed: widget.onSubmit,
+              CustomisedButton(
+                width: 80,
+                height: 50,
+                text: 'Submit',
+                onPressed: () => {},
               ),
-              CustomButton(
-                buttonText: 'Cancel',
+              CustomisedButton(
+                width: 80,
+                height: 50,
+                text: 'Cancel',
                 onPressed: () => {
                   Navigator.pop(context),
                 },
@@ -91,7 +91,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
             ],
           ),
           const SizedBox(
-            height: 25,
+            height: 10,
           ),
         ],
       ),

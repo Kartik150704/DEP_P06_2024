@@ -1,11 +1,11 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/evaluation_tile.dart';
-import 'package:casper/components/weektile.dart';
 import 'package:casper/student/no_projects_found_page.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/marks_submission_form.dart';
 
 class ProjectPage extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final project;
 
   const ProjectPage({
@@ -18,10 +18,6 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  TextEditingController weeklyMarksInputController = TextEditingController();
-  TextEditingController weeklyMarksConfirmInputController =
-      TextEditingController();
-
   var evaluationDetails = [
     [
       '1',
@@ -44,22 +40,6 @@ class _ProjectPageState extends State<ProjectPage> {
       ['97/100', 'Good work'],
     ],
   ];
-
-  void uploadWeeklyMarks() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Center(
-              child: MarksSubmissionForm(
-            marksInputController: weeklyMarksInputController,
-            marksConfirmInputController: weeklyMarksConfirmInputController,
-            onSubmit: () {},
-          )),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +98,9 @@ class _ProjectPageState extends State<ProjectPage> {
                       height: 20,
                     ),
                     Container(
-                      height: 650,
+                      height: 670,
                       width: 1200 * fem,
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 85),
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 75),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
