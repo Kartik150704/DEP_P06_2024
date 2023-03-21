@@ -1,6 +1,6 @@
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
-import 'package:casper/student/projectPage.dart';
+import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -172,6 +172,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                             scaffoldbody: Row(
                               children: [
                                 ProjectPage(
+                                  project: [],
                                   flag: true,
                                 )
                               ],

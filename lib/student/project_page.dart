@@ -1,12 +1,18 @@
+import 'package:casper/student/no_projects_found_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:casper/components/weektile.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/marks_submission_form.dart';
 
 class ProjectPage extends StatefulWidget {
+  final project;
   final flag;
 
-  ProjectPage({Key? key, this.flag = true}) : super(key: key);
+  const ProjectPage({
+    Key? key,
+    this.flag = true,
+    required this.project,
+  }) : super(key: key);
 
   @override
   State<ProjectPage> createState() => _ProjectPageState();
@@ -36,12 +42,16 @@ class _ProjectPageState extends State<ProjectPage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
+    if (widget.project == null) {
+      return const NoProjectsFoundPage();
+    } else {}
+
     if (widget.flag) {
       return Expanded(
         child: Container(
-          color: Color(0xff302c42),
+          color: const Color(0xff302c42),
           child: ListView(
             children: [
               Column(
