@@ -139,20 +139,26 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                                     physics: const ClampingScrollPhysics(),
                                     itemCount: snapshot.data?.docs.length,
                                     itemBuilder: (context, index) {
-                                      return OfferingTile(
-                                        status: '0',
-                                        header: snapshot.data?.docs[index]
-                                            ['title'],
-                                        secondaryHeader: '',
-                                        details: [
-                                          snapshot.data?.docs[index]
-                                              ['instructor_name'],
-                                          snapshot.data?.docs[index]
-                                              ['semester'],
-                                          snapshot.data?.docs[index]['year'],
-                                          snapshot.data?.docs[index]
-                                              ['description'],
-                                        ],
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 120,
+                                          vertical: 15,
+                                        ),
+                                        child: OfferingTile(
+                                          status: '0',
+                                          header: snapshot.data?.docs[index]
+                                              ['title'],
+                                          secondaryHeader: '',
+                                          details: [
+                                            snapshot.data?.docs[index]
+                                                ['instructor_name'],
+                                            snapshot.data?.docs[index]
+                                                ['semester'],
+                                            snapshot.data?.docs[index]['year'],
+                                            snapshot.data?.docs[index]
+                                                ['description'],
+                                          ],
+                                        ),
                                       );
                                     },
                                   ),

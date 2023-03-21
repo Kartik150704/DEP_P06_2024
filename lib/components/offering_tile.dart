@@ -125,9 +125,9 @@ class _OfferingTileState extends State<OfferingTile> {
             margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
             alignment: Alignment.bottomRight,
             child: CustomisedButton(
-              width: 150,
+              width: 90,
               height: 50,
-              text: 'Upload Marks',
+              text: 'Apply',
               onPressed: confirmAction,
             ),
           ),
