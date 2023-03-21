@@ -1,5 +1,5 @@
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/student/studentOfferings.dart';
+import 'package:casper/student/student_offerings_page.dart';
 import 'package:flutter/material.dart';
 
 class NoProjectsFoundPage extends StatelessWidget {
@@ -28,7 +28,8 @@ class NoProjectsFoundPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const StudentOfferings(),
+                              builder: (context) =>
+                                  const StudentOfferingsPage(),
                             ),
                           )
                         },

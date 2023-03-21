@@ -1,17 +1,17 @@
-import 'package:casper/student/logged_in_scaffold_student.dart';
+import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/enrollmentRequests.dart';
 import 'package:casper/student/offeringspageStudent.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
-class StudentOfferings extends StatefulWidget {
-  const StudentOfferings({Key? key}) : super(key: key);
+class StudentOfferingsPage extends StatefulWidget {
+  const StudentOfferingsPage({Key? key}) : super(key: key);
 
   @override
-  State<StudentOfferings> createState() => _StudentOfferingsState();
+  State<StudentOfferingsPage> createState() => _StudentOfferingsPageState();
 }
 
-class _StudentOfferingsState extends State<StudentOfferings> {
+class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
   void onPressed() {}
   var option;
   dynamic shownpage = OfferingsPageStudent();
@@ -24,7 +24,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
 
   @override
   Widget build(BuildContext context) {
-    return LoggedInScaffoldStudent(
+    return StudentLoggedInScaffold(
       studentScaffoldBody: Row(
         children: [
           Container(

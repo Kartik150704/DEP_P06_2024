@@ -25,7 +25,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color.fromARGB(255, 198, 189, 207),
       ),
       width: 350 * fem,

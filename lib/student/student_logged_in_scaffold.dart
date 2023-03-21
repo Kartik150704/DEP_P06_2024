@@ -1,13 +1,12 @@
 import 'package:casper/components/customised_text_button.dart';
-import 'package:casper/main.dart';
 import 'package:casper/student/student_home_page.dart';
-import 'package:casper/student/studentOfferings.dart';
+import 'package:casper/student/student_offerings_page.dart';
 import 'package:casper/student/student_profile_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoggedInScaffoldStudent extends StatelessWidget {
+class StudentLoggedInScaffold extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
 
@@ -19,10 +18,10 @@ class LoggedInScaffoldStudent extends StatelessWidget {
   final appBarFunctions = const [
     StudentProfilePage(),
     StudentHomePage(),
-    StudentOfferings(),
+    StudentOfferingsPage(),
   ];
 
-  LoggedInScaffoldStudent({
+  StudentLoggedInScaffold({
     Key? key,
     required this.studentScaffoldBody,
   }) : super(key: key);

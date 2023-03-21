@@ -1,7 +1,7 @@
 import 'package:casper/components/course_tile.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/student/logged_in_scaffold_student.dart';
+import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/confirm_action.dart';
 
@@ -61,7 +61,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return SelectionArea(
-      child: LoggedInScaffoldStudent(
+      child: StudentLoggedInScaffold(
         studentScaffoldBody: Row(
           children: [
             Container(

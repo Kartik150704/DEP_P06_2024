@@ -1,7 +1,7 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/textstyle.dart';
-import 'package:casper/student/logged_in_scaffold_student.dart';
+import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
       });
     }
 
-    return LoggedInScaffoldStudent(
+    return StudentLoggedInScaffold(
       studentScaffoldBody: Row(
         children: [
           Container(

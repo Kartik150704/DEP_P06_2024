@@ -2,7 +2,6 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/evaluation_tile.dart';
 import 'package:casper/student/no_projects_found_page.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/marks_submission_form.dart';
 
 class ProjectPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
