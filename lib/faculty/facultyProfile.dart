@@ -17,8 +17,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
   void onPressed() {}
 
   ProjectPage projectpage = ProjectPage(
-    project: [],
-    flag: true,
+    project: ['', '', '', '', '', '', '', ''],
   );
 
   @override

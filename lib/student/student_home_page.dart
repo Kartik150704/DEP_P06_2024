@@ -15,20 +15,25 @@ class StudentHomePage extends StatefulWidget {
 
 class _StudentHomePageState extends State<StudentHomePage> {
   // ignore: prefer_typing_uninitialized_variables
-  var selectedOption;
+  var selectedOption, projectPage;
+
+  var projectDetails = [
+    'Fair Clustering Algorithms',
+    'Dr. Shweta Jain',
+    '2023',
+    'II',
+  ];
 
   @override
   void initState() {
     super.initState();
     selectedOption = 1;
+    projectPage = ProjectPage(
+      project: projectDetails,
+    );
   }
 
   void onPressed() {}
-
-  ProjectPage projectpage = ProjectPage(
-    project: null,
-    flag: true,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +50,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
       setState(() {
         selectedOption = selectOption;
         // TODO INSERT QUERY TO GET PROJECT ID
-        projectpage = ProjectPage(
-          project: null,
-          flag: (selectOption == 1),
+        projectPage = ProjectPage(
+          project: (selectOption == 1 ? projectDetails : null),
         );
       });
     }
@@ -76,7 +80,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 ],
               ),
             ),
-            projectpage,
+            projectPage,
           ],
         ),
       ),

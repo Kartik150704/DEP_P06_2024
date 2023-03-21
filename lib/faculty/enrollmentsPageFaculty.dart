@@ -172,8 +172,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                             scaffoldbody: Row(
                               children: [
                                 ProjectPage(
-                                  project: [],
-                                  flag: true,
+                                  project: ['', '', '', '', '', '', '', ''],
                                 )
                               ],
                             )),
