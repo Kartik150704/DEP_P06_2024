@@ -50,8 +50,7 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
     return Expanded(
       child: Container(
         color: const Color(0xff302c42),
@@ -151,31 +150,60 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                 ),
               ),
             ),
-            StreamBuilder(
-              stream: db
-                  .collection('offerings')
-                  .where('status', isEqualTo: 'open')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (context, index) {
-                      return ProjectTile(
-                        info:
-                            'Supervisor Name - ${snapshot.data?.docs[index]['instructor_name']}\nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
-                        title: '${snapshot.data?.docs[index]['title']}',
-                        type: '${snapshot.data?.docs[index]['type']}',
-                        theme: 'w',
-                      );
-                    },
-                  );
-                } else {
-                  return const CustomisedText(text: 'loading...');
-                }
-              },
+            Container(
+              height: 670,
+              width: 1200 * fem,
+              margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black38,
+                  ),
+                  BoxShadow(
+                    color: Color.fromARGB(255, 70, 67, 83),
+                    spreadRadius: -3,
+                    blurRadius: 7,
+                  ),
+                ],
+              ),
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      StreamBuilder(
+                        stream: db
+                            .collection('offerings')
+                            .where('status', isEqualTo: 'open')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                return ProjectTile(
+                                  info:
+                                      'Supervisor Name - ${snapshot.data?.docs[index]['instructor_name']}\nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
+                                  title:
+                                      '${snapshot.data?.docs[index]['title']}',
+                                  type: '${snapshot.data?.docs[index]['type']}',
+                                  theme: 'w',
+                                );
+                              },
+                            );
+                          } else {
+                            return const CustomisedText(text: 'loading...');
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             const SizedBox(
               height: 100,

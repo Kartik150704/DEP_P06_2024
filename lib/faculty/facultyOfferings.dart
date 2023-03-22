@@ -28,12 +28,14 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
 
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
     return LoggedInScaffoldFaculty(
       role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
-            width: 300,
+            width: 300 * fem,
             color: Color(0xff545161),
             child: ListView(
               children: [
