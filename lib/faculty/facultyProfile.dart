@@ -23,14 +23,14 @@ class _FacultyProfileState extends State<FacultyProfile> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
     double ffem = fem * 0.97;
     return LoggedInScaffoldFaculty(
       role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
-            width: 300,
+            width: 300 * ffem,
             color: const Color(0xff545161),
             child: ListView(
               children: [

@@ -38,7 +38,7 @@ class _EnrollmentRequestsPageFacultyState
           child: ListView(
             children: [
               Container(
-                height: 670,
+                height: 800,
                 width: 1200 * fem,
                 margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
                 decoration: BoxDecoration(

@@ -274,9 +274,38 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                 ),
                 // supervisorEnrollments(),
                 // allEnrollments(),
-                (widget.role == 'su')
-                    ? supervisorEnrollments()
-                    : allEnrollments(),
+                Container(
+                  height: 670,
+                  width: 1200 * fem,
+                  margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black38,
+                      ),
+                      BoxShadow(
+                        color: Color.fromARGB(255, 70, 67, 83),
+                        spreadRadius: -3,
+                        blurRadius: 7,
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          (widget.role == 'su')
+                              ? supervisorEnrollments()
+                              : allEnrollments(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
                 const SizedBox(
                   height: 100,
                 ),

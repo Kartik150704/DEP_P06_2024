@@ -35,8 +35,7 @@ class _PanelPageFacultyState extends State<PanelPageFaculty> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
     return Expanded(
       child: Container(
         color: const Color(0xff302c42),
@@ -68,65 +67,95 @@ class _PanelPageFacultyState extends State<PanelPageFaculty> {
                         : Container(),
                   ],
                 ),
-                (widget.role == 'co')
-                    ? ProjectTile(
-                        info:
-                            'Number of Evaluations - NUMBER\nNumber of Teams Assigned - NUMBER\nNumber of evaluations completed - NUMBER',
-                        title: 'Panel A',
-                        title_onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoggedInScaffoldFaculty(
-                                  role: widget.role,
-                                  scaffoldbody: Row(
-                                    children: [
-                                      PanelPage(
-                                        name: 'Panel A',
-                                        type: 'Mid-Term',
-                                        year: '2023',
-                                        semester: '||',
-                                        role: widget.role,
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                          );
-                        },
-                        type: 'Mid-term',
-                        theme: 'w',
-                        button_flag: true,
-                        button_text: 'Delete Panel',
-                        button_onPressed: confirmAction,
-                        isLink: true,
-                      )
-                    : ProjectTile(
-                        info:
-                            'Number of Evaluations - NUMBER\nNumber of Teams Assigned - NUMBER\nNumber of evaluations completed - NUMBER',
-                        title: 'Panel A',
-                        title_onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoggedInScaffoldFaculty(
-                                  role: widget.role,
-                                  scaffoldbody: Row(
-                                    children: const [
-                                      PanelPage(
-                                          name: 'Panel A',
-                                          type: 'Mid-Term',
-                                          year: '2023',
-                                          semester: '||'),
-                                    ],
-                                  )),
-                            ),
-                          );
-                        },
-                        type: 'Mid-term',
-                        theme: 'w',
-                        button_flag: false,
-                        isLink: true,
+                Container(
+                  height: 700,
+                  width: 1200 * fem,
+                  margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black38,
                       ),
+                      BoxShadow(
+                        color: Color.fromARGB(255, 70, 67, 83),
+                        spreadRadius: -3,
+                        blurRadius: 7,
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          (widget.role == 'co')
+                              ? ProjectTile(
+                                  info:
+                                      'Number of Evaluations - NUMBER\nNumber of Teams Assigned - NUMBER\nNumber of evaluations completed - NUMBER',
+                                  title: 'Panel A',
+                                  title_onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoggedInScaffoldFaculty(
+                                                role: widget.role,
+                                                scaffoldbody: Row(
+                                                  children: [
+                                                    PanelPage(
+                                                      name: 'Panel A',
+                                                      type: 'Mid-Term',
+                                                      year: '2023',
+                                                      semester: '||',
+                                                      role: widget.role,
+                                                    ),
+                                                  ],
+                                                )),
+                                      ),
+                                    );
+                                  },
+                                  type: 'Mid-term',
+                                  theme: 'w',
+                                  button_flag: true,
+                                  button_text: 'Delete Panel',
+                                  button_onPressed: confirmAction,
+                                  isLink: true,
+                                )
+                              : ProjectTile(
+                                  info:
+                                      'Number of Evaluations - NUMBER\nNumber of Teams Assigned - NUMBER\nNumber of evaluations completed - NUMBER',
+                                  title: 'Panel A',
+                                  title_onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoggedInScaffoldFaculty(
+                                                role: widget.role,
+                                                scaffoldbody: Row(
+                                                  children: const [
+                                                    PanelPage(
+                                                        name: 'Panel A',
+                                                        type: 'Mid-Term',
+                                                        year: '2023',
+                                                        semester: '||'),
+                                                  ],
+                                                )),
+                                      ),
+                                    );
+                                  },
+                                  type: 'Mid-term',
+                                  theme: 'w',
+                                  button_flag: false,
+                                  isLink: true,
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 100,
                 ),
