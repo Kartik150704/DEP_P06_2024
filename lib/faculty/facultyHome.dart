@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/enrollmentsPageFaculty.dart';
 import 'package:casper/faculty/panelListPage.dart';
 import 'package:casper/utilites.dart';
@@ -18,6 +19,23 @@ class _FacultyHomeState extends State<FacultyHome> {
   void onPressed() {}
   dynamic shownpage;
   var option;
+
+  var options = ['Enrollments', 'Panels'];
+
+  void selectOption(opt) {
+    setState(() {
+      option = opt;
+      if (option == 1) {
+        shownpage = EnrollmentsPageFaculty(
+          role: widget.role,
+        );
+      } else {
+        shownpage = PanelPageFaculty(
+          role: widget.role,
+        );
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -52,68 +70,13 @@ class _FacultyHomeState extends State<FacultyHome> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 1 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 1;
-                              shownpage = EnrollmentsPageFaculty(
-                                role: widget.role,
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Enrollments',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 2 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 2;
-                              shownpage = PanelPageFaculty(
-                                role: widget.role,
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Panels',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
+                    for (int i = 0; i < options.length; i++) ...[
+                      CustomisedSidebarButton(
+                        text: options[i],
+                        isSelected: (option == (i + 1)),
+                        onPressed: () => selectOption(i + 1),
+                      )
+                    ],
                   ],
                 ),
               ],

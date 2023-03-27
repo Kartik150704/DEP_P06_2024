@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
 import 'package:casper/main.dart';
@@ -11,11 +12,22 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
   final scaffoldbody;
   final role;
 
-  const LoggedInScaffoldFaculty({
+  final appBarOptions = [
+    'PROFILE',
+    'HOME',
+    'OFFERINGS',
+  ];
+
+  LoggedInScaffoldFaculty({
     Key? key,
     required this.scaffoldbody,
     required this.role,
   }) : super(key: key);
+
+  void signUserOut(context) {
+    FirebaseAuth.instance.signOut();
+    Navigator.popUntil(context, ModalRoute.withName("/"));
+  }
 
   @override
   void onPressed() {
@@ -40,79 +52,31 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
             SizedBox(
               width: 30,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FacultyProfile(role: role)),
-                );
-              },
-              child: Text(
-                'PROFILE',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FacultyHome(
-                      role: role,
-                    ),
+            for (int i = 0; i < appBarOptions.length; i++) ...[
+              CustomisedTextButton(
+                text: appBarOptions[i],
+                onPressed: () => {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => appBarFunctions[i],
+                  //   ),
+                  // )
+                  Navigator.of(context).push(
+                    _createRoute(i),
                   ),
-                );
-              },
-              child: Text(
-                'HOME',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
+                },
               ),
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FacultyOfferings(role: role),
-                  ),
-                );
-              },
-              child: Text(
-                'OFFERINGS',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
-                ),
+              const SizedBox(
+                width: 15,
               ),
-            ),
+            ],
           ],
         ),
-        leadingWidth: 400,
+        leadingWidth: 350,
         actions: [
           IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.popUntil(context, ModalRoute.withName("/"));
-            },
+            onPressed: () => signUserOut(context),
             icon: const Icon(Icons.logout),
           ),
         ],
@@ -125,9 +89,19 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
       //   selectedItemColor: const Color(0xffffffff), items: const [],
       // ),
       bottomSheet: Container(
-        height: 50,
+        height: 55,
         width: double.infinity,
-        color: const Color(0xff12141d),
+        decoration: const BoxDecoration(
+          color: Color(0xff12141D),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              spreadRadius: 4,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -135,17 +109,43 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
               width: 50,
             ),
             Text(
-              'Casper',
+              '\u00a9 Casper 2023',
               style: SafeGoogleFont(
                 'Ubuntu',
                 fontSize: 15,
-                fontWeight: FontWeight.w700,
                 color: const Color(0xffffffff),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Route _createRoute(i) {
+    final appBarFunctions = [
+      FacultyProfile(role: role),
+      FacultyHome(),
+      FacultyOfferings(role: role),
+    ];
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          appBarFunctions[i],
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.decelerate;
+
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }

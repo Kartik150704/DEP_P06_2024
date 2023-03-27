@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/enrollmentRequestsFaculty.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/faculty/offeringsPageFaculty.dart';
@@ -18,6 +19,19 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
   void onPressed() {}
   dynamic shownpage;
   var option;
+
+  var options = ['Projects', 'Enrollmet Requests'];
+
+  void selectOption(opt) {
+    setState(() {
+      option = opt;
+      if (option == 1) {
+        shownpage = OfferingsPageFaculty();
+      } else {
+        shownpage = EnrollmentRequestsPageFaculty();
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -42,64 +56,13 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 1 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 1;
-                              shownpage = OfferingsPageFaculty();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Projects',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 2 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 2;
-                              shownpage = EnrollmentRequestsPageFaculty();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Enrollment Requests',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
+                    for (int i = 0; i < options.length; i++) ...[
+                      CustomisedSidebarButton(
+                        text: options[i],
+                        isSelected: (option == (i + 1)),
+                        onPressed: () => selectOption(i + 1),
+                      )
+                    ],
                   ],
                 ),
               ],
