@@ -45,12 +45,15 @@ class StudentLoggedInScaffold extends StatelessWidget {
               CustomisedTextButton(
                 text: appBarOptions[i],
                 onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => appBarFunctions[i],
-                    ),
-                  )
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => appBarFunctions[i],
+                  //   ),
+                  // )
+                  Navigator.of(context).push(
+                    _createRoute(i),
+                  ),
                 },
               ),
               const SizedBox(
@@ -99,6 +102,28 @@ class StudentLoggedInScaffold extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Route _createRoute(i) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          appBarFunctions[i],
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.decelerate;
+
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
