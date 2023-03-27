@@ -108,33 +108,38 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                           BoxShadow(
                             color: Color.fromARGB(255, 70, 67, 83),
-                            spreadRadius: -3,
-                            blurRadius: 7,
+                            // color: Colors.white,
+                            // spreadRadius: -3,
+                            // blurRadius: 7,
                           ),
                         ],
                       ),
-                      child: SingleChildScrollView(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              for (int i = 0;
-                                  i < evaluationDetails.length;
-                                  i++) ...[
-                                EvaluationTile(
-                                  status: evaluationDetails[i][0],
-                                  week: evaluationDetails[i][1],
-                                  details: evaluationDetails[i][2],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
+                      // child: SingleChildScrollView(
+                      //   child: Container(
+                      //     margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.center,
+                      //       children: [
+                      //         for (int i = 0;
+                      //             i < evaluationDetails.length;
+                      //             i++) ...[
+                      //           EvaluationTile(
+                      //             status: evaluationDetails[i][0],
+                      //             week: evaluationDetails[i][1],
+                      //             details: evaluationDetails[i][2],
+                      //           ),
+                      //           const SizedBox(
+                      //             height: 20,
+                      //           ),
+                      //         ],
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      //
+                      //
+                      //
+                      child: buildDataTable(context),
                     ),
                   ],
                 ),
@@ -144,5 +149,87 @@ class _ProjectPageState extends State<ProjectPage> {
         ),
       );
     }
+  }
+
+  int? sortColumnIndex;
+  bool isAscending = false;
+  var users = [
+    ['Aman', 'Kumar', '19', 'Female', 'true'],
+    ['Aman', 'Adatia', '21', 'Male'],
+    ['XYZ', 'ABC', '20', 'NA'],
+  ];
+  Widget buildDataTable(BuildContext context) {
+    var columns = ['First Name', 'Last Name', 'Age', 'Gender'];
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+          iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
+      child: DataTable(
+        dataRowColor: MaterialStateProperty.resolveWith(getDataRowColor),
+        border: TableBorder.all(
+          width: 0.5,
+          borderRadius: BorderRadius.circular(2),
+          color: Colors.grey,
+        ),
+        sortAscending: isAscending,
+        sortColumnIndex: sortColumnIndex,
+        columns: getColumns(columns),
+        rows: getRows(users),
+        headingRowColor: MaterialStateColor.resolveWith(
+          (states) {
+            return const Color(0xff12141D);
+          },
+        ),
+      ),
+    );
+  }
+
+  List<DataColumn> getColumns(List<String> columns) => columns
+      .map(
+        (String column) => DataColumn(
+          label: CustomisedText(text: column),
+          onSort: onSort,
+        ),
+      )
+      .toList();
+
+  List<DataRow> getRows(List<List<String>> rows) => rows.map(
+        (List<String> user) {
+          var cells = [user[0], user[1], user[2], user[3]];
+
+          return DataRow(cells: getCells(cells));
+        },
+      ).toList();
+
+  List<DataCell> getCells(List<dynamic> cells) => cells
+      .map(
+        (data) => DataCell(
+          CustomisedText(
+            text: data,
+            color: Colors.black,
+          ),
+        ),
+      )
+      .toList();
+
+  void onSort(int columnIndex, bool ascending) {
+    users.sort((user1, user2) =>
+        compareString(ascending, user1[columnIndex], user2[columnIndex]));
+
+    setState(() {
+      sortColumnIndex = columnIndex;
+      isAscending = ascending;
+    });
+  }
+
+  int compareString(bool ascending, String value1, String value2) =>
+      (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
+
+  Color? getDataRowColor(Set<MaterialState> states) {
+    if (states.contains(MaterialState.hovered)) {
+      return Colors.black;
+      // return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+    }
+    return const Color.fromARGB(255, 227, 224, 230);
   }
 }
