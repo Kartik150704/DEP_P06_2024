@@ -39,6 +39,17 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
               height: 15,
             ),
             Container(
+              margin: EdgeInsets.fromLTRB(20 * fem, 0, 0, 0),
+              child: CustomisedText(
+                text: widget.evaluation.week,
+                color: Colors.black,
+                fontSize: 30,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Container(
               margin: EdgeInsets.fromLTRB(45 * fem, 0, 0, 0),
               child: const CustomisedText(
                 text: 'Enter Obtained Marks',
@@ -110,6 +121,17 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
           children: [
             const SizedBox(
               height: 15,
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(20 * fem, 0, 0, 0),
+              child: CustomisedText(
+                text: widget.evaluation.week,
+                color: Colors.black,
+                fontSize: 30,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
             ),
             Container(
               margin: EdgeInsets.fromLTRB(35 * fem, 0, 0, 0),
