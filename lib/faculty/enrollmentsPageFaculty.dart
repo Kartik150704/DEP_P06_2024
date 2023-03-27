@@ -2,6 +2,8 @@ import 'package:casper/components/projecttile.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/customised_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -150,18 +152,52 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                  child: Text(
-                    'Enrollments',
-                    style: SafeGoogleFont(
-                      'Ubuntu',
-                      fontSize: 50,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xffffffff),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 20),
+                      child: Text(
+                        'Enrollments',
+                        style: SafeGoogleFont(
+                          'Ubuntu',
+                          fontSize: 50,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xffffffff),
+                        ),
+                      ),
                     ),
-                  ),
+                    (widget.role == 'co')
+                        ? SizedBox(
+                            width: 200,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: ischecked,
+                                  onChanged: (bool? value) {
+                                    setState(
+                                      () {
+                                        ischecked = value;
+                                      },
+                                    );
+                                  },
+                                  checkColor: Colors.white,
+                                  side: const BorderSide(color: Colors.white),
+                                ),
+                                Text(
+                                  'My Enrolments Only',
+                                  style: SafeGoogleFont(
+                                    'Ubuntu',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xffffffff),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
                 Padding(
                   padding:
@@ -172,47 +208,33 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: 250,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomTextField(
-                                  hinttext: 'Semester',
-                                  texteditingcontroller: semester_controller,
-                                ),
-                                CustomTextField(
-                                  hinttext: 'Year',
-                                  texteditingcontroller: year_controller,
-                                ),
-                              ],
+                        Row(
+                          children: [
+                            CustomisedTextField(
+                              textEditingController: supervisor_name_controller,
+                              hintText: 'Supervisor Name',
+                              obscureText: false,
+                              width: 150 * fem,
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: 250,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomTextField(
-                                  hinttext: 'Supervisor Name',
-                                  texteditingcontroller:
-                                      supervisor_name_controller,
-                                ),
-                                CustomTextField(
-                                  hinttext: 'Project Title',
-                                  texteditingcontroller:
-                                      project_title_controller,
-                                ),
-                              ],
+                            CustomisedTextField(
+                              textEditingController: project_title_controller,
+                              hintText: 'Project Title',
+                              obscureText: false,
+                              width: 150 * fem,
                             ),
-                          ),
+                            CustomisedTextField(
+                              textEditingController: semester_controller,
+                              hintText: 'Semester',
+                              obscureText: false,
+                              width: 150 * fem,
+                            ),
+                            CustomisedTextField(
+                              textEditingController: year_controller,
+                              hintText: 'Year',
+                              obscureText: false,
+                              width: 150 * fem,
+                            ),
+                          ],
                         ),
                         Expanded(
                           child: Row(
@@ -234,37 +256,6 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                                   ),
                                 ),
                               ),
-                              (widget.role == 'co')
-                                  ? SizedBox(
-                                      width: 200,
-                                      child: Row(
-                                        children: [
-                                          Checkbox(
-                                            value: ischecked,
-                                            onChanged: (bool? value) {
-                                              setState(
-                                                () {
-                                                  ischecked = value;
-                                                },
-                                              );
-                                            },
-                                            checkColor: Colors.white,
-                                            side: const BorderSide(
-                                                color: Colors.white),
-                                          ),
-                                          Text(
-                                            'My Enrolments Only',
-                                            style: SafeGoogleFont(
-                                              'Ubuntu',
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w700,
-                                              color: const Color(0xffffffff),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
                             ],
                           ),
                         ),

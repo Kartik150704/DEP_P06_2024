@@ -125,7 +125,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
   Route _createRoute(i) {
     final appBarFunctions = [
       FacultyProfile(role: role),
-      FacultyHome(),
+      FacultyHome(role: role),
       FacultyOfferings(role: role),
     ];
     return PageRouteBuilder(
