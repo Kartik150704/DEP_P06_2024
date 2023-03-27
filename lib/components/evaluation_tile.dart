@@ -98,7 +98,7 @@ class _EvaluationTileState extends State<EvaluationTile> {
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
                   child: const CustomisedText(
-                    text: '03/01/2023 - 09/01/2023',
+                    text: '03/01 - 09/01',
                     color: Colors.black,
                     fontSize: 15,
                   ),
