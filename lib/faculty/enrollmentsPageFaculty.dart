@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:casper/components/enrollment_data_table.dart';
 import '../components/customised_text.dart';
 import '../components/text_field.dart';
 
@@ -29,68 +29,41 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
 
   bool? ischecked = false;
 
-  Future<Map<String, dynamic>?> getDoc(String collection, String id) async {
-    var doc =
-        await FirebaseFirestore.instance.collection(collection).doc(id).get();
-    return doc.data();
-  }
+  List<Enrollment> supervisorEnrollments() {
+    final List<Enrollment> enrollments_data = [];
+    List<dynamic> project_list = [];
 
-  StreamBuilder supervisorEnrollments() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('instructors')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: snapshot.data?.docs[0]['number_of_projects_as_head'],
-            itemBuilder: (context, index) {
-              // return Text('0');
-              return FutureBuilder(
-                future: getDoc('projects',
-                    snapshot.data?.docs[0]['project_as_head_ids'][index]),
-                builder: (context, snaphot) {
-                  if (snapshot.hasData) {
-                    // print(snaphot.data);
-                    return ProjectTile(
-                      info:
-                          'Student Name(s) - ${snaphot.data?['student_name'][0]}, ${snaphot.data?['student_name'][1]} \nSemester - ${snaphot.data?['semester']}\nYear - ${snaphot.data?['year']}\nProject Description - ${snaphot.data?['description']}',
-                      title: '${snaphot.data?['title']}',
-                      title_onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoggedInScaffoldFaculty(
-                                role: widget.role,
-                                scaffoldbody: Row(
-                                  children: const [
-                                    ProjectPage(
-                                      project: ['', '', '', '', '', '', '', ''],
-                                    )
-                                  ],
-                                )),
-                          ),
-                        );
-                      },
-                      type: '${snaphot.data?['type']}',
-                      theme: 'w',
-                      isLink: true,
-                    );
-                  } else {
-                    return Text('loading...');
-                  }
-                },
-              );
-            },
-          );
-        } else {
-          return const CustomisedText(text: 'loading...');
-        }
-      },
-    );
+    FirebaseFirestore.instance
+        .collection('instructors')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                project_list = (doc['project_as_head_ids']);
+                for (var id in project_list) {
+                  FirebaseFirestore.instance
+                      .collection('projects')
+                      .get()
+                      .then((QuerySnapshot querySnapshot) => {
+                            querySnapshot.docs.forEach((doc) {
+                              if (doc.id == id) {
+                                final val = doc;
+                                enrollments_data.add(Enrollment(
+                                    name: val['title'],
+                                    sname:
+                                        '${val['student_name'][0]}, ${val['student_name'][1]}',
+                                    sem: val['semester'],
+                                    year: val['year'],
+                                    description: val['description']));
+                                print(enrollments_data);
+                              }
+                            })
+                          });
+                }
+              })
+            });
+    print(enrollments_data);
+    return enrollments_data;
   }
 
   StreamBuilder allEnrollments() {
@@ -185,7 +158,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                                   side: const BorderSide(color: Colors.white),
                                 ),
                                 Text(
-                                  'My Enrolments Only',
+                                  'My Enrollments Only',
                                   style: SafeGoogleFont(
                                     'Ubuntu',
                                     fontSize: 10,
@@ -283,16 +256,11 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                     ],
                   ),
                   child: SingleChildScrollView(
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          (widget.role == 'su')
-                              ? supervisorEnrollments()
-                              : allEnrollments(),
-                        ],
-                      ),
+                    child: EnrollmentDataTable(
+                      enrollments: (widget.role == 'su')
+                          ? supervisorEnrollments()
+                          : allEnrollments(),
+                      role: widget.role,
                     ),
                   ),
                 ),
@@ -307,4 +275,16 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
       ),
     );
   }
+}
+
+class Enrollment {
+  final String name, sname, sem, year, description;
+
+  const Enrollment({
+    required this.name,
+    required this.sname,
+    required this.sem,
+    required this.year,
+    required this.description,
+  });
 }
