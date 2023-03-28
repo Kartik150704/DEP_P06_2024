@@ -21,29 +21,36 @@ class ProjectPage extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectPage> {
   var project_details = [];
+  List<Evaluation> evaluations = [];
 
-  var evaluationDetails = [
-    [
-      '1',
-      'Week 4',
-      ['NA', 'NA'],
-    ],
-    [
-      '1',
-      'Week 3',
-      ['NA', 'NA'],
-    ],
-    [
-      '2',
-      'Week 2',
-      ['97/100', 'Good work'],
-    ],
-    [
-      '2',
-      'Week 1',
-      ['97/100', 'Good work'],
-    ],
-  ];
+  void fetchEvaluations() {
+    var project_id = widget.project_id;
+    FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('project_id', isEqualTo: project_id)
+        .get()
+        .then((value) {
+      var doc = value.docs[0];
+      // print(doc);
+      int n = doc['number_of_evaluations'];
+      // required this.week,
+      // required this.date,
+      // required this.marks,
+      // required this.remarks,
+      // required this.status,
+      for (int i = 0; i < n; i++) {
+        setState(() {
+          evaluations.add(Evaluation(
+              week: (i + 1).toString(),
+              date: '05/04 - 12/04',
+              marks: doc['weekly_evaluations'][i],
+              remarks: doc['weekly_comments'][i],
+              status: '0'));
+        });
+      }
+      print(evaluations);
+    });
+  }
 
   void fetchProject() {
     FirebaseFirestore.instance
@@ -58,6 +65,7 @@ class _ProjectPageState extends State<ProjectPage> {
         project_details.add(doc['year']);
         project_details.add(doc['semester']);
         project_details.add(doc['student_name']);
+        project_details.add(doc['description']);
         // print(project_details);
       });
     });
@@ -69,6 +77,7 @@ class _ProjectPageState extends State<ProjectPage> {
     // TODO: implement initState
     super.initState();
     fetchProject();
+    fetchEvaluations();
   }
 
   @override
@@ -100,11 +109,20 @@ class _ProjectPageState extends State<ProjectPage> {
                       text: project_details[0],
                       fontSize: 50,
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CustomisedText(
+                      text: project_details[5],
+                      fontSize: 25,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                           child: CustomisedText(
                             text: project_details[1] +
                                 ' - ' +
@@ -153,45 +171,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       child: SingleChildScrollView(
                         // ignore: prefer_const_constructors
                         child: EvaluationDataTable(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          evaluations: <Evaluation>[
-                            const Evaluation(
-                              week: 'Week 5',
-                              date: '05/04 - 12/04',
-                              marks: 'NA',
-                              remarks: 'NA',
-                              status: '0',
-                            ),
-                            const Evaluation(
-                              week: 'Week 4',
-                              date: '29/03 - 05/04',
-                              marks: 'NA',
-                              remarks: 'NA',
-                              status: '1',
-                            ),
-                            const Evaluation(
-                              week: 'Week 3',
-                              date: '22/03 - 29/03',
-                              marks: 'NA',
-                              remarks: 'NA',
-                              status: '1',
-                            ),
-                            const Evaluation(
-                              week: 'Week 2',
-                              date: '15/03 - 22/03',
-                              marks: '19/20',
-                              remarks:
-                                  'Good work aabafg asdfasd asdfasd a asdfas asdfas',
-                              status: '2',
-                            ),
-                            const Evaluation(
-                              week: 'Week 1',
-                              date: '09/03 - 15/03',
-                              marks: '19/20',
-                              remarks: 'Good work good work good work goooood',
-                              status: '2',
-                            ),
-                          ],
+                          evaluations: evaluations,
                         ),
                       ),
                     ),

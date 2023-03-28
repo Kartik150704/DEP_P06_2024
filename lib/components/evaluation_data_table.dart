@@ -41,7 +41,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
   @override
   Widget build(BuildContext context) {
     final columns = [
-      'S. No.',
+      'Week',
       'Date',
       'Marks',
       'Remarks',

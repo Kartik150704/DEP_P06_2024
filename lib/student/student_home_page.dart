@@ -41,7 +41,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then((value) {
-      print(value.docs[0]['proj_id'][selectedOption - 1]);
       fetchProject(value.docs[0]['proj_id'][selectedOption - 1]);
     });
     // projectPage = Text('hi');
@@ -49,7 +48,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   fetchProject(var project_id) {
     setState(() {
-      projectPage = ProjectPage(project_id: project_id,);
+      projectPage = ProjectPage(
+        project_id: project_id,
+      );
     });
   }
 
@@ -71,10 +72,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery
-        .of(context)
-        .size
-        .width / baseWidth) * 0.97;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return StudentLoggedInScaffold(
       studentScaffoldBody: Row(
