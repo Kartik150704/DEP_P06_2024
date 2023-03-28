@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/enrollment_data_table.dart';
+import 'package:flutter/rendering.dart';
 import '../components/customised_text.dart';
 import '../components/text_field.dart';
 
@@ -64,7 +65,8 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
           setState(() {
             enrollments.add(Enrollment(
               name: val['title'],
-              sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
+              sname1: val['student_name'][0],
+              sname2: val['student_name'][1],
               sem: val['semester'],
               year: val['year'],
               description: val['description'],
@@ -88,7 +90,8 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
           enrollments.add(
             Enrollment(
               name: val['title'],
-              sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
+              sname1: val['student_name'][0],
+              sname2: val['student_name'][1],
               sem: val['semester'],
               year: val['year'],
               description: val['description'],
@@ -232,7 +235,6 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                 // supervisorEnrollments(),
                 // allEnrollments(),
                 Container(
-                  height: 670,
                   width: 1200 * fem,
                   margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
                   decoration: BoxDecoration(
@@ -248,10 +250,17 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                       ),
                     ],
                   ),
-                  child: SingleChildScrollView(
-                    child: EnrollmentDataTable(
-                      enrollments: enrollments,
-                      role: widget.role,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: EnrollmentDataTable(
+                          enrollments: enrollments,
+                          role: widget.role,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -269,11 +278,12 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
 }
 
 class Enrollment {
-  final String name, sname, sem, year, description, project_id;
+  final String name, sname1, sname2, sem, year, description, project_id;
 
   const Enrollment({
     required this.name,
-    required this.sname,
+    required this.sname1,
+    required this.sname2,
     required this.sem,
     required this.year,
     required this.description,

@@ -7,6 +7,8 @@ import 'package:casper/utilites.dart';
 import 'package:casper/faculty/enrollmentsPageFaculty.dart';
 import 'package:flutter/material.dart';
 
+import 'customised_text_button.dart';
+
 class EnrollmentDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final enrollments;
@@ -30,7 +32,8 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
   Widget build(BuildContext context) {
     final columns = [
       'Name',
-      'Student Name(s)',
+      'Student1',
+      'Student2',
       'Semester',
       'Year',
       'Project Description',
@@ -89,6 +92,11 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
           text: columns[4],
         ),
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[5],
+        ),
+      ),
     ];
 
     return headings;
@@ -118,13 +126,20 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                 },
                 child: CustomisedText(
                   text: enrollment.name,
-                  color: Colors.black,
+                  color: Colors.blue[900],
+                  selectable: false,
                 ),
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.sname,
+                text: enrollment.sname1,
+                color: Colors.black,
+              ),
+            ),
+            DataCell(
+              CustomisedText(
+                text: enrollment.sname2,
                 color: Colors.black,
               ),
             ),
@@ -178,14 +193,19 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
     } else if (columnIndex == 1) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.sname, enrollment2.sname),
+            compareString(ascending, enrollment1.sname1, enrollment2.sname1),
       );
     } else if (columnIndex == 2) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.sem, enrollment2.sem),
+            compareString(ascending, enrollment1.sname2, enrollment2.sname2),
       );
     } else if (columnIndex == 3) {
+      widget.enrollments.sort(
+        (enrollment1, enrollment2) =>
+            compareString(ascending, enrollment1.sem, enrollment2.sem),
+      );
+    } else if (columnIndex == 4) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
             compareString(ascending, enrollment1.year, enrollment2.year),
