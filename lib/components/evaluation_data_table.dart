@@ -1,16 +1,22 @@
+import 'dart:html';
+
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/marks_submission_form.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class EvaluationDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final evaluations, isFaculty;
+  final evaluations, isFaculty, refresh;
 
   const EvaluationDataTable(
-      {super.key, required this.evaluations, this.isFaculty = false});
+      {super.key,
+      required this.evaluations,
+      this.isFaculty = false,
+      required this.refresh});
 
   @override
   State<EvaluationDataTable> createState() => _EvaluationDataTableState();
@@ -20,15 +26,54 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
-  void viewEvaluation(evaluation) {
+  void viewEvaluation(evaluation, refresh) {
     showDialog(
       context: context,
       builder: (context) {
+        var marksInputController = TextEditingController(),
+            remarksInputController = TextEditingController();
         return AlertDialog(
           title: Center(
             child: MarksSubmissionForm(
               evaluation: evaluation,
-              onSubmit: () {},
+              marksInputController: marksInputController,
+              remarksInputController: remarksInputController,
+              onSubmit: () {
+                if (marksInputController.text == '' &&
+                    remarksInputController.text == '') {
+                  Navigator.pop(context);
+                  return;
+                }
+                FirebaseFirestore.instance
+                    .collection('evaluations')
+                    .doc(evaluation.evaluation_id)
+                    .get()
+                    .then((value) {
+                  var doc = value.data();
+                  var evals = doc!['weekly_evaluations'];
+                  var remarks = doc['weekly_comments'];
+                  print(marksInputController.text == '');
+                  if (marksInputController.text != '') {
+                    evals[int.parse(evaluation.week) - 1] =
+                        marksInputController.text;
+                  }
+                  if (remarksInputController.text != '') {
+                    remarks[int.parse(evaluation.week) - 1] =
+                        remarksInputController.text;
+                  }
+                  print(evals);
+                  print(remarks);
+                  FirebaseFirestore.instance
+                      .collection('evaluations')
+                      .doc(evaluation.evaluation_id)
+                      .set({
+                    'weekly_evaluations': evals,
+                    'weekly_comments': remarks
+                  }, SetOptions(merge: true));
+                });
+                Navigator.pop(context);
+                refresh();
+              },
               isFaculty: widget.isFaculty,
             ),
           ),
@@ -150,7 +195,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
                 width: double.infinity,
                 height: 35,
                 text: 'View',
-                onPressed: () => viewEvaluation(evaluation),
+                onPressed: () => viewEvaluation(evaluation, widget.refresh),
                 elevation: 0,
               ),
             )

@@ -34,7 +34,7 @@ class _EvaluationTileState extends State<EvaluationTile> {
           title: Center(
             child: MarksSubmissionForm(
               marksInputController: evaluationMarksController,
-              marksConfirmInputController: confirmEvaluationMarksController,
+              remarksInputController: confirmEvaluationMarksController,
               onSubmit: () {},
             ),
           ),

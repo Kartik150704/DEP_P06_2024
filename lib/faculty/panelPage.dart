@@ -35,7 +35,7 @@ class _PanelPageState extends State<PanelPage> {
           title: Center(
               child: MarksSubmissionForm(
             marksInputController: panelMarksInputController,
-            marksConfirmInputController: panelMarksConfirmInputController,
+            remarksInputController: panelMarksConfirmInputController,
             onSubmit: () {},
           )),
         );

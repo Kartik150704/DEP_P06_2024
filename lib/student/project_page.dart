@@ -47,6 +47,7 @@ class _ProjectPageState extends State<ProjectPage> {
             marks: doc['weekly_evaluations'][i] ?? '',
             remarks: doc['weekly_comments'][i] ?? '',
             status: doc['weekly_evaluations'][i] == null ? '1' : '2',
+            evaluation_id: doc.id,
           ));
         });
       }
@@ -55,6 +56,11 @@ class _ProjectPageState extends State<ProjectPage> {
   }
 
   void fetchProject() {
+    setState(() {
+      project_details = [];
+      evaluations = [];
+    });
+    fetchEvaluations();
     FirebaseFirestore.instance
         .collection('projects')
         .doc(widget.project_id)
@@ -79,7 +85,6 @@ class _ProjectPageState extends State<ProjectPage> {
     // TODO: implement initState
     super.initState();
     fetchProject();
-    fetchEvaluations();
   }
 
   @override
@@ -173,6 +178,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       child: SingleChildScrollView(
                         // ignore: prefer_const_constructors
                         child: EvaluationDataTable(
+                          refresh: fetchProject,
                           isFaculty: widget.isFaculty,
                           evaluations: evaluations,
                         ),
@@ -190,7 +196,7 @@ class _ProjectPageState extends State<ProjectPage> {
 }
 
 class Evaluation {
-  final String week, date, marks, remarks, status;
+  final String week, date, marks, remarks, status, evaluation_id;
 
   const Evaluation({
     required this.week,
@@ -198,5 +204,6 @@ class Evaluation {
     required this.marks,
     required this.remarks,
     required this.status,
+    required this.evaluation_id,
   });
 }

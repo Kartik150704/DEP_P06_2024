@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class MarksSubmissionForm extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final marksInputController,
-      marksConfirmInputController,
+      remarksInputController,
       onSubmit,
       evaluation,
       isFaculty;
@@ -15,7 +15,7 @@ class MarksSubmissionForm extends StatefulWidget {
   const MarksSubmissionForm({
     super.key,
     this.marksInputController,
-    this.marksConfirmInputController,
+    this.remarksInputController,
     this.onSubmit,
     this.evaluation,
     this.isFaculty = false,
@@ -83,7 +83,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
               height: 5,
             ),
             CustomisedTextField(
-              textEditingController: widget.marksConfirmInputController,
+              textEditingController: widget.remarksInputController,
               hintText: 'Remarks',
               obscureText: false,
             ),
@@ -97,7 +97,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
                   width: 80,
                   height: 50,
                   text: 'Submit',
-                  onPressed: () => {},
+                  onPressed: widget.onSubmit,
                 ),
                 CustomisedButton(
                   width: 80,
