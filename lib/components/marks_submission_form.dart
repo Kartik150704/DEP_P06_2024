@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 
 class MarksSubmissionForm extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final marksInputController, marksConfirmInputController, onSubmit, evaluation;
+  final marksInputController,
+      marksConfirmInputController,
+      onSubmit,
+      evaluation,
+      isFaculty;
 
   const MarksSubmissionForm({
     super.key,
@@ -14,6 +18,7 @@ class MarksSubmissionForm extends StatefulWidget {
     this.marksConfirmInputController,
     this.onSubmit,
     this.evaluation,
+    this.isFaculty = false,
   });
 
   @override
@@ -26,7 +31,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
-    if (widget.evaluation.status == '1') {
+    if (widget.evaluation.status == '1' || widget.isFaculty) {
       return Container(
         decoration: const BoxDecoration(
           color: Color.fromARGB(255, 198, 189, 207),

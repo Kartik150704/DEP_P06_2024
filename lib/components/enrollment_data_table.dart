@@ -109,6 +109,7 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                             children: [
                               ProjectPage(
                                 project_id: enrollment.project_id,
+                                isFaculty: true,
                               )
                             ],
                           )),

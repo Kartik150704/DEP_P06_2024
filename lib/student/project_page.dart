@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final project, project_id;
+  final project, project_id, isFaculty;
 
   ProjectPage({
     Key? key,
     this.project,
     this.project_id,
+    this.isFaculty = false,
   }) : super(key: key);
 
   @override
@@ -41,11 +42,12 @@ class _ProjectPageState extends State<ProjectPage> {
       for (int i = 0; i < n; i++) {
         setState(() {
           evaluations.add(Evaluation(
-              week: (i + 1).toString(),
-              date: '05/04 - 12/04',
-              marks: doc['weekly_evaluations'][i],
-              remarks: doc['weekly_comments'][i],
-              status: '0'));
+            week: (i + 1).toString(),
+            date: '05/04 - 12/04',
+            marks: doc['weekly_evaluations'][i] ?? '',
+            remarks: doc['weekly_comments'][i] ?? '',
+            status: doc['weekly_evaluations'][i] == null ? '1' : '2',
+          ));
         });
       }
       print(evaluations);
@@ -171,6 +173,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       child: SingleChildScrollView(
                         // ignore: prefer_const_constructors
                         child: EvaluationDataTable(
+                          isFaculty: widget.isFaculty,
                           evaluations: evaluations,
                         ),
                       ),

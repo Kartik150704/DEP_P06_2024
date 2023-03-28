@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 
 class EvaluationDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final evaluations;
+  final evaluations, isFaculty;
 
-  const EvaluationDataTable({
-    super.key,
-    required this.evaluations,
-  });
+  const EvaluationDataTable(
+      {super.key, required this.evaluations, this.isFaculty = false});
 
   @override
   State<EvaluationDataTable> createState() => _EvaluationDataTableState();
@@ -31,6 +29,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
             child: MarksSubmissionForm(
               evaluation: evaluation,
               onSubmit: () {},
+              isFaculty: widget.isFaculty,
             ),
           ),
         );
