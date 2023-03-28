@@ -153,6 +153,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_form_builder:
+    dependency: "direct main"
+    description:
+      name: flutter_form_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.7.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -160,6 +167,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -233,6 +245,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  multiselect:
+    dependency: "direct main"
+    description:
+      name: multiselect
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  navigation_builder:
+    dependency: transitive
+    description:
+      name: navigation_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2+4"
   path:
     dependency: transitive
     description:
@@ -322,6 +348,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  states_rebuilder:
+    dependency: transitive
+    description:
+      name: states_rebuilder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.2.0"
   stream_channel:
     dependency: transitive
     description:

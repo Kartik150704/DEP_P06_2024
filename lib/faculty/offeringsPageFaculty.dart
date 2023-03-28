@@ -33,13 +33,7 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
       builder: (context) {
         return AlertDialog(
           title: Center(
-            child: AddProjectForm(
-              projectNameController: projectNameController,
-              projectSemesterController: projectSemesterController,
-              projectYearController: projectYearController,
-              projectDescriptionController: projectDescriptionController,
-              onSubmit: () {},
-            ),
+            child: AddProjectForm(),
           ),
         );
       },
