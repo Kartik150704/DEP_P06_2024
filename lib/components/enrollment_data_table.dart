@@ -105,9 +105,16 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                       builder: (context) => LoggedInScaffoldFaculty(
                           role: widget.role,
                           scaffoldbody: Row(
-                            children: const [
+                            children: [
                               ProjectPage(
-                                project: ['', '', '', '', '', '', '', ''],
+                                project_id: enrollment.project_id,
+                                project: const [
+                                  '',
+                                  '',
+                                  '',
+                                  '',
+                                  ['', '']
+                                ],
                               )
                             ],
                           )),

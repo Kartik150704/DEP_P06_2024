@@ -1,6 +1,10 @@
 import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/student/no_projects_found_page.dart';
 import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/project_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentHomePage extends StatefulWidget {
@@ -31,18 +35,34 @@ class _StudentHomePageState extends State<StudentHomePage> {
   void initState() {
     super.initState();
     selectedOption = 1;
-    projectPage = ProjectPage(
-      project: projectDetails,
-    );
+    projectPage = NoProjectsFoundPage();
+    FirebaseFirestore.instance
+        .collection('student')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      print(value.docs[0]['proj_id'][selectedOption - 1]);
+      fetchProject(value.docs[0]['proj_id'][selectedOption - 1]);
+    });
+    // projectPage = Text('hi');
+  }
+
+  fetchProject(var project_id) {
+    setState(() {
+      projectPage = ProjectPage(project_id: project_id,);
+    });
   }
 
   void selectCourse(selectOption) {
     setState(() {
       selectedOption = selectOption;
-      // TODO INSERT QUERY TO GET PROJECT ID
-      projectPage = ProjectPage(
-        project: (selectOption == 1 ? projectDetails : null),
-      );
+    });
+    FirebaseFirestore.instance
+        .collection('student')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      fetchProject(value.docs[0]['proj_id'][selectOption - 1]);
     });
   }
 
@@ -51,7 +71,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double fem = (MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth) * 0.97;
 
     return StudentLoggedInScaffold(
       studentScaffoldBody: Row(

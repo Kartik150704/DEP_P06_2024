@@ -2,15 +2,17 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/evaluation_data_table.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/student/no_projects_found_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final project;
+  final project, project_id;
 
-  const ProjectPage({
+  ProjectPage({
     Key? key,
-    required this.project,
+    this.project,
+    this.project_id,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,8 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
+  var project_details = [];
+
   var evaluationDetails = [
     [
       '1',
@@ -41,13 +45,45 @@ class _ProjectPageState extends State<ProjectPage> {
     ],
   ];
 
+  void fetchProject() {
+    FirebaseFirestore.instance
+        .collection('projects')
+        .doc(widget.project_id)
+        .get()
+        .then((value) {
+      var doc = value.data();
+      setState(() {
+        project_details.add(doc!['title']);
+        project_details.add(doc['instructor_name']);
+        project_details.add(doc['year']);
+        project_details.add(doc['semester']);
+        project_details.add(doc['student_name']);
+        // print(project_details);
+      });
+    });
+    // Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchProject();
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
-    if (widget.project == null) {
+    if (widget.project_id == null) {
       return const NoProjectsFoundPage();
+    } else if (project_details.length < 5) {
+      return const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+        ),
+      );
     } else {
       return Expanded(
         child: Container(
@@ -61,7 +97,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomisedText(
-                      text: widget.project[0],
+                      text: project_details[0],
                       fontSize: 50,
                     ),
                     Row(
@@ -70,11 +106,11 @@ class _ProjectPageState extends State<ProjectPage> {
                         Container(
                           margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                           child: CustomisedText(
-                            text: widget.project[1] +
+                            text: project_details[1] +
                                 ' - ' +
-                                widget.project[2] +
+                                project_details[2] +
                                 ' ' +
-                                widget.project[3],
+                                project_details[3],
                             fontSize: 25,
                           ),
                         ),
@@ -82,13 +118,13 @@ class _ProjectPageState extends State<ProjectPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             CustomisedText(
-                              text: widget.project[4][0],
+                              text: project_details[4][0],
                             ),
                             const SizedBox(
                               height: 5,
                             ),
                             CustomisedText(
-                              text: widget.project[4][1],
+                              text: project_details[4][1],
                             ),
                           ],
                         )

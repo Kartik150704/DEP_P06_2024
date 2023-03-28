@@ -43,6 +43,9 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
   }
 
   void supervisorEnrollments() {
+    setState(() {
+      enrollments = [];
+    });
     final List<Enrollment> enrollments_data = [];
     // List<dynamic> project_list
     FirebaseFirestore.instance
@@ -60,11 +63,13 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
           final val = doc.data();
           setState(() {
             enrollments.add(Enrollment(
-                name: val['title'],
-                sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
-                sem: val['semester'],
-                year: val['year'],
-                description: val['description']));
+              name: val['title'],
+              sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
+              sem: val['semester'],
+              year: val['year'],
+              description: val['description'],
+              project_id: doc.id,
+            ));
           });
           // print(val);
         }
@@ -73,16 +78,23 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
   }
 
   void allEnrollments() {
+    setState(() {
+      enrollments = [];
+    });
     FirebaseFirestore.instance.collection('projects').get().then((value) {
       for (var doc in value.docs) {
         final val = doc.data();
         setState(() {
-          enrollments.add(Enrollment(
+          enrollments.add(
+            Enrollment(
               name: val['title'],
               sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
               sem: val['semester'],
               year: val['year'],
-              description: val['description']));
+              description: val['description'],
+              project_id: doc.id,
+            ),
+          );
         });
       }
     });
@@ -127,6 +139,11 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                                     setState(
                                       () {
                                         ischecked = value;
+                                        if (ischecked!) {
+                                          supervisorEnrollments();
+                                        } else {
+                                          allEnrollments();
+                                        }
                                       },
                                     );
                                   },
@@ -252,7 +269,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
 }
 
 class Enrollment {
-  final String name, sname, sem, year, description;
+  final String name, sname, sem, year, description, project_id;
 
   const Enrollment({
     required this.name,
@@ -260,5 +277,6 @@ class Enrollment {
     required this.sem,
     required this.year,
     required this.description,
+    required this.project_id,
   });
 }
