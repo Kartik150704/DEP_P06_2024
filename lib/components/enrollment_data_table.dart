@@ -82,6 +82,7 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
         label: CustomisedText(
           text: columns[3],
         ),
+        onSort: onSort,
       ),
       DataColumn(
         label: CustomisedText(
@@ -108,13 +109,6 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                             children: [
                               ProjectPage(
                                 project_id: enrollment.project_id,
-                                project: const [
-                                  '',
-                                  '',
-                                  '',
-                                  '',
-                                  ['', '']
-                                ],
                               )
                             ],
                           )),
@@ -183,12 +177,17 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
     } else if (columnIndex == 1) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.date, enrollment2.date),
+            compareString(ascending, enrollment1.sname, enrollment2.sname),
       );
     } else if (columnIndex == 2) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.marks, enrollment2.marks),
+            compareString(ascending, enrollment1.sem, enrollment2.sem),
+      );
+    } else if (columnIndex == 3) {
+      widget.enrollments.sort(
+        (enrollment1, enrollment2) =>
+            compareString(ascending, enrollment1.year, enrollment2.year),
       );
     }
 
