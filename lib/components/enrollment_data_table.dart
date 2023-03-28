@@ -171,7 +171,7 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
     if (columnIndex == 0) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.week, enrollment2.week),
+            compareString(ascending, enrollment1.name, enrollment2.name),
       );
     } else if (columnIndex == 1) {
       widget.enrollments.sort(

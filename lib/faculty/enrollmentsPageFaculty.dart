@@ -29,87 +29,63 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
 
   bool? ischecked = false;
 
-  List<Enrollment> supervisorEnrollments() {
-    final List<Enrollment> enrollments_data = [];
-    List<dynamic> project_list = [];
+  late List<Enrollment> enrollments = [];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.role == 'su') {
+      supervisorEnrollments();
+    } else {
+      allEnrollments();
+    }
+  }
+
+  void supervisorEnrollments() {
+    final List<Enrollment> enrollments_data = [];
+    // List<dynamic> project_list
     FirebaseFirestore.instance
         .collection('instructors')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
-        .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                project_list = (doc['project_as_head_ids']);
-                for (var id in project_list) {
-                  FirebaseFirestore.instance
-                      .collection('projects')
-                      .get()
-                      .then((QuerySnapshot querySnapshot) => {
-                            querySnapshot.docs.forEach((doc) {
-                              if (doc.id == id) {
-                                final val = doc;
-                                enrollments_data.add(Enrollment(
-                                    name: val['title'],
-                                    sname:
-                                        '${val['student_name'][0]}, ${val['student_name'][1]}',
-                                    sem: val['semester'],
-                                    year: val['year'],
-                                    description: val['description']));
-                                print(enrollments_data);
-                              }
-                            })
-                          });
-                }
-              })
-            });
-    print(enrollments_data);
-    return enrollments_data;
+        .then((snapshot) {
+      FirebaseFirestore.instance
+          .collection('projects')
+          .where(FieldPath.documentId,
+              whereIn: snapshot.docs[0]['project_as_head_ids'])
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          final val = doc.data();
+          setState(() {
+            enrollments.add(Enrollment(
+                name: val['title'],
+                sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
+                sem: val['semester'],
+                year: val['year'],
+                description: val['description']));
+          });
+          // print(val);
+        }
+      });
+    });
   }
 
-  StreamBuilder allEnrollments() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('projects').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: snapshot.data?.docs.length,
-            itemBuilder: (context, index) {
-              print(snapshot.data?.docs[index]);
-              // var doc = snapshot.data?.docs[index];
-
-              return ProjectTile(
-                info:
-                    'Student Name(s) - ${snapshot.data?.docs[index]['student_name'][0]}, ${snapshot.data?.docs[index]['student_name'][1]} \nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
-                title: '${snapshot.data?.docs[index]['title']}',
-                title_onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoggedInScaffoldFaculty(
-                          role: widget.role,
-                          scaffoldbody: Row(
-                            children: const [
-                              ProjectPage(
-                                project: ['', '', '', '', '', '', '', ''],
-                              )
-                            ],
-                          )),
-                    ),
-                  );
-                },
-                type: '${snapshot.data?.docs[index]['type']}',
-                theme: 'w',
-                isLink: true,
-              );
-            },
-          );
-        } else {
-          return const CustomisedText(text: 'loading...');
-        }
-      },
-    );
+  void allEnrollments() {
+    FirebaseFirestore.instance.collection('projects').get().then((value) {
+      for (var doc in value.docs) {
+        final val = doc.data();
+        setState(() {
+          enrollments.add(Enrollment(
+              name: val['title'],
+              sname: '${val['student_name'][0]}, ${val['student_name'][1]}',
+              sem: val['semester'],
+              year: val['year'],
+              description: val['description']));
+        });
+      }
+    });
   }
 
   @override
@@ -257,9 +233,7 @@ class _EnrollmentsPageFacultyState extends State<EnrollmentsPageFaculty> {
                   ),
                   child: SingleChildScrollView(
                     child: EnrollmentDataTable(
-                      enrollments: (widget.role == 'su')
-                          ? supervisorEnrollments()
-                          : allEnrollments(),
+                      enrollments: enrollments,
                       role: widget.role,
                     ),
                   ),
