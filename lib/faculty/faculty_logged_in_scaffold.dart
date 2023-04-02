@@ -1,24 +1,22 @@
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
-import 'package:casper/main.dart';
+import 'package:casper/faculty/faculty_home_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'faculty_home_page.dart';
-
-class LoggedInScaffoldFaculty extends StatelessWidget {
-  final scaffoldbody;
-  final role;
-
+class FacultyLoggedInScaffold extends StatelessWidget {
   final appBarOptions = [
     'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
 
-  LoggedInScaffoldFaculty({
+  // ignore: prefer_typing_uninitialized_variables
+  final scaffoldbody, role;
+
+  FacultyLoggedInScaffold({
     Key? key,
     required this.scaffoldbody,
     required this.role,
@@ -29,39 +27,22 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
     Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  @override
-  void onPressed() {
-    // showDialog(context: context, builder: AlertDialog(title: 'ok',));
-  }
+  void onPressed() {}
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff12141d),
-        // title: Text(
-        //   'Casper',
-        //   style: SafeGoogleFont(
-        //     'Ubuntu',
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.w700,
-        //     color: const Color(0xffffffff),
-        //   ),
-        // ),
         leading: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 30,
             ),
             for (int i = 0; i < appBarOptions.length; i++) ...[
               CustomisedTextButton(
                 text: appBarOptions[i],
                 onPressed: () => {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => appBarFunctions[i],
-                  //   ),
-                  // )
                   Navigator.of(context).push(
                     _createRoute(i),
                   ),
@@ -82,12 +63,6 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
         ],
       ),
       body: scaffoldbody,
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: const Color(0xff1a1e2e),
-      //   // unselectedLabelStyle: TextStyle(color: Color(0xffffffff)),
-      //   unselectedItemColor: const Color(0xffffffff),
-      //   selectedItemColor: const Color(0xffffffff), items: const [],
-      // ),
       bottomSheet: Container(
         height: 55,
         width: double.infinity,

@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 
 class FacultyEnrollmentsPage extends StatefulWidget {
   final String role;
+  final showProject;
 
   const FacultyEnrollmentsPage({
     Key? key,
+    required this.showProject,
     this.role = 'su',
   }) : super(key: key);
 
@@ -238,6 +240,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         child: EnrollmentsDataTable(
                           enrollments: enrollments,
                           role: widget.role,
+                          showProject: widget.showProject,
                         ),
                       ),
                     ),

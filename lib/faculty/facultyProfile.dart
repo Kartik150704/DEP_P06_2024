@@ -1,4 +1,4 @@
-import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
+import 'package:casper/faculty/faculty_logged_in_scaffold.dart';
 import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
@@ -25,7 +25,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
     double ffem = fem * 0.97;
-    return LoggedInScaffoldFaculty(
+    return FacultyLoggedInScaffold(
       role: widget.role,
       scaffoldbody: Row(
         children: [

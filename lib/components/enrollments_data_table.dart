@@ -2,7 +2,7 @@ import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:casper/faculty/faculty_home_page.dart';
-import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
+import 'package:casper/faculty/faculty_logged_in_scaffold.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +10,13 @@ import 'package:flutter/material.dart';
 class EnrollmentsDataTable extends StatefulWidget {
   final List<Enrollment> enrollments;
   final String role;
+  final showProject;
 
   const EnrollmentsDataTable({
     super.key,
     required this.enrollments,
     required this.role,
+    required this.showProject,
   });
 
   @override
@@ -101,17 +103,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                 width: 250,
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FacultyHomePage(
-                          role: widget.role,
-                          projectId: enrollment.projectId,
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: () => widget.showProject(enrollment.projectId),
                   child: CustomisedOverflowText(
                     text: enrollment.title,
                     color: Colors.blue[900],

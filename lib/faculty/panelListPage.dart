@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
 import '../utilites.dart';
-import 'loggedinscaffoldFaculty.dart';
+import 'faculty_logged_in_scaffold.dart';
 
 class PanelPageFaculty extends StatefulWidget {
   final role;
@@ -100,19 +100,20 @@ class _PanelPageFacultyState extends State<PanelPageFaculty> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            LoggedInScaffoldFaculty(
+                                            FacultyLoggedInScaffold(
+                                          role: widget.role,
+                                          scaffoldbody: Row(
+                                            children: [
+                                              PanelPage(
+                                                name: 'Panel A',
+                                                type: 'Mid-Term',
+                                                year: '2023',
+                                                semester: '||',
                                                 role: widget.role,
-                                                scaffoldbody: Row(
-                                                  children: [
-                                                    PanelPage(
-                                                      name: 'Panel A',
-                                                      type: 'Mid-Term',
-                                                      year: '2023',
-                                                      semester: '||',
-                                                      role: widget.role,
-                                                    ),
-                                                  ],
-                                                )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     );
                                   },
@@ -132,17 +133,18 @@ class _PanelPageFacultyState extends State<PanelPageFaculty> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            LoggedInScaffoldFaculty(
-                                                role: widget.role,
-                                                scaffoldbody: Row(
-                                                  children: const [
-                                                    PanelPage(
-                                                        name: 'Panel A',
-                                                        type: 'Mid-Term',
-                                                        year: '2023',
-                                                        semester: '||'),
-                                                  ],
-                                                )),
+                                            FacultyLoggedInScaffold(
+                                          role: widget.role,
+                                          scaffoldbody: Row(
+                                            children: const [
+                                              PanelPage(
+                                                  name: 'Panel A',
+                                                  type: 'Mid-Term',
+                                                  year: '2023',
+                                                  semester: '||'),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     );
                                   },
