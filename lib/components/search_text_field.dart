@@ -24,6 +24,7 @@ class SearchTextField extends StatelessWidget {
       child: TextField(
         obscureText: false,
         controller: textEditingController,
+        cursorColor: Colors.black,
         decoration: InputDecoration(
           border: InputBorder.none,
           focusedBorder: const OutlineInputBorder(

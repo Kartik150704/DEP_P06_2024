@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final project, project_id, isFaculty;
+  final project_id, isFaculty;
 
   ProjectPage({
     Key? key,
-    this.project,
     this.project_id,
     this.isFaculty = false,
   }) : super(key: key);

@@ -27,6 +27,7 @@ class CustomisedTextField extends StatelessWidget {
       child: TextField(
         obscureText: obscureText,
         controller: textEditingController,
+        cursorColor: Colors.black,
         decoration: InputDecoration(
           border: InputBorder.none,
           focusedBorder: const OutlineInputBorder(

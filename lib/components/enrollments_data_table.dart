@@ -1,6 +1,7 @@
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
+import 'package:casper/faculty/faculty_home_page.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
@@ -104,16 +105,10 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LoggedInScaffoldFaculty(
-                            role: widget.role,
-                            scaffoldbody: Row(
-                              children: [
-                                ProjectPage(
-                                  project_id: enrollment.projectId,
-                                  isFaculty: true,
-                                )
-                              ],
-                            )),
+                        builder: (context) => FacultyHomePage(
+                          role: widget.role,
+                          projectId: enrollment.projectId,
+                        ),
                       ),
                     );
                   },
@@ -126,7 +121,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
               ),
             ),
             DataCell(
-              Container(
+              SizedBox(
                 width: 300,
                 child: CustomisedOverflowText(
                   text: enrollment.students,
@@ -134,7 +129,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                 ),
               ),
             ),
-            DataCell(
+            const DataCell(
               CustomisedText(
                 text: 'CP302',
                 color: Colors.black,
@@ -155,9 +150,11 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
           ];
 
           return DataRow(
-              cells: cells,
-              color: MaterialStateProperty.all(
-                  const Color.fromARGB(255, 212, 203, 216)));
+            cells: cells,
+            color: MaterialStateProperty.all(
+              const Color.fromARGB(255, 212, 203, 216),
+            ),
+          );
         },
       ).toList();
 

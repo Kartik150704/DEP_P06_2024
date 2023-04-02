@@ -16,9 +16,9 @@ class FacultyProfile extends StatefulWidget {
 class _FacultyProfileState extends State<FacultyProfile> {
   void onPressed() {}
 
-  ProjectPage projectpage = ProjectPage(
-    project: ['', '', '', '', '', '', '', ''],
-  );
+  // ProjectPage projectpage = ProjectPage(
+  //   project: ['', '', '', '', '', '', '', ''],
+  // );
 
   @override
   Widget build(BuildContext context) {
