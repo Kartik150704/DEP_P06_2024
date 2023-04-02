@@ -1,20 +1,20 @@
-import 'package:casper/login_page.dart';
-import 'package:casper/login_scaffold.dart';
+import 'package:casper/auth_page.dart';
+import 'package:casper/firebase_options.dart';
 import 'package:flutter/material.dart';
+
+// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
-import 'auth_page.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const myActualApp());
+  runApp(const Casper());
 }
 
-class myActualApp extends StatelessWidget {
-  const myActualApp({Key? key}) : super(key: key);
+class Casper extends StatelessWidget {
+  const Casper({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

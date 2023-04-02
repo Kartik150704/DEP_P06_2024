@@ -6,7 +6,7 @@ import 'package:casper/utilites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'facultyHome.dart';
+import 'faculty_home_page.dart';
 
 class LoggedInScaffoldFaculty extends StatelessWidget {
   final scaffoldbody;
@@ -125,7 +125,7 @@ class LoggedInScaffoldFaculty extends StatelessWidget {
   Route _createRoute(i) {
     final appBarFunctions = [
       FacultyProfile(role: role),
-      FacultyHome(role: role),
+      FacultyHomePage(role: role),
       FacultyOfferings(role: role),
     ];
     return PageRouteBuilder(

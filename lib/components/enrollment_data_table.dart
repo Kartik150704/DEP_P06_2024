@@ -4,7 +4,7 @@ import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/components/marks_submission_form.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
-import 'package:casper/faculty/enrollmentsPageFaculty.dart';
+import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:flutter/material.dart';
 
 import 'customised_text_button.dart';
@@ -116,7 +116,7 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                           scaffoldbody: Row(
                             children: [
                               ProjectPage(
-                                project_id: enrollment.project_id,
+                                project_id: enrollment.projectId,
                                 isFaculty: true,
                               )
                             ],
@@ -125,7 +125,7 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                   );
                 },
                 child: CustomisedText(
-                  text: enrollment.name,
+                  text: enrollment.title,
                   color: Colors.blue[900],
                   selectable: false,
                 ),

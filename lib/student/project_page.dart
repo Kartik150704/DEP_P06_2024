@@ -32,13 +32,7 @@ class _ProjectPageState extends State<ProjectPage> {
         .get()
         .then((value) {
       var doc = value.docs[0];
-      // print(doc);
       int n = doc['number_of_evaluations'];
-      // required this.week,
-      // required this.date,
-      // required this.marks,
-      // required this.remarks,
-      // required this.status,
       for (int i = 0; i < n; i++) {
         setState(() {
           evaluations.add(Evaluation(
@@ -51,7 +45,6 @@ class _ProjectPageState extends State<ProjectPage> {
           ));
         });
       }
-      print(evaluations);
     });
   }
 
@@ -74,15 +67,12 @@ class _ProjectPageState extends State<ProjectPage> {
         project_details.add(doc['semester']);
         project_details.add(doc['student_name']);
         project_details.add(doc['description']);
-        // print(project_details);
       });
     });
-    // Navigator.pop(context);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchProject();
   }

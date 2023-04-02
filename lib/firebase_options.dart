@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '404983897210',
     projectId: 'casper-5a3e9',
     storageBucket: 'casper-5a3e9.appspot.com',
-    iosClientId: '404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn.apps.googleusercontent.com',
+    iosClientId:
+        '404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn.apps.googleusercontent.com',
     iosBundleId: 'com.dep.casper',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '404983897210',
     projectId: 'casper-5a3e9',
     storageBucket: 'casper-5a3e9.appspot.com',
-    iosClientId: '404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn.apps.googleusercontent.com',
+    iosClientId:
+        '404983897210-3v58j8and033apa5hlhorpg2tsv8l8kn.apps.googleusercontent.com',
     iosBundleId: 'com.dep.casper',
   );
 }

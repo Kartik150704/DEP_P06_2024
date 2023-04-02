@@ -1,70 +1,64 @@
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/faculty/enrollmentsPageFaculty.dart';
+import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:casper/faculty/panelListPage.dart';
-import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 
 import 'loggedinscaffoldFaculty.dart';
 
-class FacultyHome extends StatefulWidget {
-  final role;
+class FacultyHomePage extends StatefulWidget {
+  final String role;
 
-  const FacultyHome({Key? key, this.role = 'su'}) : super(key: key);
+  const FacultyHomePage({
+    Key? key,
+    this.role = 'su',
+  }) : super(key: key);
 
   @override
-  State<FacultyHome> createState() => _FacultyHomeState();
+  State<FacultyHomePage> createState() => _FacultyHomePageState();
 }
 
-class _FacultyHomeState extends State<FacultyHome> {
-  void onPressed() {}
-  dynamic shownpage;
-  var option;
+class _FacultyHomePageState extends State<FacultyHomePage> {
+  var options = ['Enrollments', 'Panels'], option = 1;
 
-  var options = ['Enrollments', 'Panels'];
+  dynamic displayPage;
 
   void selectOption(opt) {
     setState(() {
       option = opt;
       if (option == 1) {
-        shownpage = EnrollmentsPageFaculty(
+        displayPage = FacultyEnrollmentsPage(
           role: widget.role,
         );
       } else {
-        shownpage = PanelPageFaculty(
+        displayPage = PanelPageFaculty(
           role: widget.role,
         );
       }
     });
   }
 
+  void onPressed() {}
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    option = 1;
-    shownpage = EnrollmentsPageFaculty(
+    displayPage = FacultyEnrollmentsPage(
       role: widget.role,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // setState(
-    //   () {
-    //     shownpage = EnrollmentsPageFaculty(
-    //       role: widget.role,
-    //     );
-    //   },
-    // );
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+
     return LoggedInScaffoldFaculty(
       role: widget.role,
       scaffoldbody: Row(
         children: [
           Container(
             width: 300 * fem,
-            color: Color(0xff545161),
+            color: const Color(0xff545161),
             child: ListView(
               children: [
                 Column(
@@ -82,7 +76,7 @@ class _FacultyHomeState extends State<FacultyHome> {
               ],
             ),
           ),
-          shownpage,
+          displayPage,
         ],
       ),
     );
