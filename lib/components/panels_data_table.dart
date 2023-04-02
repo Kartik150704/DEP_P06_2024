@@ -1,31 +1,31 @@
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/faculty/faculty_enrollments_page.dart';
+import 'package:casper/faculty/faculty_panels_page.dart';
 import 'package:flutter/material.dart';
 
-class EnrollmentsDataTable extends StatefulWidget {
-  final List<Enrollment> enrollments;
+class PanelsDataTable extends StatefulWidget {
+  final List<Panel> panels;
   final String role;
-  final showProject;
+  // final showProject;
 
-  const EnrollmentsDataTable({
+  const PanelsDataTable({
     super.key,
-    required this.enrollments,
+    required this.panels,
     required this.role,
-    required this.showProject,
+    // required this.showProject,
   });
 
   @override
-  State<EnrollmentsDataTable> createState() => _EnrollmentsDataTableState();
+  State<PanelsDataTable> createState() => _PanelsDataTableState();
 }
 
-class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
+class _PanelsDataTableState extends State<PanelsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.enrollments.isEmpty) {
+    if (widget.panels.isEmpty) {
       return SizedBox(
         height: 560,
         child: Center(
@@ -41,7 +41,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                 width: 10,
               ),
               CustomisedText(
-                text: 'No Enrollments found',
+                text: 'No panels found',
                 color: Colors.grey[300],
                 fontSize: 30,
               ),
@@ -52,9 +52,11 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
     }
 
     final columns = [
-      'Project Title',
-      'Student(s)',
-      'Course Code',
+      'Panel',
+      'Evaluators',
+      'Assigned',
+      'Evaluated',
+      'Type',
       'Semester',
       'Year',
     ];
@@ -71,7 +73,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         sortAscending: isAscending,
         sortColumnIndex: sortColumnIndex,
         columns: getColumns(columns),
-        rows: getRows(widget.enrollments),
+        rows: getRows(widget.panels),
         headingRowColor: MaterialStateColor.resolveWith(
           (states) {
             return const Color(0xff12141D);
@@ -112,22 +114,41 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         ),
         onSort: onSort,
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[5],
+        ),
+        onSort: onSort,
+      ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[6],
+        ),
+        onSort: onSort,
+      ),
     ];
 
     return headings;
   }
 
-  List<DataRow> getRows(List<Enrollment> rows) => rows.map(
-        (Enrollment enrollment) {
+  List<DataRow> getRows(List<Panel> rows) => rows.map(
+        (Panel panel) {
           final cells = [
             DataCell(
-              Container(
+              SizedBox(
+                child: CustomisedText(
+                  text: panel.number,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
                 width: 250,
-                alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () => widget.showProject(enrollment.projectId),
+                  onPressed: () {},
                   child: CustomisedOverflowText(
-                    text: enrollment.title,
+                    text: panel.evaluators,
                     color: Colors.blue[900],
                     selectable: false,
                   ),
@@ -136,28 +157,38 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             ),
             DataCell(
               SizedBox(
-                width: 300,
                 child: CustomisedOverflowText(
-                  text: enrollment.students,
+                  text: panel.teamsAssigned,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                child: CustomisedOverflowText(
+                  text: panel.teamsEvaluated,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                width: 100,
+                child: CustomisedOverflowText(
+                  text: panel.type,
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.courseCode,
+                text: panel.semester,
                 color: Colors.black,
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.semester,
-                color: Colors.black,
-              ),
-            ),
-            DataCell(
-              CustomisedText(
-                text: enrollment.year,
+                text: panel.year,
                 color: Colors.black,
               ),
             ),
@@ -174,29 +205,32 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.title, enrollment2.title),
-      );
-    } else if (columnIndex == 1) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.students, enrollment2.students),
+      widget.panels.sort(
+        (panel1, panel2) =>
+            compareString(ascending, panel1.number, panel2.number),
       );
     } else if (columnIndex == 2) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.courseCode, enrollment2.courseCode),
+      widget.panels.sort(
+        (panel1, panel2) => compareString(
+            ascending, panel1.teamsAssigned, panel2.teamsAssigned),
       );
     } else if (columnIndex == 3) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.semester, enrollment2.semester),
+      widget.panels.sort(
+        (panel1, panel2) => compareString(
+            ascending, panel1.teamsEvaluated, panel2.teamsEvaluated),
       );
     } else if (columnIndex == 4) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.year, enrollment2.year),
+      widget.panels.sort(
+        (panel1, panel2) => compareString(ascending, panel1.type, panel2.type),
+      );
+    } else if (columnIndex == 5) {
+      widget.panels.sort(
+        (panel1, panel2) =>
+            compareString(ascending, panel1.semester, panel2.semester),
+      );
+    } else if (columnIndex == 6) {
+      widget.panels.sort(
+        (panel1, panel2) => compareString(ascending, panel1.year, panel2.year),
       );
     }
 

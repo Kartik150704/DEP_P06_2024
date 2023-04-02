@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
-import 'package:casper/faculty/panelListPage.dart';
+import 'package:casper/faculty/faculty_panels_page.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class FacultyHomePage extends StatefulWidget {
 }
 
 class _FacultyHomePageState extends State<FacultyHomePage> {
-  var options = ['Enrollments', 'Panels'], option = 1;
+  var options = ['Enrollments', 'Panels'], option = 2;
 
   dynamic displayPage;
 
@@ -34,7 +34,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
           showProject: showProject,
         );
       } else {
-        displayPage = PanelPageFaculty(
+        displayPage = FacultyPanelsPage(
           role: widget.role,
         );
       }
@@ -61,9 +61,12 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
         isFaculty: true,
       );
     } else {
-      displayPage = FacultyEnrollmentsPage(
+      // displayPage = FacultyEnrollmentsPage(
+      //   role: widget.role,
+      //   showProject: showProject,
+      // );
+      displayPage = FacultyPanelsPage(
         role: widget.role,
-        showProject: showProject,
       );
     }
   }

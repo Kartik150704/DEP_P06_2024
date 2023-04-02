@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/marks_submission_form.dart';
@@ -12,11 +10,12 @@ class EvaluationDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final evaluations, isFaculty, refresh;
 
-  const EvaluationDataTable(
-      {super.key,
-      required this.evaluations,
-      this.isFaculty = false,
-      required this.refresh});
+  const EvaluationDataTable({
+    super.key,
+    required this.evaluations,
+    this.isFaculty = false,
+    required this.refresh,
+  });
 
   @override
   State<EvaluationDataTable> createState() => _EvaluationDataTableState();

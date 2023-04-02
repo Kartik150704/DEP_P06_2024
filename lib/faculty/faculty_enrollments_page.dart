@@ -30,15 +30,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       courseCodeController = TextEditingController(),
       yearSemesterController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.role == 'su') {
-      getSupervisorEnrollments();
-    } else {
-      getAllEnrollments();
-    }
-  }
+  dynamic displayPage;
 
   void getSupervisorEnrollments() {
     setState(() {
@@ -78,23 +70,36 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       enrollments = [];
     });
 
-    FirebaseFirestore.instance.collection('projects').get().then((value) {
-      for (var doc in value.docs) {
-        final val = doc.data();
-        setState(() {
-          enrollments.add(
-            Enrollment(
-              title: val['title'],
-              students: val['student_name'][0] + ', ' + val['student_name'][1],
-              semester: val['semester'],
-              year: val['year'],
-              description: val['description'],
-              projectId: doc.id,
-            ),
-          );
-        });
-      }
-    });
+    FirebaseFirestore.instance.collection('projects').get().then(
+      (value) {
+        for (var doc in value.docs) {
+          final val = doc.data();
+          setState(() {
+            enrollments.add(
+              Enrollment(
+                title: val['title'],
+                students:
+                    val['student_name'][0] + ', ' + val['student_name'][1],
+                semester: val['semester'],
+                year: val['year'],
+                description: val['description'],
+                projectId: doc.id,
+              ),
+            );
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.role == 'su') {
+      getSupervisorEnrollments();
+    } else {
+      getAllEnrollments();
+    }
   }
 
   @override
@@ -256,11 +261,18 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
 }
 
 class Enrollment {
-  final String title, students, semester, year, description, projectId;
+  final String title,
+      students,
+      courseCode,
+      semester,
+      year,
+      description,
+      projectId;
 
   const Enrollment({
     required this.title,
     required this.students,
+    this.courseCode = 'CP302',
     required this.semester,
     required this.year,
     required this.description,
