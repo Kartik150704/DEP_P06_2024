@@ -2,7 +2,7 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/utilites.dart';
 import 'package:casper/components/customised_text_field.dart';
-import 'package:casper/components/enrollment_data_table.dart';
+import 'package:casper/components/enrollments_data_table.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +59,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           setState(() {
             enrollments.add(Enrollment(
               title: val['title'],
-              sname1: val['student_name'][0],
-              sname2: val['student_name'][1],
-              sem: val['semester'],
+              students: val['student_name'][0] + ', ' + val['student_name'][1],
+              semester: val['semester'],
               year: val['year'],
               description: val['description'],
               projectId: doc.id,
@@ -84,9 +83,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           enrollments.add(
             Enrollment(
               title: val['title'],
-              sname1: val['student_name'][0],
-              sname2: val['student_name'][1],
-              sem: val['semester'],
+              students: val['student_name'][0] + ', ' + val['student_name'][1],
+              semester: val['semester'],
               year: val['year'],
               description: val['description'],
               projectId: doc.id,
@@ -237,7 +235,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
-                        child: EnrollmentDataTable(
+                        child: EnrollmentsDataTable(
                           enrollments: enrollments,
                           role: widget.role,
                         ),
@@ -255,13 +253,12 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
 }
 
 class Enrollment {
-  final String title, sname1, sname2, sem, year, description, projectId;
+  final String title, students, semester, year, description, projectId;
 
   const Enrollment({
     required this.title,
-    required this.sname1,
-    required this.sname2,
-    required this.sem,
+    required this.students,
+    required this.semester,
     required this.year,
     required this.description,
     required this.projectId,

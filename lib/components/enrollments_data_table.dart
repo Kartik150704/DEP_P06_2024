@@ -1,42 +1,37 @@
-import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
+import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
-import 'package:casper/components/marks_submission_form.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
-import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:flutter/material.dart';
 
-import 'customised_text_button.dart';
-
-class EnrollmentDataTable extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final enrollments;
+class EnrollmentsDataTable extends StatefulWidget {
+  final List<Enrollment> enrollments;
   final String role;
 
-  const EnrollmentDataTable({
+  const EnrollmentsDataTable({
     super.key,
     required this.enrollments,
     required this.role,
   });
 
   @override
-  State<EnrollmentDataTable> createState() => _EnrollmentDataTableState();
+  State<EnrollmentsDataTable> createState() => _EnrollmentsDataTableState();
 }
 
-class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
+class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
   @override
   Widget build(BuildContext context) {
     final columns = [
-      'Name',
-      'Student1',
-      'Student2',
+      'Project Title',
+      'Student(s)',
+      'Course Code',
       'Semester',
       'Year',
-      'Project Description',
     ];
 
     return Theme(
@@ -92,11 +87,6 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
           text: columns[4],
         ),
       ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[5],
-        ),
-      ),
     ];
 
     return headings;
@@ -106,46 +96,53 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
         (Enrollment enrollment) {
           final cells = [
             DataCell(
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoggedInScaffoldFaculty(
-                          role: widget.role,
-                          scaffoldbody: Row(
-                            children: [
-                              ProjectPage(
-                                project_id: enrollment.projectId,
-                                isFaculty: true,
-                              )
-                            ],
-                          )),
-                    ),
-                  );
-                },
-                child: CustomisedText(
-                  text: enrollment.title,
-                  color: Colors.blue[900],
-                  selectable: false,
+              Container(
+                width: 250,
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoggedInScaffoldFaculty(
+                            role: widget.role,
+                            scaffoldbody: Row(
+                              children: [
+                                ProjectPage(
+                                  project_id: enrollment.projectId,
+                                  isFaculty: true,
+                                )
+                              ],
+                            )),
+                      ),
+                    );
+                  },
+                  child: CustomisedOverflowText(
+                    text: enrollment.title,
+                    color: Colors.blue[900],
+                    selectable: false,
+                  ),
+                ),
+              ),
+            ),
+            DataCell(
+              Container(
+                width: 300,
+                child: CustomisedOverflowText(
+                  text: enrollment.students,
+                  color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.sname1,
+                text: 'CP302',
                 color: Colors.black,
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.sname2,
-                color: Colors.black,
-              ),
-            ),
-            DataCell(
-              CustomisedText(
-                text: enrollment.sem,
+                text: enrollment.semester,
                 color: Colors.black,
               ),
             ),
@@ -155,32 +152,12 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
                 color: Colors.black,
               ),
             ),
-            DataCell(
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: SelectionArea(
-                  child: Text(
-                    enrollment.description,
-                    textAlign: TextAlign.center,
-                    style: SafeGoogleFont(
-                      'Ubuntu',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ),
           ];
 
           return DataRow(
               cells: cells,
               color: MaterialStateProperty.all(
-                  Color.fromARGB(255, 212, 203, 216)));
+                  const Color.fromARGB(255, 212, 203, 216)));
         },
       ).toList();
 
@@ -188,24 +165,14 @@ class _EnrollmentDataTableState extends State<EnrollmentDataTable> {
     if (columnIndex == 0) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.name, enrollment2.name),
-      );
-    } else if (columnIndex == 1) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.sname1, enrollment2.sname1),
+            compareString(ascending, enrollment1.title, enrollment2.title),
       );
     } else if (columnIndex == 2) {
       widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.sname2, enrollment2.sname2),
+        (enrollment1, enrollment2) => compareString(
+            ascending, enrollment1.semester, enrollment2.semester),
       );
     } else if (columnIndex == 3) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.sem, enrollment2.sem),
-      );
-    } else if (columnIndex == 4) {
       widget.enrollments.sort(
         (enrollment1, enrollment2) =>
             compareString(ascending, enrollment1.year, enrollment2.year),
