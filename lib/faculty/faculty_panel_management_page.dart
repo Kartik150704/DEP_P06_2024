@@ -123,23 +123,20 @@ class _FacultyPanelManagementPageState
                         SizedBox(
                           height: 47,
                           width: 47,
-                          child: Tooltip(
-                            message: 'Search',
-                            child: FloatingActionButton(
-                              shape: BeveledRectangleBorder(
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                              backgroundColor:
-                                  const Color.fromARGB(255, 212, 203, 216),
-                              splashColor: Colors.black,
-                              hoverColor: Colors.grey,
-                              child: const Icon(
-                                Icons.search,
-                                color: Colors.black,
-                                size: 29,
-                              ),
-                              onPressed: () {},
+                          child: FloatingActionButton(
+                            shape: BeveledRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
                             ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 212, 203, 216),
+                            splashColor: Colors.black,
+                            hoverColor: Colors.grey,
+                            child: const Icon(
+                              Icons.search,
+                              color: Colors.black,
+                              size: 29,
+                            ),
+                            onPressed: () {},
                           ),
                         ),
                       ],
