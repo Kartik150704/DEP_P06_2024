@@ -2,14 +2,13 @@ import 'package:casper/components/button.dart';
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components/panels_data_table.dart';
+import 'package:casper/components/assigned_panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/faculty/panelPage.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
 import '../utilites.dart';
-import 'faculty_logged_in_scaffold.dart';
 
 class FacultyPanelsPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -25,7 +24,7 @@ class FacultyPanelsPage extends StatefulWidget {
 }
 
 class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
-  late List<Panel> panels = [];
+  late List<AssignedPanel> panels = [];
   final panelNumberController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
       panelTypeController = TextEditingController(),
@@ -50,7 +49,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   // TODO: Implement these methods
   void getSupervisorPanels() {
     panels = [
-      Panel(
+      AssignedPanel(
         number: '1',
         evaluators: 'Shweta Jain, Sudarshan Iyengar',
         teamsAssigned: '3',
@@ -64,7 +63,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
 
   void getAllPanels() {
     panels = [
-      Panel(
+      AssignedPanel(
         number: '1',
         evaluators: 'Shweta Jain, Sudarshan Iyengar',
         teamsAssigned: '3',
@@ -106,7 +105,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const CustomisedText(
-                        text: 'Panels',
+                        text: 'My Panels',
                         fontSize: 50,
                       ),
                       Container(),
@@ -196,7 +195,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
-                        child: PanelsDataTable(
+                        child: AssignedPanelsDataTable(
                           panels: panels,
                           role: widget.role,
                         ),
@@ -213,7 +212,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   }
 }
 
-class Panel {
+class AssignedPanel {
   final String number,
       evaluators,
       teamsAssigned,
@@ -222,7 +221,7 @@ class Panel {
       semester,
       year;
 
-  Panel({
+  AssignedPanel({
     required this.number,
     required this.evaluators,
     required this.teamsAssigned,

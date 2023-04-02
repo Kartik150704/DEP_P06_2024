@@ -1,18 +1,17 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
+import 'package:casper/faculty/faculty_panel_management_page.dart';
 import 'package:casper/faculty/faculty_panels_page.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:flutter/material.dart';
 
-import 'faculty_logged_in_scaffold.dart';
-
 class FacultyHomePage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final role, projectId;
+  final userRole, projectId;
 
   const FacultyHomePage({
     Key? key,
-    this.role = 'su',
+    required this.userRole,
     this.projectId = -1,
   }) : super(key: key);
 
@@ -21,25 +20,13 @@ class FacultyHomePage extends StatefulWidget {
 }
 
 class _FacultyHomePageState extends State<FacultyHomePage> {
-  var options = ['Enrollments', 'Panels'], option = 2;
+  var options = [
+        'My Enrollments',
+        'My Panels',
+      ],
+      selectedOption = 1;
 
   dynamic displayPage;
-
-  void selectOption(opt) {
-    setState(() {
-      option = opt;
-      if (option == 1) {
-        displayPage = FacultyEnrollmentsPage(
-          role: widget.role,
-          showProject: showProject,
-        );
-      } else {
-        displayPage = FacultyPanelsPage(
-          role: widget.role,
-        );
-      }
-    });
-  }
 
   void showProject(projectId) {
     setState(() {
@@ -50,25 +37,44 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
-  void onPressed() {}
+  void selectOption(option) {
+    setState(() {
+      selectedOption = option;
+      switch (option) {
+        case 0:
+          displayPage = FacultyEnrollmentsPage(
+            role: widget.userRole,
+            showProject: showProject,
+          );
+          break;
+        case 1:
+          displayPage = FacultyPanelsPage(
+            role: widget.userRole,
+          );
+          break;
+        case 2:
+          displayPage = FacultyPanelManagementPage(
+            userRole: widget.userRole,
+          );
+          break;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    if (widget.projectId != -1) {
-      displayPage = ProjectPage(
-        project_id: widget.projectId,
-        isFaculty: true,
-      );
-    } else {
-      // displayPage = FacultyEnrollmentsPage(
-      //   role: widget.role,
-      //   showProject: showProject,
-      // );
-      displayPage = FacultyPanelsPage(
-        role: widget.role,
-      );
+    if (widget.userRole == 'co') {
+      options = [
+        'My Enrollments',
+        'My Panels',
+        'Panel Management',
+      ];
     }
+
+    displayPage = FacultyPanelsPage(
+      role: widget.userRole,
+    );
   }
 
   @override
@@ -76,33 +82,30 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
 
-    return FacultyLoggedInScaffold(
-      role: widget.role,
-      scaffoldbody: Row(
-        children: [
-          Container(
-            width: 300 * fem,
-            color: const Color(0xff545161),
-            child: ListView(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (int i = 0; i < options.length; i++) ...[
-                      CustomisedSidebarButton(
-                        text: options[i],
-                        isSelected: (option == (i + 1)),
-                        onPressed: () => selectOption(i + 1),
-                      )
-                    ],
+    return Row(
+      children: [
+        Container(
+          width: 300 * fem,
+          color: const Color(0xff545161),
+          child: ListView(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (int i = 0; i < options.length; i++) ...[
+                    CustomisedSidebarButton(
+                      text: options[i],
+                      isSelected: (selectedOption == (i)),
+                      onPressed: () => selectOption(i),
+                    )
                   ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
-          displayPage,
-        ],
-      ),
+        ),
+        displayPage,
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:casper/faculty/faculty_home_page.dart';
+import 'package:casper/faculty/faculty_scaffold.dart';
 import 'package:casper/login_page.dart';
 import 'package:casper/login_scaffold.dart';
 import 'package:casper/student/student_home_page.dart';
@@ -42,12 +43,12 @@ class AuthPage extends StatelessWidget {
                   if (snapshot.data == 'student') {
                     return const StudentHomePage();
                   } else if (snapshot.data == 'supervisor') {
-                    return const FacultyHomePage(
-                      role: 'su',
+                    return const FacultyScaffold(
+                      userRole: 'su',
                     );
                   } else {
-                    return const FacultyHomePage(
-                      role: 'co',
+                    return const FacultyScaffold(
+                      userRole: 'co',
                     );
                   }
                 } else {

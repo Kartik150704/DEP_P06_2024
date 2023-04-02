@@ -26,16 +26,18 @@ class CustomisedButton extends StatelessWidget {
         width: width,
         height: height,
         child: Center(
-          child: Text(
-            text,
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              height: 1.2175,
-              color: const Color(0xffffffff),
-            ),
-          ),
+          child: (text is String)
+              ? Text(
+                  text,
+                  style: SafeGoogleFont(
+                    'Ubuntu',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2175,
+                    color: const Color(0xffffffff),
+                  ),
+                )
+              : text,
         ),
       ),
     );

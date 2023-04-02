@@ -6,28 +6,54 @@ import 'package:casper/utilites.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class FacultyLoggedInScaffold extends StatelessWidget {
+class FacultyScaffold extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  final userRole;
+
+  const FacultyScaffold({
+    Key? key,
+    required this.userRole,
+  }) : super(key: key);
+
+  @override
+  State<FacultyScaffold> createState() => _FacultyScaffoldState();
+}
+
+class _FacultyScaffoldState extends State<FacultyScaffold> {
   final appBarOptions = [
     'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
 
-  // ignore: prefer_typing_uninitialized_variables
-  final scaffoldbody, role;
-
-  FacultyLoggedInScaffold({
-    Key? key,
-    required this.scaffoldbody,
-    required this.role,
-  }) : super(key: key);
+  dynamic displayPage;
 
   void signUserOut(context) {
     FirebaseAuth.instance.signOut();
     Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
-  void onPressed() {}
+  void selectOption(option) {
+    setState(() {
+      switch (option) {
+        case 0:
+          displayPage = FacultyProfile(role: widget.userRole);
+          break;
+        case 1:
+          displayPage = FacultyHomePage(userRole: widget.userRole);
+          break;
+        case 2:
+          displayPage = FacultyOfferings(role: widget.userRole);
+          break;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    displayPage = FacultyHomePage(userRole: widget.userRole);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +68,7 @@ class FacultyLoggedInScaffold extends StatelessWidget {
             for (int i = 0; i < appBarOptions.length; i++) ...[
               CustomisedTextButton(
                 text: appBarOptions[i],
-                onPressed: () => {
-                  Navigator.of(context).push(
-                    _createRoute(i),
-                  ),
-                },
+                onPressed: () => selectOption(i),
               ),
               const SizedBox(
                 width: 15,
@@ -62,7 +84,7 @@ class FacultyLoggedInScaffold extends StatelessWidget {
           ),
         ],
       ),
-      body: scaffoldbody,
+      body: displayPage,
       bottomSheet: Container(
         height: 55,
         width: double.infinity,
@@ -94,33 +116,6 @@ class FacultyLoggedInScaffold extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Route _createRoute(i) {
-    final appBarFunctions = [
-      FacultyProfile(role: role),
-      FacultyHomePage(role: role),
-      FacultyOfferings(role: role),
-    ];
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          appBarFunctions[i],
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.decelerate;
-
-        var tween = Tween(
-          begin: begin,
-          end: end,
-        ).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }
