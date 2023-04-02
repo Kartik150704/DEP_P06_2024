@@ -1,0 +1,3 @@
+'My Enrollments Only' button upon clicking several times continously gives some repeqted courses.
+Course type missing in faculty enrollments.
+Supervisor name in all enrollments missing for coordinator.

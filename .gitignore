@@ -37,5 +37,3 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
-
-issues.txt
