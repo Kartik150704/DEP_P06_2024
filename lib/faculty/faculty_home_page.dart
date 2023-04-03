@@ -1,13 +1,14 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:casper/faculty/faculty_panel_management_page.dart';
+import 'package:casper/faculty/faculty_panel_page.dart';
 import 'package:casper/faculty/faculty_panels_page.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:flutter/material.dart';
 
 class FacultyHomePage extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final userRole, projectId;
+  final String userRole;
+  final int projectId;
 
   const FacultyHomePage({
     Key? key,
@@ -37,6 +38,15 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
+  void viewPanel(panel) {
+    setState(() {
+      displayPage = FacultyPanelPage(
+        assignedPanel: panel,
+        userRole: widget.userRole,
+      );
+    });
+  }
+
   void selectOption(option) {
     setState(() {
       selectedOption = option;
@@ -55,6 +65,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
         case 2:
           displayPage = FacultyPanelManagementPage(
             userRole: widget.userRole,
+            viewPanel: viewPanel,
           );
           break;
       }

@@ -1,58 +1,30 @@
-import 'package:casper/components/confirm_action.dart';
+import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components/panels_data_table.dart';
+import 'package:casper/components/panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
-class FacultyPanelManagementPage extends StatefulWidget {
+class FacultyPanelPage extends StatefulWidget {
   final String userRole;
-  // ignore: prefer_typing_uninitialized_variables
-  final viewPanel;
+  final AssignedPanel assignedPanel;
 
-  const FacultyPanelManagementPage({
+  const FacultyPanelPage({
     Key? key,
     required this.userRole,
-    required this.viewPanel,
+    required this.assignedPanel,
   }) : super(key: key);
 
   @override
-  State<FacultyPanelManagementPage> createState() =>
-      _FacultyPanelManagementPageState();
+  State<FacultyPanelPage> createState() => _FacultyPanelPageState();
 }
 
-class _FacultyPanelManagementPageState
-    extends State<FacultyPanelManagementPage> {
-  late List<AssignedPanel> assignedPanels = [];
-  final panelIDController = TextEditingController(),
-      evaluatorNameController = TextEditingController();
-
-  void confirmAction() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Center(
-            child: ConfirmAction(
-              onSubmit: () {},
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // TODO: Implement this method
-  void getPanels() {
-    setState(() {
-      assignedPanels = assignedPanelGlobl;
-    });
-  }
+class _FacultyPanelPageState extends State<FacultyPanelPage> {
+  final teamIdController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    getPanels();
   }
 
   @override
@@ -75,9 +47,23 @@ class _FacultyPanelManagementPageState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const CustomisedText(
-                          text: 'Panel Management',
-                          fontSize: 50,
+                        Row(
+                          children: [
+                            CustomisedText(
+                              text: 'Panel ${widget.assignedPanel.panel.id}: ',
+                              fontSize: 50,
+                            ),
+                            Container(
+                              width: 1200,
+                              height: 50,
+                              alignment: Alignment.bottomLeft,
+                              child: CustomisedOverflowText(
+                                text:
+                                    ' ${widget.assignedPanel.panel.evaluators.map((e) => e.name).join(', ')}',
+                                fontSize: 30,
+                              ),
+                            ),
+                          ],
                         ),
                         Container(),
                       ],
@@ -92,7 +78,7 @@ class _FacultyPanelManagementPageState
                           width: 35 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: panelIDController,
+                          textEditingController: teamIdController,
                           hintText: 'Panel Identification',
                           width: 180 * fem,
                         ),
@@ -100,7 +86,7 @@ class _FacultyPanelManagementPageState
                           width: 20 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: evaluatorNameController,
+                          textEditingController: teamIdController,
                           hintText: 'Evaluator\'s Name',
                           width: 180 * fem,
                         ),
@@ -148,9 +134,8 @@ class _FacultyPanelManagementPageState
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: SingleChildScrollView(
-                          child: PanelsDataTable(
-                            assignedPanels: assignedPanels,
-                            viewPanel: widget.viewPanel,
+                          child: PanelTeamsDataTable(
+                            assignedPanel: widget.assignedPanel,
                           ),
                         ),
                       ),
@@ -187,7 +172,7 @@ class _FacultyPanelManagementPageState
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Add Panel',
+                message: 'Add Team(s)',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,

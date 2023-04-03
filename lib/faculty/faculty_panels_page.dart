@@ -4,7 +4,7 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/assigned_panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/faculty/panelPage.dart';
+import 'package:casper/faculty/faculty_panel_page.dart';
 import 'package:flutter/material.dart';
 
 import '../components/projecttile.dart';
