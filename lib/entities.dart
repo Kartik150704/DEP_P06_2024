@@ -192,7 +192,7 @@ final panelGlobal = [
 final assignedPanelGlobl = [
   AssignedPanel(
     course: 'CP301',
-    type: 'Mid-Term',
+    type: 'MidTerm',
     semester: '2',
     year: '2023',
     numberOfAssignedTeams: 2,
@@ -238,7 +238,7 @@ final assignedPanelGlobl = [
   ),
   AssignedPanel(
     course: 'CP301',
-    type: 'Mid-Term',
+    type: 'MidTerm',
     semester: '2',
     year: '2023',
     numberOfAssignedTeams: 1,
@@ -283,7 +283,7 @@ final assignedPanelGlobl = [
   ),
   AssignedPanel(
     course: 'CP301',
-    type: 'Mid-Term',
+    type: 'MidTerm',
     semester: '2',
     year: '2023',
     numberOfAssignedTeams: 0,

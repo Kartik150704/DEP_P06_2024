@@ -1,3 +1,4 @@
+import 'package:casper/components/add_teams_form.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panel_teams_data_table.dart';
@@ -6,6 +7,7 @@ import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelPage extends StatefulWidget {
+  final int actionType;
   final String userRole;
   final AssignedPanel assignedPanel;
 
@@ -13,6 +15,7 @@ class FacultyPanelPage extends StatefulWidget {
     Key? key,
     required this.userRole,
     required this.assignedPanel,
+    this.actionType = 1,
   }) : super(key: key);
 
   @override
@@ -20,7 +23,24 @@ class FacultyPanelPage extends StatefulWidget {
 }
 
 class _FacultyPanelPageState extends State<FacultyPanelPage> {
-  final teamIdController = TextEditingController();
+  final teamIdController = TextEditingController(),
+      studentNameController = TextEditingController(),
+      studentEntryNumberController = TextEditingController(),
+      courseTermController = TextEditingController(),
+      yearSemesterController = TextEditingController();
+
+  void addTeams() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: AddTeamsForm(),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -79,16 +99,40 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                         ),
                         SearchTextField(
                           textEditingController: teamIdController,
-                          hintText: 'Panel Identification',
-                          width: 180 * fem,
+                          hintText: 'Team Identification',
+                          width: 175 * fem,
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
                         SearchTextField(
                           textEditingController: teamIdController,
-                          hintText: 'Evaluator\'s Name',
-                          width: 180 * fem,
+                          hintText: 'Student Name',
+                          width: 175 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: teamIdController,
+                          hintText: 'Student Entry Number',
+                          width: 175 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: teamIdController,
+                          hintText: 'Course-Term',
+                          width: 175 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: teamIdController,
+                          hintText: 'Year-Semester',
+                          width: 175 * fem,
                         ),
                         SizedBox(
                           width: 25 * fem,
@@ -152,37 +196,17 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Import Team Assignments',
-                child: FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
-                  splashColor: Colors.black,
-                  hoverColor: Colors.grey,
-                  child: const Icon(
-                    Icons.upload_file,
-                    color: Colors.black,
-                    size: 35,
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
-              child: Tooltip(
                 message: 'Add Team(s)',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
                   hoverColor: Colors.grey,
+                  onPressed: addTeams,
                   child: const Icon(
                     Icons.add,
                     color: Colors.black,
                     size: 35,
                   ),
-                  onPressed: () {},
                 ),
               ),
             ),

@@ -167,7 +167,7 @@ class _FacultyPanelManagementPageState
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Import Team Assignments',
+                message: 'Import Team Assignment(s)',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
@@ -5,11 +6,14 @@ import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  final actionType;
   final AssignedPanel assignedPanel;
 
   const PanelTeamsDataTable({
     super.key,
     required this.assignedPanel,
+    this.actionType = 1,
   });
 
   @override
@@ -22,6 +26,23 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
   final myId = 1;
   final List<StudentData> studentData = [];
+
+  void confirmAction(teamId, panelId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: ConfirmAction(
+              onSubmit: () {},
+              text:
+                  'You want to remove team \'$teamId\' from panel \'$panelId?\'',
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -43,8 +64,11 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
         studentData.add(StudentData(
           teamId: team.id,
+          panelId: widget.assignedPanel.panel.id,
           studentName: student.name,
           studentEntryNumber: student.entryNumber,
+          type:
+              '${widget.assignedPanel.course}-${widget.assignedPanel.type}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
           evaluation: eval,
           isMyPanel: myPanel,
         ));
@@ -84,7 +108,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
       'Team ID',
       'Student Name',
       'Student Entry Number',
-      'Evaluation',
+      'Type',
+      (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
 
     return Theme(
@@ -135,6 +160,12 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
         ),
         onSort: onSort,
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[4],
+        ),
+        onSort: onSort,
+      ),
     ];
 
     return headings;
@@ -153,7 +184,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             ),
             DataCell(
               SizedBox(
-                width: 300,
+                width: 200,
                 child: CustomisedOverflowText(
                   text: data.studentName,
                   color: Colors.black,
@@ -169,25 +200,36 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               ),
             ),
             DataCell(
+              SizedBox(
+                child: CustomisedText(
+                  text: data.type,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
               (data.evaluation != -1
                   ? CustomisedText(
-                      text: data.evaluation.toString(),
+                      text: (widget.actionType == 1
+                          ? 'Evaluated'
+                          : data.evaluation.toString()),
                       color: Colors.black,
                     )
-                  : (data.isMyPanel
+                  : (widget.actionType == 1
                       ? CustomisedButton(
-                          text: const Icon(
-                            Icons.open_in_new_rounded,
-                            size: 20,
-                          ),
+                          text: 'Remove Team',
+                          height: 37,
+                          width: double.infinity,
+                          onPressed: () =>
+                              confirmAction(data.teamId, data.panelId),
+                          elevation: 0,
+                        )
+                      : CustomisedButton(
+                          text: 'Upload',
                           height: 37,
                           width: double.infinity,
                           onPressed: () {},
                           elevation: 0,
-                        )
-                      : const CustomisedText(
-                          text: 'Not Evaluated',
-                          color: Colors.black,
                         ))),
             ),
           ];
@@ -195,7 +237,13 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           return DataRow(
             cells: cells,
             color: MaterialStateProperty.all(
-              const Color.fromARGB(255, 212, 203, 216),
+              (widget.actionType == 1
+                  ? (data.evaluation != -1
+                      ? const Color.fromARGB(255, 192, 188, 192)
+                      : const Color.fromARGB(255, 212, 203, 216))
+                  : (data.evaluation != -1
+                      ? const Color(0xff7ae37b)
+                      : const Color.fromARGB(255, 208, 219, 144))),
             ),
           );
         },
@@ -230,6 +278,14 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
       studentData.sort(
         (data1, data2) => compareString(
           ascending,
+          data1.type,
+          data2.type,
+        ),
+      );
+    } else if (columnIndex == 4) {
+      studentData.sort(
+        (data1, data2) => compareString(
+          ascending,
           data1.evaluation.toString(),
           data2.evaluation.toString(),
         ),
@@ -248,14 +304,16 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
 class StudentData {
   final bool isMyPanel;
-  final int teamId, evaluation;
-  final String studentName, studentEntryNumber;
+  final int teamId, panelId, evaluation;
+  final String studentName, studentEntryNumber, type;
 
   StudentData({
     required this.teamId,
+    required this.panelId,
     required this.studentName,
     required this.studentEntryNumber,
     required this.evaluation,
     required this.isMyPanel,
+    required this.type,
   });
 }
