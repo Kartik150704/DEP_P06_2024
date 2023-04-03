@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
@@ -78,6 +79,15 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
         ),
         leadingWidth: 350,
         actions: [
+          Container(
+            alignment: Alignment.center,
+            child: const CustomisedText(
+              text: 'Signed In As()',
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
           IconButton(
             onPressed: () => signUserOut(context),
             icon: const Icon(Icons.logout),

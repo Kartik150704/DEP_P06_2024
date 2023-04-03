@@ -189,7 +189,7 @@ final panelGlobal = [
   ),
 ];
 
-final assignedPanelGlobl = [
+final assignedPanelGlobal = [
   AssignedPanel(
     course: 'CP301',
     type: 'MidTerm',

@@ -38,11 +38,12 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
-  void viewPanel(panel) {
+  void viewPanel(panel, action) {
     setState(() {
       displayPage = FacultyPanelPage(
         assignedPanel: panel,
         userRole: widget.userRole,
+        actionType: action,
       );
     });
   }
@@ -59,7 +60,8 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
           break;
         case 1:
           displayPage = FacultyPanelsPage(
-            role: widget.userRole,
+            userRole: widget.userRole,
+            viewPanel: viewPanel,
           );
           break;
         case 2:
@@ -84,7 +86,8 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     }
 
     displayPage = FacultyPanelsPage(
-      role: widget.userRole,
+      userRole: widget.userRole,
+      viewPanel: viewPanel,
     );
   }
 

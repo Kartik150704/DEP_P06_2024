@@ -2,18 +2,19 @@ import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/evaluation_submission_form.dart';
 import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
+  final AssignedPanel assignedPanel;
   // ignore: prefer_typing_uninitialized_variables
   final actionType;
-  final AssignedPanel assignedPanel;
 
   const PanelTeamsDataTable({
     super.key,
     required this.assignedPanel,
-    this.actionType = 1,
+    required this.actionType,
   });
 
   @override
@@ -24,7 +25,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
-  final myId = 1;
+  // TODO: Fetch these values
+  final myId = 1, totalMarks = 10;
   final List<StudentData> studentData = [];
 
   void confirmAction(teamId, panelId) {
@@ -37,6 +39,21 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               onSubmit: () {},
               text:
                   'You want to remove team \'$teamId\' from panel \'$panelId?\'',
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void uploadEvaluation(student) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: EvaluationSubmissionForm(
+              student: student,
             ),
           ),
         );
@@ -65,6 +82,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
         studentData.add(StudentData(
           teamId: team.id,
           panelId: widget.assignedPanel.panel.id,
+          studentId: student.id,
           studentName: student.name,
           studentEntryNumber: student.entryNumber,
           type:
@@ -209,12 +227,32 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             ),
             DataCell(
               (data.evaluation != -1
-                  ? CustomisedText(
-                      text: (widget.actionType == 1
-                          ? 'Evaluated'
-                          : data.evaluation.toString()),
-                      color: Colors.black,
-                    )
+                  ? (widget.actionType == 1
+                      ? const CustomisedText(
+                          text: 'Evaluated',
+                          color: Colors.black,
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomisedText(
+                              text: '${data.evaluation}/$totalMarks',
+                              color: Colors.black,
+                            ),
+                            CustomisedButton(
+                              text: 'Edit',
+                              height: 37,
+                              width: 50,
+                              onPressed: () => uploadEvaluation(
+                                Student(
+                                    name: data.studentName,
+                                    entryNumber: data.studentEntryNumber,
+                                    id: data.studentId),
+                              ),
+                              elevation: 0,
+                            )
+                          ],
+                        ))
                   : (widget.actionType == 1
                       ? CustomisedButton(
                           text: 'Remove Team',
@@ -228,7 +266,12 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
                           text: 'Upload',
                           height: 37,
                           width: double.infinity,
-                          onPressed: () {},
+                          onPressed: () => uploadEvaluation(
+                            Student(
+                                name: data.studentName,
+                                entryNumber: data.studentEntryNumber,
+                                id: data.studentId),
+                          ),
                           elevation: 0,
                         ))),
             ),
@@ -304,12 +347,13 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
 class StudentData {
   final bool isMyPanel;
-  final int teamId, panelId, evaluation;
+  final int teamId, panelId, studentId, evaluation;
   final String studentName, studentEntryNumber, type;
 
   StudentData({
     required this.teamId,
     required this.panelId,
+    required this.studentId,
     required this.studentName,
     required this.studentEntryNumber,
     required this.evaluation,

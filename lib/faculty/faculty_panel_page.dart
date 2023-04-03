@@ -15,7 +15,7 @@ class FacultyPanelPage extends StatefulWidget {
     Key? key,
     required this.userRole,
     required this.assignedPanel,
-    this.actionType = 1,
+    required this.actionType,
   }) : super(key: key);
 
   @override
@@ -180,6 +180,7 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                         child: SingleChildScrollView(
                           child: PanelTeamsDataTable(
                             assignedPanel: widget.assignedPanel,
+                            actionType: widget.actionType,
                           ),
                         ),
                       ),
@@ -190,31 +191,34 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
             ],
           ),
         ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
-              child: Tooltip(
-                message: 'Add Team(s)',
-                child: FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
-                  splashColor: Colors.black,
-                  hoverColor: Colors.grey,
-                  onPressed: addTeams,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                    size: 35,
+        floatingActionButton: (widget.actionType == 1
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+                    child: Tooltip(
+                      message: 'Add Team(s)',
+                      child: FloatingActionButton(
+                        backgroundColor:
+                            const Color.fromARGB(255, 212, 203, 216),
+                        splashColor: Colors.black,
+                        hoverColor: Colors.grey,
+                        onPressed: addTeams,
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 35,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 65,
-            ),
-          ],
-        ),
+                  const SizedBox(
+                    height: 65,
+                  ),
+                ],
+              )
+            : Container()),
       ),
     );
   }

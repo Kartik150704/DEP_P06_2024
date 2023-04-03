@@ -1,18 +1,20 @@
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/faculty/faculty_panels_page.dart';
+import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
 class AssignedPanelsDataTable extends StatefulWidget {
-  final List<AssignedPanel> panels;
-  final String role;
-  // final showProject;
+  final List<AssignedPanel> assignedPanels;
+  final String userRole;
+  // ignore: prefer_typing_uninitialized_variables
+  final viewPanel;
 
   const AssignedPanelsDataTable({
     super.key,
-    required this.panels,
-    required this.role,
-    // required this.showProject,
+    required this.assignedPanels,
+    required this.userRole,
+    required this.viewPanel,
   });
 
   @override
@@ -24,9 +26,20 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
+  late int myId = 1;
+  int getNumberOfTeamsEvaluated(AssignedPanel assignedPanel) {
+    int count = 0;
+    for (final evaluation in assignedPanel.evaluations) {
+      if (evaluation.evaluator.id == myId) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.panels.isEmpty) {
+    if (widget.assignedPanels.isEmpty) {
       return SizedBox(
         height: 560,
         child: Center(
@@ -53,13 +66,11 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
     }
 
     final columns = [
-      'Panel',
+      'ID',
       'Evaluators',
-      'Assigned',
-      'Evaluated',
-      'Type',
-      'Semester',
-      'Year',
+      'Teams Assigned',
+      'Teams Evaluated',
+      'View Details',
     ];
 
     return Theme(
@@ -74,7 +85,7 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
         sortAscending: isAscending,
         sortColumnIndex: sortColumnIndex,
         columns: getColumns(columns),
-        rows: getRows(widget.panels),
+        rows: getRows(widget.assignedPanels),
         headingRowColor: MaterialStateColor.resolveWith(
           (states) {
             return const Color(0xff12141D);
@@ -113,19 +124,6 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
         label: CustomisedText(
           text: columns[4],
         ),
-        onSort: onSort,
-      ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[5],
-        ),
-        onSort: onSort,
-      ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[6],
-        ),
-        onSort: onSort,
       ),
     ];
 
@@ -133,33 +131,23 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
   }
 
   List<DataRow> getRows(List<AssignedPanel> rows) => rows.map(
-        (AssignedPanel panel) {
+        (AssignedPanel assignedPanel) {
           final cells = [
             DataCell(
               SizedBox(
                 child: CustomisedText(
-                  text: panel.number,
+                  text: assignedPanel.panel.id.toString(),
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               SizedBox(
-                width: 250,
-                child: TextButton(
-                  onPressed: () {},
-                  child: CustomisedOverflowText(
-                    text: panel.evaluators,
-                    color: Colors.blue[900],
-                    selectable: false,
-                  ),
-                ),
-              ),
-            ),
-            DataCell(
-              SizedBox(
+                width: 350,
                 child: CustomisedOverflowText(
-                  text: panel.teamsAssigned,
+                  text: assignedPanel.panel.evaluators
+                      .map((e) => e.name)
+                      .join(', '),
                   color: Colors.black,
                 ),
               ),
@@ -167,30 +155,29 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
             DataCell(
               SizedBox(
                 child: CustomisedOverflowText(
-                  text: panel.teamsEvaluated,
+                  text: assignedPanel.numberOfAssignedTeams.toString(),
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               SizedBox(
-                width: 100,
                 child: CustomisedOverflowText(
-                  text: panel.type,
+                  text: getNumberOfTeamsEvaluated(assignedPanel).toString(),
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
-              CustomisedText(
-                text: panel.semester,
-                color: Colors.black,
-              ),
-            ),
-            DataCell(
-              CustomisedText(
-                text: panel.year,
-                color: Colors.black,
+              CustomisedButton(
+                text: const Icon(
+                  Icons.open_in_new_rounded,
+                  size: 20,
+                ),
+                height: 37,
+                width: double.infinity,
+                onPressed: () => widget.viewPanel(assignedPanel, 2),
+                elevation: 0,
               ),
             ),
           ];
@@ -198,7 +185,10 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
           return DataRow(
             cells: cells,
             color: MaterialStateProperty.all(
-              const Color.fromARGB(255, 212, 203, 216),
+              (assignedPanel.numberOfAssignedTeams ==
+                      getNumberOfTeamsEvaluated(assignedPanel)
+                  ? const Color(0xff7ae37b)
+                  : const Color.fromARGB(255, 208, 219, 144)),
             ),
           );
         },
@@ -206,32 +196,25 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      widget.panels.sort(
-        (panel1, panel2) =>
-            compareString(ascending, panel1.number, panel2.number),
+      widget.assignedPanels.sort(
+        (assignedPanel1, assignedPanel2) => compareString(
+            ascending,
+            assignedPanel1.panel.id.toString(),
+            assignedPanel2.panel.id.toString()),
       );
     } else if (columnIndex == 2) {
-      widget.panels.sort(
-        (panel1, panel2) => compareString(
-            ascending, panel1.teamsAssigned, panel2.teamsAssigned),
+      widget.assignedPanels.sort(
+        (assignedPanel1, assignedPanel2) => compareString(
+            ascending,
+            assignedPanel1.numberOfAssignedTeams.toString(),
+            assignedPanel2.numberOfAssignedTeams.toString()),
       );
     } else if (columnIndex == 3) {
-      widget.panels.sort(
-        (panel1, panel2) => compareString(
-            ascending, panel1.teamsEvaluated, panel2.teamsEvaluated),
-      );
-    } else if (columnIndex == 4) {
-      widget.panels.sort(
-        (panel1, panel2) => compareString(ascending, panel1.type, panel2.type),
-      );
-    } else if (columnIndex == 5) {
-      widget.panels.sort(
-        (panel1, panel2) =>
-            compareString(ascending, panel1.semester, panel2.semester),
-      );
-    } else if (columnIndex == 6) {
-      widget.panels.sort(
-        (panel1, panel2) => compareString(ascending, panel1.year, panel2.year),
+      widget.assignedPanels.sort(
+        (assignedPanel1, assignedPanel2) => compareString(
+            ascending,
+            getNumberOfTeamsEvaluated(assignedPanel1).toString(),
+            getNumberOfTeamsEvaluated(assignedPanel2).toString()),
       );
     }
 

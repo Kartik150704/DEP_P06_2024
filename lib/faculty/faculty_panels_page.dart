@@ -1,22 +1,18 @@
-import 'package:casper/components/button.dart';
-import 'package:casper/components/confirm_action.dart';
-import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/assigned_panels_data_table.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/faculty/faculty_panel_page.dart';
+import 'package:casper/entities.dart';
 import 'package:flutter/material.dart';
 
-import '../components/projecttile.dart';
-import '../utilites.dart';
-
 class FacultyPanelsPage extends StatefulWidget {
+  final String userRole;
   // ignore: prefer_typing_uninitialized_variables
-  final role;
+  final viewPanel;
 
   const FacultyPanelsPage({
     Key? key,
-    required this.role,
+    required this.userRole,
+    required this.viewPanel,
   }) : super(key: key);
 
   @override
@@ -24,71 +20,23 @@ class FacultyPanelsPage extends StatefulWidget {
 }
 
 class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
-  late List<AssignedPanel> panels = [];
-  final panelNumberController = TextEditingController(),
-      evaluatorNameController = TextEditingController(),
-      panelTypeController = TextEditingController(),
-      semesterController = TextEditingController(),
-      yearController = TextEditingController();
+  late List<AssignedPanel> assignedPanels = [];
+  final panelIdController = TextEditingController(),
+      evaluatorNameController = TextEditingController();
 
-  void confirmAction() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Center(
-            child: ConfirmAction(
-              onSubmit: () {},
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // TODO: Implement these methods
-  void getSupervisorPanels() {
-    panels = [
-      AssignedPanel(
-        number: '1',
-        evaluators: 'Shweta Jain, Sudarshan Iyengar',
-        teamsAssigned: '3',
-        teamsEvaluated: '1',
-        type: 'Mid-Term',
-        semester: '2',
-        year: '2022',
-      )
-    ];
-  }
-
-  void getAllPanels() {
-    panels = [
-      AssignedPanel(
-        number: '1',
-        evaluators: 'Shweta Jain, Sudarshan Iyengar',
-        teamsAssigned: '3',
-        teamsEvaluated: '1',
-        type: 'Mid-Term',
-        semester: '2',
-        year: '2022',
-      )
-    ];
-  }
-
+  // TODO: Implement this method
   @override
   void initState() {
     super.initState();
-    if (widget.role == 'su') {
-      getSupervisorPanels();
-    } else {
-      getAllPanels();
-    }
+    setState(() {
+      assignedPanels = assignedPanelGlobal;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
 
     return Expanded(
       child: Container(
@@ -118,59 +66,41 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 33 * fem,
+                        width: 35 * fem,
                       ),
                       SearchTextField(
-                        textEditingController: panelNumberController,
-                        hintText: 'Panel Number',
-                        width: 170 * fem,
+                        textEditingController: panelIdController,
+                        hintText: 'Panel Identification',
+                        width: 180 * fem,
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
                       SearchTextField(
                         textEditingController: evaluatorNameController,
-                        hintText: 'Evaluator Name',
-                        width: 170 * fem,
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: panelTypeController,
-                        hintText: 'Panel Type',
-                        width: 170 * fem,
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: semesterController,
-                        hintText: 'Semester',
-                        width: 170 * fem,
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: yearController,
-                        hintText: 'Year',
-                        width: 170 * fem,
+                        hintText: 'Evaluator\'s Name',
+                        width: 180 * fem,
                       ),
                       SizedBox(
                         width: 25 * fem,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.grey[300],
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
+                      SizedBox(
+                        height: 47,
+                        width: 47,
+                        child: FloatingActionButton(
+                          shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          iconSize: 25,
+                          backgroundColor:
+                              const Color.fromARGB(255, 212, 203, 216),
+                          splashColor: Colors.black,
+                          hoverColor: Colors.grey,
+                          child: const Icon(
+                            Icons.search,
+                            color: Colors.black,
+                            size: 29,
+                          ),
+                          onPressed: () {},
                         ),
                       ),
                     ],
@@ -196,8 +126,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                       padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
                         child: AssignedPanelsDataTable(
-                          panels: panels,
-                          role: widget.role,
+                          assignedPanels: assignedPanels,
+                          userRole: widget.userRole,
+                          viewPanel: widget.viewPanel,
                         ),
                       ),
                     ),
@@ -210,24 +141,4 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
       ),
     );
   }
-}
-
-class AssignedPanel {
-  final String number,
-      evaluators,
-      teamsAssigned,
-      teamsEvaluated,
-      type,
-      semester,
-      year;
-
-  AssignedPanel({
-    required this.number,
-    required this.evaluators,
-    required this.teamsAssigned,
-    required this.teamsEvaluated,
-    required this.type,
-    required this.semester,
-    required this.year,
-  });
 }

@@ -45,7 +45,7 @@ class _FacultyPanelManagementPageState
   // TODO: Implement this method
   void getPanels() {
     setState(() {
-      assignedPanels = assignedPanelGlobl;
+      assignedPanels = assignedPanelGlobal;
     });
   }
 

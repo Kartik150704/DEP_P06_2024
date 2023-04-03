@@ -147,7 +147,7 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
                 ),
                 height: 37,
                 width: double.infinity,
-                onPressed: () => widget.viewPanel(assignedPanel),
+                onPressed: () => widget.viewPanel(assignedPanel, 1),
                 elevation: 0,
               ),
             ),
