@@ -25,7 +25,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
         'My Enrollments',
         'My Panels',
       ],
-      selectedOption = 1;
+      selectedOption = 0;
 
   dynamic displayPage;
 
@@ -85,9 +85,9 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
       ];
     }
 
-    displayPage = FacultyPanelsPage(
-      userRole: widget.userRole,
-      viewPanel: viewPanel,
+    displayPage = FacultyEnrollmentsPage(
+      role: widget.userRole,
+      showProject: showProject,
     );
   }
 

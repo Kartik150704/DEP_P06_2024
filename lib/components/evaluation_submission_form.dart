@@ -26,7 +26,7 @@ class EvaluationSubmissionForm extends StatelessWidget {
           SizedBox(
             width: 500,
             child: CustomisedText(
-              text: 'Enter the marks for ${student.name}',
+              text: 'Enter marks for ${student.name}',
               color: Colors.black,
               fontSize: 23,
             ),

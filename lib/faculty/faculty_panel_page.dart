@@ -3,7 +3,7 @@ import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/entities.dart';
+import 'package:casper/models.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelPage extends StatefulWidget {

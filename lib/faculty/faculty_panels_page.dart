@@ -1,7 +1,8 @@
 import 'package:casper/components/assigned_panels_data_table.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/entities.dart';
+import 'package:casper/models.dart';
+import 'package:casper/seeds.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelsPage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   void initState() {
     super.initState();
     setState(() {
-      assignedPanels = assignedPanelGlobal;
+      assignedPanels = assignedPanelsGLOBAL;
     });
   }
 

@@ -1,7 +1,7 @@
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/entities.dart';
+import 'package:casper/models.dart';
 import 'package:flutter/material.dart';
 
 class PanelsDataTable extends StatefulWidget {

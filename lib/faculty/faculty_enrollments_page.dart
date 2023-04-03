@@ -1,14 +1,15 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/utilites.dart';
-import 'package:casper/components/customised_text_field.dart';
+import 'package:casper/models.dart';
 import 'package:casper/components/enrollments_data_table.dart';
+import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyEnrollmentsPage extends StatefulWidget {
   final String role;
+  // ignore: prefer_typing_uninitialized_variables
   final showProject;
 
   const FacultyEnrollmentsPage({
@@ -23,18 +24,19 @@ class FacultyEnrollmentsPage extends StatefulWidget {
 
 class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   bool? ischecked = false;
-  late List<Enrollment> enrollments = [];
+  final List<Enrollment> enrollments = [];
   final projectTitleController = TextEditingController(),
-      supervisorNameController = TextEditingController(),
+      semesterController = TextEditingController(),
       studentNameController = TextEditingController(),
       courseCodeController = TextEditingController(),
-      yearSemesterController = TextEditingController();
+      yearController = TextEditingController();
 
   dynamic displayPage;
 
+  // TODO: Modify database and implement this method
   void getSupervisorEnrollments() {
     setState(() {
-      enrollments = [];
+      enrollments.clear();
     });
 
     FirebaseFirestore.instance
@@ -44,62 +46,79 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
         .then((snapshot) {
       FirebaseFirestore.instance
           .collection('projects')
-          .where(FieldPath.documentId,
-              whereIn: snapshot.docs[0]['project_as_head_ids'])
+          .where(
+            FieldPath.documentId,
+            whereIn: snapshot.docs[0]['project_as_head_ids'],
+          )
           .get()
           .then((value) {
         for (var doc in value.docs) {
           final val = doc.data();
           setState(() {
-            enrollments.add(Enrollment(
-              title: val['title'],
-              students: val['student_name'][0] + ', ' + val['student_name'][1],
-              semester: val['semester'],
-              year: val['year'],
-              description: val['description'],
-              projectId: doc.id,
-            ));
+            enrollments.add(
+              // Enrollment(
+              //   title: val['title'],
+              //   students:
+              //       val['student_name'][0] + ', ' + val['student_name'][1],
+              //   semester: val['semester'],
+              //   year: val['year'],
+              //   description: val['description'],
+              //   projectId: doc.id,
+              // ),
+              Enrollment(
+                id: '-1',
+                offering: Offering(
+                  id: '-1',
+                  instructor: Faculty(
+                    id: '-1',
+                    name: 'null',
+                    email: 'null',
+                  ),
+                  course: 'CP302',
+                  semester: val['semester'],
+                  year: val['year'],
+                  project: Project(
+                    id: doc.id,
+                    title: val['title'],
+                    description: val['description'],
+                  ),
+                ),
+                team: Team(
+                  id: '1',
+                  numberOfMembers: 2,
+                  students: [
+                    Student(
+                      id: '1',
+                      name: val['student_name'][1],
+                      entryNumber: 'null',
+                      email: 'null',
+                    ),
+                    Student(
+                      id: '2',
+                      name: val['student_name'][0],
+                      entryNumber: 'null',
+                      email: 'null',
+                    ),
+                  ],
+                ),
+                supervisorEvaluations: [
+                  evaluationsGLOBAL[6],
+                  evaluationsGLOBAL[7],
+                  evaluationsGLOBAL[8],
+                ],
+              ),
+            );
           });
         }
       });
     });
   }
 
-  void getAllEnrollments() {
-    setState(() {
-      enrollments = [];
-    });
-
-    FirebaseFirestore.instance.collection('projects').get().then(
-      (value) {
-        for (var doc in value.docs) {
-          final val = doc.data();
-          setState(() {
-            enrollments.add(
-              Enrollment(
-                title: val['title'],
-                students:
-                    val['student_name'][0] + ', ' + val['student_name'][1],
-                semester: val['semester'],
-                year: val['year'],
-                description: val['description'],
-                projectId: doc.id,
-              ),
-            );
-          });
-        }
-      },
-    );
-  }
-
+  // TODO: Implement this method
   @override
   void initState() {
     super.initState();
-    if (widget.role == 'su') {
-      getSupervisorEnrollments();
-    } else {
-      getAllEnrollments();
-    }
+    getSupervisorEnrollments();
   }
 
   @override
@@ -122,40 +141,41 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const CustomisedText(
-                        text: 'Enrollments',
+                        text: 'My Enrollments',
                         fontSize: 50,
                       ),
-                      (widget.role == 'co')
-                          ? SizedBox(
-                              width: 200,
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: ischecked,
-                                    onChanged: (bool? value) {
-                                      setState(
-                                        () {
-                                          ischecked = value;
-                                          if (ischecked!) {
-                                            getSupervisorEnrollments();
-                                          } else {
-                                            getAllEnrollments();
-                                          }
-                                        },
-                                      );
-                                    },
-                                    checkColor: Colors.white,
-                                    side: const BorderSide(color: Colors.white),
-                                  ),
-                                  const CustomisedText(
-                                    text: 'My Enrollments Only',
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(),
+                      // (widget.role == 'co')
+                      //     ? SizedBox(
+                      //         width: 200,
+                      //         child: Row(
+                      //           children: [
+                      //             Checkbox(
+                      //               value: ischecked,
+                      //               onChanged: (bool? value) {
+                      //                 setState(
+                      //                   () {
+                      //                     ischecked = value;
+                      //                     if (ischecked!) {
+                      //                       getSupervisorEnrollments();
+                      //                     } else {
+                      //                       getAllEnrollments();
+                      //                     }
+                      //                   },
+                      //                 );
+                      //               },
+                      //               checkColor: Colors.white,
+                      //               side: const BorderSide(color: Colors.white),
+                      //             ),
+                      //             const CustomisedText(
+                      //               text: 'My Enrollments Only',
+                      //               fontSize: 10,
+                      //               color: Colors.white,
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       )
+                      //     : Container(),
+                      Container(),
                     ],
                   ),
                   const SizedBox(
@@ -170,14 +190,6 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       SearchTextField(
                         textEditingController: projectTitleController,
                         hintText: 'Project Title',
-                        width: 170 * fem,
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: supervisorNameController,
-                        hintText: 'Supervisor Name',
                         width: 170 * fem,
                       ),
                       SizedBox(
@@ -200,24 +212,38 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         width: 20 * fem,
                       ),
                       SearchTextField(
-                        textEditingController: yearSemesterController,
-                        hintText: 'Year-Semester',
+                        textEditingController: semesterController,
+                        hintText: 'Year',
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: yearController,
+                        hintText: 'Semester',
                         width: 170 * fem,
                       ),
                       SizedBox(
                         width: 25 * fem,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.grey[300],
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
+                      SizedBox(
+                        height: 47,
+                        width: 47,
+                        child: FloatingActionButton(
+                          shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          iconSize: 25,
+                          backgroundColor:
+                              const Color.fromARGB(255, 212, 203, 216),
+                          splashColor: Colors.black,
+                          hoverColor: Colors.grey,
+                          child: const Icon(
+                            Icons.search,
+                            color: Colors.black,
+                            size: 29,
+                          ),
+                          onPressed: () {},
                         ),
                       ),
                     ],
@@ -244,7 +270,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       child: SingleChildScrollView(
                         child: EnrollmentsDataTable(
                           enrollments: enrollments,
-                          role: widget.role,
+                          userRole: widget.role,
                           showProject: widget.showProject,
                         ),
                       ),
@@ -258,24 +284,4 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       ),
     );
   }
-}
-
-class Enrollment {
-  final String title,
-      students,
-      courseCode,
-      semester,
-      year,
-      description,
-      projectId;
-
-  const Enrollment({
-    required this.title,
-    required this.students,
-    this.courseCode = 'CP302',
-    required this.semester,
-    required this.year,
-    required this.description,
-    required this.projectId,
-  });
 }

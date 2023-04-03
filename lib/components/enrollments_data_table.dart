@@ -1,17 +1,19 @@
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/faculty/faculty_enrollments_page.dart';
+import 'package:casper/models.dart';
+import 'package:casper/seeds.dart';
 import 'package:flutter/material.dart';
 
 class EnrollmentsDataTable extends StatefulWidget {
   final List<Enrollment> enrollments;
-  final String role;
+  final String userRole;
+  // ignore: prefer_typing_uninitialized_variables
   final showProject;
 
   const EnrollmentsDataTable({
     super.key,
     required this.enrollments,
-    required this.role,
+    required this.userRole,
     required this.showProject,
   });
 
@@ -22,6 +24,61 @@ class EnrollmentsDataTable extends StatefulWidget {
 class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
+
+  final int totalWeekly = evaluationCriteriasGLOBAL[0].regular,
+      totalMidterm = evaluationCriteriasGLOBAL[0].midtermSupervisor,
+      totalEndterm = evaluationCriteriasGLOBAL[0].endtermSupervisor,
+      totalReport = evaluationCriteriasGLOBAL[0].report;
+  late List<StudentData> studentData = [];
+
+  void getStudentData() {
+    setState(() {
+      studentData = [];
+    });
+
+    for (final enrollment in widget.enrollments) {
+      for (final student in enrollment.team.students) {
+        int weekly = -1, weekCount = 0, midterm = -1, endterm = -1, report = -1;
+        String grade = 'NA';
+        for (final evaluation in enrollment.supervisorEvaluations) {
+          if (evaluation.student.id == student.id) {
+            if (evaluation.type == 'midterm-supervisor') {
+              midterm = evaluation.marks;
+            } else if (evaluation.type == 'endterm-suerpvisor') {
+              endterm = evaluation.marks;
+            } else if (evaluation.type.contains('week')) {
+              weekCount += 1;
+              if (weekly == -1) {
+                weekly = evaluation.marks;
+              } else {
+                weekly += evaluation.marks;
+              }
+            } else if (evaluation.type == 'report') {
+              report = evaluation.marks;
+            } else if (evaluation.type.contains('grade')) {
+              grade = evaluation.type.split('_')[1];
+            }
+          }
+        }
+
+        studentData.add(
+          StudentData(
+            weekly: (weekCount == 0 ? -1 : (weekly / weekCount).round()),
+            midterm: midterm,
+            endterm: endterm,
+            report: report,
+            grade: grade,
+            projectId: enrollment.offering.project.id,
+            projectTitle: enrollment.offering.project.title,
+            teamId: enrollment.team.id,
+            type:
+                '${enrollment.offering.course}-${enrollment.offering.year}-${enrollment.offering.semester}',
+            student: student,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +106,20 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
           ),
         ),
       );
+    } else if (studentData.isEmpty) {
+      getStudentData();
     }
 
     final columns = [
-      'Project Title',
-      'Student(s)',
-      'Course Code',
-      'Semester',
-      'Year',
+      'Project',
+      'Team',
+      'Student',
+      'Type',
+      'W($totalWeekly)',
+      'M',
+      'E',
+      'R',
+      'G',
     ];
 
     return Theme(
@@ -71,7 +134,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         sortAscending: isAscending,
         sortColumnIndex: sortColumnIndex,
         columns: getColumns(columns),
-        rows: getRows(widget.enrollments),
+        rows: getRows(studentData),
         headingRowColor: MaterialStateColor.resolveWith(
           (states) {
             return const Color(0xff12141D);
@@ -93,6 +156,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         label: CustomisedText(
           text: columns[1],
         ),
+        onSort: onSort,
       ),
       DataColumn(
         label: CustomisedText(
@@ -112,22 +176,48 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         ),
         onSort: onSort,
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[5],
+        ),
+        onSort: onSort,
+      ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[6],
+        ),
+        onSort: onSort,
+      ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[7],
+        ),
+        onSort: onSort,
+      ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[8],
+        ),
+        onSort: onSort,
+      ),
     ];
 
     return headings;
   }
 
-  List<DataRow> getRows(List<Enrollment> rows) => rows.map(
-        (Enrollment enrollment) {
+  List<DataRow> getRows(List<StudentData> rows) => rows.map(
+        (StudentData data) {
           final cells = [
             DataCell(
               Container(
-                width: 250,
+                width: 160,
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () => widget.showProject(enrollment.projectId),
+                  onPressed: () => widget.showProject(
+                    data.projectId,
+                  ),
                   child: CustomisedOverflowText(
-                    text: enrollment.title,
+                    text: data.projectTitle,
                     color: Colors.blue[900],
                     selectable: false,
                   ),
@@ -135,29 +225,60 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
               ),
             ),
             DataCell(
+              CustomisedText(
+                text: data.teamId.toString(),
+                color: Colors.black,
+              ),
+            ),
+            DataCell(
               SizedBox(
-                width: 300,
+                width: 140,
                 child: CustomisedOverflowText(
-                  text: enrollment.students,
+                  text: data.student.name,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                child: CustomisedText(
+                  text: data.type,
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.courseCode,
+                text: (data.weekly == -1 ? 'NA' : '${data.weekly}'),
                 color: Colors.black,
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.semester,
+                text: (data.midterm == -1
+                    ? 'NA'
+                    : '${data.midterm}/$totalMidterm'),
                 color: Colors.black,
               ),
             ),
             DataCell(
               CustomisedText(
-                text: enrollment.year,
+                text: (data.endterm == -1
+                    ? 'NA'
+                    : '${data.endterm}/$totalEndterm'),
+                color: Colors.black,
+              ),
+            ),
+            DataCell(
+              CustomisedText(
+                text:
+                    (data.report == -1 ? 'NA' : '${data.report}/$totalReport'),
+                color: Colors.black,
+              ),
+            ),
+            DataCell(
+              CustomisedText(
+                text: data.grade,
                 color: Colors.black,
               ),
             ),
@@ -174,29 +295,46 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.title, enrollment2.title),
+      studentData.sort(
+        (data1, data2) =>
+            compareString(ascending, data1.projectTitle, data2.projectTitle),
       );
     } else if (columnIndex == 1) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.students, enrollment2.students),
+      studentData.sort(
+        (data1, data2) => compareString(ascending, data1.teamId, data2.teamId),
       );
     } else if (columnIndex == 2) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.courseCode, enrollment2.courseCode),
+      studentData.sort(
+        (data1, data2) =>
+            compareString(ascending, data1.student.name, data2.student.name),
       );
     } else if (columnIndex == 3) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) => compareString(
-            ascending, enrollment1.semester, enrollment2.semester),
+      studentData.sort(
+        (data1, data2) => compareString(ascending, data1.type, data2.type),
       );
     } else if (columnIndex == 4) {
-      widget.enrollments.sort(
-        (enrollment1, enrollment2) =>
-            compareString(ascending, enrollment1.year, enrollment2.year),
+      studentData.sort(
+        (data1, data2) => compareString(
+            ascending, data1.weekly.toString(), data2.weekly.toString()),
+      );
+    } else if (columnIndex == 5) {
+      studentData.sort(
+        (data1, data2) => compareString(
+            ascending, data1.midterm.toString(), data2.midterm.toString()),
+      );
+    } else if (columnIndex == 6) {
+      studentData.sort(
+        (data1, data2) => compareString(
+            ascending, data1.endterm.toString(), data2.endterm.toString()),
+      );
+    } else if (columnIndex == 7) {
+      studentData.sort(
+        (data1, data2) => compareString(
+            ascending, data1.report.toString(), data2.report.toString()),
+      );
+    } else if (columnIndex == 8) {
+      studentData.sort(
+        (data1, data2) => compareString(ascending, data1.grade, data2.grade),
       );
     }
 
@@ -208,4 +346,23 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
   int compareString(bool ascending, String value1, String value2) =>
       (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
+}
+
+class StudentData {
+  final int weekly, midterm, endterm, report;
+  final String projectTitle, teamId, projectId, type, grade;
+  final Student student;
+
+  StudentData({
+    required this.weekly,
+    required this.midterm,
+    required this.endterm,
+    required this.report,
+    required this.grade,
+    required this.projectTitle,
+    required this.teamId,
+    required this.projectId,
+    required this.type,
+    required this.student,
+  });
 }

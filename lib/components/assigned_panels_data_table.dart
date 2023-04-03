@@ -1,7 +1,7 @@
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/entities.dart';
+import 'package:casper/models.dart';
 import 'package:flutter/material.dart';
 
 class AssignedPanelsDataTable extends StatefulWidget {
@@ -26,15 +26,15 @@ class _AssignedPanelsDataTableState extends State<AssignedPanelsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
-  late int myId = 1;
+  final myId = '1';
   int getNumberOfTeamsEvaluated(AssignedPanel assignedPanel) {
     int count = 0;
     for (final evaluation in assignedPanel.evaluations) {
-      if (evaluation.evaluator.id == myId) {
+      if (evaluation.faculty.id == myId) {
         count += 1;
       }
     }
-    return count;
+    return (count / 2).round();
   }
 
   @override

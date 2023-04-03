@@ -3,7 +3,8 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/evaluation_submission_form.dart';
-import 'package:casper/entities.dart';
+import 'package:casper/models.dart';
+import 'package:casper/seeds.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
@@ -26,7 +27,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
   bool isAscending = false;
 
   // TODO: Fetch these values
-  final myId = 1, totalMarks = 10;
+  final myId = '1',
+      totalMidTermMarks = evaluationCriteriasGLOBAL[0].midtermPanel;
   final List<StudentData> studentData = [];
 
   void confirmAction(teamId, panelId) {
@@ -38,7 +40,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             child: ConfirmAction(
               onSubmit: () {},
               text:
-                  'You want to remove team \'$teamId\' from panel \'$panelId?\'',
+                  '\'Team $teamId\' will be permanently removed from \'Panel $panelId\'.',
             ),
           ),
         );
@@ -61,20 +63,18 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void getStudentData() {
     for (final team in widget.assignedPanel.assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
-        int eval = -1;
-        for (final currentEvaluation in widget.assignedPanel.evaluations) {
-          if (currentEvaluation.evaluator.id == myId) {
+        int evaluation = -1;
+
+        for (final eval in widget.assignedPanel.evaluations) {
+          if (eval.faculty.id == myId) {
             myPanel = true;
-            for (final st in currentEvaluation.evaluation) {
-              if (st.studentId == student.id) {
-                eval = st.marks;
-              }
+
+            if (eval.student.id == student.id) {
+              evaluation = eval.marks;
             }
           }
         }
@@ -82,13 +82,11 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
         studentData.add(StudentData(
           teamId: team.id,
           panelId: widget.assignedPanel.panel.id,
-          studentId: student.id,
-          studentName: student.name,
-          studentEntryNumber: student.entryNumber,
+          student: student,
           type:
-              '${widget.assignedPanel.course}-${widget.assignedPanel.type}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
-          evaluation: eval,
-          isMyPanel: myPanel,
+              '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
+          evaluation: evaluation,
+          myPanel: myPanel,
         ));
       }
     }
@@ -120,6 +118,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           ),
         ),
       );
+    } else if (studentData.isEmpty) {
+      getStudentData();
     }
 
     final columns = [
@@ -204,7 +204,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               SizedBox(
                 width: 200,
                 child: CustomisedOverflowText(
-                  text: data.studentName,
+                  text: data.student.name,
                   color: Colors.black,
                 ),
               ),
@@ -212,7 +212,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             DataCell(
               SizedBox(
                 child: CustomisedText(
-                  text: data.studentEntryNumber,
+                  text: data.student.entryNumber,
                   color: Colors.black,
                 ),
               ),
@@ -236,7 +236,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomisedText(
-                              text: '${data.evaluation}/$totalMarks',
+                              text: '${data.evaluation}/$totalMidTermMarks',
                               color: Colors.black,
                             ),
                             CustomisedButton(
@@ -244,10 +244,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
                               height: 37,
                               width: 50,
                               onPressed: () => uploadEvaluation(
-                                Student(
-                                    name: data.studentName,
-                                    entryNumber: data.studentEntryNumber,
-                                    id: data.studentId),
+                                data.student,
                               ),
                               elevation: 0,
                             )
@@ -267,10 +264,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
                           height: 37,
                           width: double.infinity,
                           onPressed: () => uploadEvaluation(
-                            Student(
-                                name: data.studentName,
-                                entryNumber: data.studentEntryNumber,
-                                id: data.studentId),
+                            data.student,
                           ),
                           elevation: 0,
                         ))),
@@ -305,16 +299,16 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
       studentData.sort(
         (data1, data2) => compareString(
           ascending,
-          data1.studentName.toString(),
-          data2.studentName.toString(),
+          data1.student.name,
+          data2.student.name,
         ),
       );
     } else if (columnIndex == 2) {
       studentData.sort(
         (data1, data2) => compareString(
           ascending,
-          data1.studentEntryNumber.toString(),
-          data2.studentEntryNumber.toString(),
+          data1.student.entryNumber,
+          data2.student.entryNumber,
         ),
       );
     } else if (columnIndex == 3) {
@@ -346,18 +340,17 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 }
 
 class StudentData {
-  final bool isMyPanel;
-  final int teamId, panelId, studentId, evaluation;
-  final String studentName, studentEntryNumber, type;
+  final bool myPanel;
+  final int evaluation;
+  final String teamId, panelId, type;
+  final Student student;
 
   StudentData({
     required this.teamId,
     required this.panelId,
-    required this.studentId,
-    required this.studentName,
-    required this.studentEntryNumber,
+    required this.student,
     required this.evaluation,
-    required this.isMyPanel,
+    required this.myPanel,
     required this.type,
   });
 }

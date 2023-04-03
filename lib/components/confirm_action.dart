@@ -25,16 +25,19 @@ class _ConfirmActionState extends State<ConfirmAction> {
           const SizedBox(
             height: 10,
           ),
-          CustomisedText(
-            text: 'Are you sure?\n${widget.text}',
-            fontSize: 23,
-            color: Colors.black,
+          SizedBox(
+            width: 450,
+            child: CustomisedText(
+              text: '${widget.text} Are you sure?',
+              fontSize: 23,
+              color: Colors.black,
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CustomisedButton(
                 width: 70,
