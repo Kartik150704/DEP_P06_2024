@@ -18,25 +18,25 @@ final evaluationCriteriasGLOBAL = [
 
 final studentsGLOBAL = [
   Student(
-    id: '1',
+    id: '2020csb1187',
     name: 'Ojassvi Kumar',
     entryNumber: '2020csb1187',
     email: '2020csb1187@iitrpr.ac.in',
   ),
   Student(
-    id: '2',
+    id: '2020csb1153',
     name: 'Aman Kumar',
     entryNumber: '2020csb1153',
     email: '2020csb1153@iitrpr.ac.in',
   ),
   Student(
-    id: '3',
+    id: '2020csb1198',
     name: 'Rishabh Jain',
     entryNumber: '2020csb1198',
     email: '2020csb1198@iitrpr.ac.in',
   ),
   Student(
-    id: '4',
+    id: '2020csb1154',
     name: 'Aman Pankaj Adatia',
     entryNumber: '2020csb1154',
     email: '2020csb1154@iitrpr.ac.in',
@@ -46,32 +46,32 @@ final studentsGLOBAL = [
 final facultyGLOBAL = [
   Faculty(
     id: '1',
-    name: 'Shweta Jain',
+    name: 'Dr Shweta Jain',
     email: 'sj@iitrpr.ac.in',
   ),
   Faculty(
     id: '2',
-    name: 'Shashi Shekhar Jha',
+    name: 'Dr Shashi Shekhar Jha',
     email: 'ssj@iitrpr.ac.in',
   ),
   Faculty(
     id: '3',
-    name: 'Apurva Mudgal',
+    name: 'Dr Apurva Mudgal',
     email: 'am@iitrpr.ac.in',
   ),
   Faculty(
     id: '4',
-    name: 'Anil Shukla',
+    name: 'Dr Anil Shukla',
     email: 'as@iitrpr.ac.in',
   ),
   Faculty(
     id: '5',
-    name: 'Nitin Auluck',
+    name: 'Dr Nitin Auluck',
     email: 'na@iitrpr.ac.in',
   ),
   Faculty(
     id: '6',
-    name: 'Vishwanath Gunturi',
+    name: 'Dr Vishwanath Gunturi',
     email: 'vg@iitrpr.ac.in',
   ),
 ];
@@ -97,7 +97,7 @@ final teamsGLOBAL = [
 
 final panelGLOBAL = [
   Panel(
-    id: '1',
+    id: '4',
     numberOfEvaluators: 2,
     evaluators: [
       facultyGLOBAL[0],

@@ -4,10 +4,15 @@ import 'package:casper/components/panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../components/add_panel_form.dart';
 
 class FacultyPanelManagementPage extends StatefulWidget {
   final String userRole;
+
   // ignore: prefer_typing_uninitialized_variables
   final viewPanel;
 
@@ -46,7 +51,33 @@ class _FacultyPanelManagementPageState
   // TODO: Implement this method
   void getPanels() {
     setState(() {
-      assignedPanels = assignedPanelsGLOBAL;
+      assignedPanels.clear();
+      assignedPanels.add(assignedPanelsGLOBAL[0]);
+      // assignedPanels = assignedPanelsGLOBAL;
+    });
+    FirebaseFirestore.instance.collection('panels').get().then((value) {
+      for (var doc in value.docs) {
+        setState(() {
+          assignedPanels.add(AssignedPanel(
+              id: doc['panel_id'],
+              course: 'CP302',
+              term: 'MidTerm',
+              semester: '2',
+              year: '2023',
+              numberOfAssignedTeams: 0,
+              panel: Panel(
+                  id: doc['panel_id'],
+                  numberOfEvaluators: int.parse(doc['number_of_evaluators']),
+                  evaluators: List<Faculty>.generate(
+                      int.parse(doc['number_of_evaluators']),
+                      (index) => Faculty(
+                          id: doc['evaluator_ids'][index],
+                          name: doc['evaluator_names'][index],
+                          email: ''))),
+              assignedTeams: [],
+              evaluations: []));
+        });
+      }
     });
   }
 
@@ -198,7 +229,20 @@ class _FacultyPanelManagementPageState
                     color: Colors.black,
                     size: 35,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Center(
+                            child: AddPanelForm(
+                              refresh: getPanels,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),

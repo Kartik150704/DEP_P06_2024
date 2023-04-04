@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class FacultyEnrollmentsPage extends StatefulWidget {
   final String role;
+
   // ignore: prefer_typing_uninitialized_variables
   final showProject;
 
@@ -66,15 +67,15 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
               //   projectId: doc.id,
               // ),
               Enrollment(
-                id: '-1',
+                id: doc.id,
                 offering: Offering(
-                  id: '-1',
+                  id: val['offering_id'],
                   instructor: Faculty(
-                    id: '-1',
-                    name: 'null',
-                    email: 'null',
+                    id: FirebaseAuth.instance.currentUser!.uid,
+                    name: val['instructor_name'],
+                    email: FirebaseAuth.instance.currentUser!.email.toString(),
                   ),
-                  course: 'CP302',
+                  course: val['type'],
                   semester: val['semester'],
                   year: val['year'],
                   project: Project(
@@ -84,20 +85,20 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   ),
                 ),
                 team: Team(
-                  id: '1',
+                  id: 'placeholder: TEAMID',
                   numberOfMembers: 2,
                   students: [
                     Student(
-                      id: '1',
-                      name: val['student_name'][1],
-                      entryNumber: '2020csb1187',
-                      email: '2020csb1187@iitrpr.ac.in',
+                      id: val['student_ids'][0],
+                      name: val['student_name'][0],
+                      entryNumber: val['student_ids'][0],
+                      email: '${val['student_ids'][0]}@iitrpr.ac.in',
                     ),
                     Student(
-                      id: '2',
-                      name: val['student_name'][0],
-                      entryNumber: '2020csb1153',
-                      email: '2020csb1153@iitrpr.ac.in',
+                      id: val['student_ids'][1],
+                      name: val['student_name'][1],
+                      entryNumber: val['student_ids'][1],
+                      email: '${val['student_ids'][1]}@iitrpr.ac.in',
                     ),
                   ],
                 ),
