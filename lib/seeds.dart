@@ -66,7 +66,7 @@ final facultyGLOBAL = [
   ),
   Faculty(
     id: '5',
-    name: 'Nitin Aucluck',
+    name: 'Nitin Auluck',
     email: 'na@iitrpr.ac.in',
   ),
   Faculty(

@@ -1,6 +1,8 @@
 import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/project_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyProfile extends StatefulWidget {
@@ -13,11 +15,37 @@ class FacultyProfile extends StatefulWidget {
 }
 
 class _FacultyProfileState extends State<FacultyProfile> {
+  var faculty = ['', ''];
+  var name = ['', '', ''];
   void onPressed() {}
 
   // ProjectPage projectpage = ProjectPage(
   //   project: ['', '', '', '', '', '', '', ''],
   // );
+  void fetchName() {
+    setState(() {
+      faculty = ['', ''];
+      name = ['', '', ''];
+    });
+    FirebaseFirestore.instance.collection('instructors').get().then((value) {
+      value.docs.forEach((element) {
+        var doc = element.data();
+        if (doc['uid'] == FirebaseAuth.instance.currentUser?.uid) {
+          setState(() {
+            faculty[0] = (doc['name']);
+            faculty[1] = (doc['department']);
+          });
+          name = faculty[0].split(' ');
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +78,24 @@ class _FacultyProfileState extends State<FacultyProfile> {
                     ),
                   ),
                   SizedBox(
-                    height: 40,
+                    height: 30,
                     child: Center(
                       child: Text(
                         'Faculty ID -',
+                        style: SafeGoogleFont(
+                          'Ubuntu',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xffffffff),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: Center(
+                      child: Text(
+                        '${FirebaseAuth.instance.currentUser?.uid}',
                         style: SafeGoogleFont(
                           'Ubuntu',
                           fontSize: 20,
@@ -86,7 +128,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         margin: EdgeInsets.fromLTRB(
                             66 * fem, 0 * fem, 0 * fem, 70 * fem),
                         child: Text(
-                          'Profile',
+                          '${name[0]} ${name[1]}\'s Profile',
                           style: SafeGoogleFont(
                             'Ubuntu',
                             fontSize: 50 * ffem,
@@ -100,7 +142,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         margin: EdgeInsets.fromLTRB(
                             0 * fem, 0 * fem, 0 * fem, 9 * fem),
                         child: Text(
-                          'Name - NAME',
+                          'Name - ${faculty[0]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
                             fontSize: 25 * ffem,
@@ -115,7 +157,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                         margin: EdgeInsets.fromLTRB(
                             0 * fem, 0 * fem, 0 * fem, 9 * fem),
                         child: Text(
-                          'Department - DEPARTMENT',
+                          'Department - ${faculty[1]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
                             fontSize: 25 * ffem,
