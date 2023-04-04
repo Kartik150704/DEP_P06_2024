@@ -22,6 +22,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   // ignore: prefer_typing_uninitialized_variables
   var selectedOption, projectPage;
+  var uid;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
         .then((value) {
       fetchProject(value.docs[0]['proj_id'][selectedOption - 1]);
     });
+    uid = FirebaseAuth.instance.currentUser?.uid;
   }
 
   fetchProject(var project_id) {
@@ -66,6 +68,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return StudentLoggedInScaffold(
+      uid: uid,
       studentScaffoldBody: Row(
         children: [
           Container(

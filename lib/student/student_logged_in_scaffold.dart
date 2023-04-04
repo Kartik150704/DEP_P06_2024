@@ -9,20 +9,21 @@ import 'package:flutter/material.dart';
 class StudentLoggedInScaffold extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
-
+  final uid;
   final appBarOptions = [
     'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
-  final appBarFunctions = const [
-    StudentProfilePage(),
-    StudentHomePage(),
-    StudentOfferingsPage(),
+  late final appBarFunctions = [
+    StudentProfilePage(uid: uid),
+    const StudentHomePage(),
+    const StudentOfferingsPage(),
   ];
 
   StudentLoggedInScaffold({
     Key? key,
+    this.uid,
     required this.studentScaffoldBody,
   }) : super(key: key);
 
