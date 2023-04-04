@@ -18,7 +18,7 @@ class StudentProfilePage extends StatefulWidget {
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
-  var student = [];
+  var student = ['', '', '', '', '', ''];
   var canJoinNewTeam = false;
   var studentDetails = [
     'Name: Aman Kumar',
@@ -61,21 +61,19 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   void fetchName() {
     setState(() {
-      student = [];
+      student = ['', '', '', '', '', ''];
     });
     FirebaseFirestore.instance.collection('student').get().then((value) {
       value.docs.forEach((element) {
         var doc = element.data();
         if (doc['uid'] == widget.uid && widget.uid != null) {
-          print(widget.uid);
           setState(() {
-            student.add(doc['name']);
-            student.add(doc['department']);
-            student.add(doc['id']);
-            student.add(doc['cgpa']);
-            student.add(doc['contact']);
-            student.add(doc['proj_id'][0]);
-            print(student[5]);
+            student[0] = (doc['name']);
+            student[1] = (doc['department']);
+            student[2] = (doc['id']);
+            student[3] = (doc['cgpa']);
+            student[4] = (doc['contact']);
+            student[5] = (doc['proj_id'][0]);
           });
         }
       });
