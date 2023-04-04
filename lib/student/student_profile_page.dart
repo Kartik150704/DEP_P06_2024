@@ -19,6 +19,7 @@ class StudentProfilePage extends StatefulWidget {
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
   var student = ['', '', '', '', '', ''];
+  var team = ['', ''];
   var canJoinNewTeam = false;
   var studentDetails = [
     'Name: Aman Kumar',
@@ -62,6 +63,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   void fetchName() {
     setState(() {
       student = ['', '', '', '', '', ''];
+      team = ['', ''];
     });
     FirebaseFirestore.instance.collection('student').get().then((value) {
       value.docs.forEach((element) {
@@ -74,6 +76,18 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             student[3] = (doc['cgpa']);
             student[4] = (doc['contact']);
             student[5] = (doc['proj_id'][0]);
+
+            FirebaseFirestore.instance
+                .collection('projects')
+                .doc(student[5])
+                .get()
+                .then((value) {
+              var doc = value.data();
+              setState(() {
+                team[0] = doc!['student_name'][0];
+                team[1] = doc['student_name'][1];
+              });
+            });
           });
         }
       });
@@ -138,7 +152,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           height: 4,
                         ),
                         CustomisedText(
-                          text: 'Ojassvi Kumar\nAman Kumar',
+                          text: '${team[0]}\n${team[1]}',
                           fontSize: 17,
                         ),
                       ],
