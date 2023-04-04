@@ -3,6 +3,8 @@ import 'package:casper/student/student_enrollment_requests.dart';
 import 'package:casper/student/student_logged_in_scaffold.dart';
 import 'package:casper/student/student_offerings.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class StudentOfferingsPage extends StatefulWidget {
   const StudentOfferingsPage({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class StudentOfferingsPage extends StatefulWidget {
 class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
   // ignore: prefer_typing_uninitialized_variables
   var selectedOption, displayedPage;
-
+  var uid;
   var pages = [
     'Available Projects',
     'Enrollment Requests',
@@ -25,6 +27,7 @@ class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
     super.initState();
     selectedOption = 1;
     displayedPage = const StudentOfferings();
+    uid = FirebaseAuth.instance.currentUser?.uid;
   }
 
   void selectPage(selectOption) {
@@ -42,6 +45,7 @@ class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return StudentLoggedInScaffold(
+      uid: uid,
       studentScaffoldBody: Row(
         children: [
           Container(

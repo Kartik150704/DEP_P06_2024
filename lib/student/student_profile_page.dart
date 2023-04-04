@@ -66,7 +66,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     FirebaseFirestore.instance.collection('student').get().then((value) {
       value.docs.forEach((element) {
         var doc = element.data();
-        if (doc['uid'] == widget.uid) {
+        if (doc['uid'] == widget.uid && widget.uid != null) {
+          print(widget.uid);
           setState(() {
             student.add(doc['name']);
             student.add(doc['department']);
@@ -74,7 +75,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             student.add(doc['cgpa']);
             student.add(doc['contact']);
             student.add(doc['proj_id'][0]);
-            print(student[2]);
+            print(student[5]);
           });
         }
       });
@@ -96,6 +97,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
     return SelectionArea(
       child: StudentLoggedInScaffold(
+        uid: widget.uid,
         studentScaffoldBody: Row(
           children: [
             Container(
