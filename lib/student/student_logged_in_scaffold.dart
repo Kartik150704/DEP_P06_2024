@@ -3,33 +3,59 @@ import 'package:casper/student/student_home_page.dart';
 import 'package:casper/student/student_offerings_page.dart';
 import 'package:casper/student/student_profile_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class StudentLoggedInScaffold extends StatelessWidget {
+import '../components/customised_text.dart';
+
+class StudentLoggedInScaffold extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
   final uid;
-  final appBarOptions = [
-    'PROFILE',
-    'HOME',
-    'OFFERINGS',
-  ];
-  late final appBarFunctions = [
-    StudentProfilePage(uid: uid),
-    const StudentHomePage(),
-    const StudentOfferingsPage(),
-  ];
 
-  StudentLoggedInScaffold({
+  const StudentLoggedInScaffold({
     Key? key,
     this.uid,
     required this.studentScaffoldBody,
   }) : super(key: key);
 
+  @override
+  State<StudentLoggedInScaffold> createState() =>
+      _StudentLoggedInScaffoldState();
+}
+
+class _StudentLoggedInScaffoldState extends State<StudentLoggedInScaffold> {
+  final appBarOptions = [
+    'PROFILE',
+    'HOME',
+    'OFFERINGS',
+  ];
+  String username = '';
+  late final appBarFunctions = [
+    StudentProfilePage(uid: widget.uid),
+    const StudentHomePage(),
+    const StudentOfferingsPage(),
+  ];
+
   void signUserOut(context) {
     FirebaseAuth.instance.signOut();
     Navigator.popUntil(context, ModalRoute.withName("/"));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('student')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        username = value.docs[0]['name'];
+      });
+    });
   }
 
   @override
@@ -65,13 +91,22 @@ class StudentLoggedInScaffold extends StatelessWidget {
         ),
         leadingWidth: 350,
         actions: [
+          Container(
+            alignment: Alignment.center,
+            child: CustomisedText(
+              text: '$username (Student)',
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
           IconButton(
             onPressed: () => signUserOut(context),
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
-      body: studentScaffoldBody,
+      body: widget.studentScaffoldBody,
       bottomSheet: Container(
         height: 55,
         width: double.infinity,

@@ -4,6 +4,7 @@ import 'package:casper/faculty/facultyOfferings.dart';
 import 'package:casper/faculty/facultyProfile.dart';
 import 'package:casper/faculty/faculty_home_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
     'HOME',
     'OFFERINGS',
   ];
-
+  String username = '';
   dynamic displayPage;
 
   void signUserOut(context) {
@@ -54,6 +55,15 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
   void initState() {
     super.initState();
     displayPage = FacultyHomePage(userRole: widget.userRole);
+    FirebaseFirestore.instance
+        .collection('instructors')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        username = value.docs[0]['name'];
+      });
+    });
   }
 
   @override
@@ -81,8 +91,9 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
         actions: [
           Container(
             alignment: Alignment.center,
-            child: const CustomisedText(
-              text: 'Signed In As()',
+            child: CustomisedText(
+              text:
+                  '$username (${(widget.userRole == 'co') ? 'Coordinator' : 'Supervisor'})',
             ),
           ),
           const SizedBox(
