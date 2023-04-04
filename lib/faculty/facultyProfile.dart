@@ -15,7 +15,7 @@ class FacultyProfile extends StatefulWidget {
 }
 
 class _FacultyProfileState extends State<FacultyProfile> {
-  var faculty = ['', ''];
+  var faculty = ['', '', ''];
   var name = ['', '', ''];
   void onPressed() {}
 
@@ -24,7 +24,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
   // );
   void fetchName() {
     setState(() {
-      faculty = ['', ''];
+      faculty = ['', '', ''];
       name = ['', '', ''];
     });
     FirebaseFirestore.instance.collection('instructors').get().then((value) {
@@ -34,6 +34,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
           setState(() {
             faculty[0] = (doc['name']);
             faculty[1] = (doc['department']);
+            faculty[2] = (doc['contact']);
           });
           name = faculty[0].split(' ');
         }
@@ -140,7 +141,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(
-                            0 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
                         child: Text(
                           'Name - ${faculty[0]}',
                           style: SafeGoogleFont(
@@ -155,7 +156,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                       Container(
                         // programprogram5jG (225:254)
                         margin: EdgeInsets.fromLTRB(
-                            0 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
                         child: Text(
                           'Department - ${faculty[1]}',
                           style: SafeGoogleFont(
@@ -169,9 +170,9 @@ class _FacultyProfileState extends State<FacultyProfile> {
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(
-                            0 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
                         child: Text(
-                          'Contact - CONTACT',
+                          'Contact - ${faculty[2]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
                             fontSize: 25 * ffem,
