@@ -2,6 +2,7 @@ import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
+import 'package:casper/components/team_assignment_form.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -209,7 +210,18 @@ class _FacultyPanelManagementPageState
                     color: Colors.black,
                     size: 35,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Center(
+                            child: TeamAssignmentForm(),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),

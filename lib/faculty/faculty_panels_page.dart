@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class FacultyPanelsPage extends StatefulWidget {
   final String userRole;
+
   // ignore: prefer_typing_uninitialized_variables
   final viewPanel;
 
@@ -30,7 +31,11 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   void initState() {
     super.initState();
     setState(() {
-      assignedPanels = assignedPanelsGLOBAL;
+      // TODO: fix very temporary logic to display only my panels
+      if (widget.userRole == 'co')
+        assignedPanels = [assignedPanelsGLOBAL[0]];
+      else
+        assignedPanels = [];
     });
   }
 
