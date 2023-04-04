@@ -125,7 +125,7 @@ final panelGLOBAL = [
 final evaluationsGLOBAL = [
   Evaluation(
     id: '1',
-    marks: 5,
+    marks: 17,
     remarks: 'Good work',
     type: 'midterm-panel',
     student: studentsGLOBAL[0],

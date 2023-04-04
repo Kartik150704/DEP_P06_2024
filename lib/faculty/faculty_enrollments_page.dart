@@ -26,10 +26,10 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   bool? ischecked = false;
   final List<Enrollment> enrollments = [];
   final projectTitleController = TextEditingController(),
-      semesterController = TextEditingController(),
       studentNameController = TextEditingController(),
-      courseCodeController = TextEditingController(),
-      yearController = TextEditingController();
+      courseCodeController = TextEditingController(text: 'CP302'),
+      yearController = TextEditingController(text: '2022'),
+      semesterController = TextEditingController(text: '2');
 
   dynamic displayPage;
 
@@ -90,14 +90,14 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     Student(
                       id: '1',
                       name: val['student_name'][1],
-                      entryNumber: 'null',
-                      email: 'null',
+                      entryNumber: '2020csb1187',
+                      email: '2020csb1187@iitrpr.ac.in',
                     ),
                     Student(
                       id: '2',
                       name: val['student_name'][0],
-                      entryNumber: 'null',
-                      email: 'null',
+                      entryNumber: '2020csb1153',
+                      email: '2020csb1153@iitrpr.ac.in',
                     ),
                   ],
                 ),
@@ -189,7 +189,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       ),
                       SearchTextField(
                         textEditingController: projectTitleController,
-                        hintText: 'Project Title',
+                        hintText: 'Project',
                         width: 170 * fem,
                       ),
                       SizedBox(
@@ -197,7 +197,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       ),
                       SearchTextField(
                         textEditingController: studentNameController,
-                        hintText: 'Student Name',
+                        hintText: 'Student\'s Name',
                         width: 170 * fem,
                       ),
                       SizedBox(
@@ -205,7 +205,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       ),
                       SearchTextField(
                         textEditingController: courseCodeController,
-                        hintText: 'Course Code',
+                        hintText: 'Course',
                         width: 170 * fem,
                       ),
                       SizedBox(
