@@ -55,6 +55,7 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
       'ID',
       'Number Of Evaluators',
       'Evaluators',
+      'Type',
       'View Details',
     ];
 
@@ -103,6 +104,12 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
         label: CustomisedText(
           text: columns[3],
         ),
+        onSort: onSort,
+      ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[4],
+        ),
       ),
     ];
 
@@ -137,6 +144,13 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
                       .join(', '),
                   color: Colors.black,
                 ),
+              ),
+            ),
+            DataCell(
+              CustomisedOverflowText(
+                text:
+                    '${assignedPanel.panel.course}-${assignedPanel.panel.year}-${assignedPanel.panel.semester}',
+                color: Colors.black,
               ),
             ),
             DataCell(

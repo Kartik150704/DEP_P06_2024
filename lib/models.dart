@@ -58,13 +58,16 @@ class Team {
 
 class Panel {
   final int numberOfEvaluators;
-  final String id;
+  final String id, course, year, semester;
   final List<Faculty> evaluators;
 
   Panel({
     required this.id,
     required this.numberOfEvaluators,
     required this.evaluators,
+    required this.course,
+    required this.year,
+    required this.semester,
   });
 }
 

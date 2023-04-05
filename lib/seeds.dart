@@ -98,6 +98,9 @@ final teamsGLOBAL = [
 final panelGLOBAL = [
   Panel(
     id: '4',
+    course: 'CP302',
+    semester: '2',
+    year: '2023',
     numberOfEvaluators: 2,
     evaluators: [
       facultyGLOBAL[0],
@@ -106,6 +109,9 @@ final panelGLOBAL = [
   ),
   Panel(
     id: '2',
+    course: 'CP302',
+    semester: '2',
+    year: '2023',
     numberOfEvaluators: 2,
     evaluators: [
       facultyGLOBAL[2],
@@ -114,6 +120,9 @@ final panelGLOBAL = [
   ),
   Panel(
     id: '3',
+    course: 'CP302',
+    semester: '2',
+    year: '2023',
     numberOfEvaluators: 2,
     evaluators: [
       facultyGLOBAL[4],

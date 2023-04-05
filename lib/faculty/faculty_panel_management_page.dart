@@ -67,6 +67,9 @@ class _FacultyPanelManagementPageState
               year: '2023',
               numberOfAssignedTeams: 0,
               panel: Panel(
+                  course: 'CP302',
+                  semester: '2',
+                  year: '2023',
                   id: doc['panel_id'],
                   numberOfEvaluators: int.parse(doc['number_of_evaluators']),
                   evaluators: List<Faculty>.generate(
