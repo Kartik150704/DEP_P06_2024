@@ -13,16 +13,17 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:csv/csv.dart';
 
-class TeamAssignmentForm extends StatefulWidget {
-  const TeamAssignmentForm({
+class StudentTeamAssignmentForm extends StatefulWidget {
+  const StudentTeamAssignmentForm({
     super.key,
   });
 
   @override
-  State<TeamAssignmentForm> createState() => _TeamAssignmentFormState();
+  State<StudentTeamAssignmentForm> createState() =>
+      _StudentTeamAssignmentFormState();
 }
 
-class _TeamAssignmentFormState extends State<TeamAssignmentForm> {
+class _StudentTeamAssignmentFormState extends State<StudentTeamAssignmentForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   List<String> csvData = [];
 
@@ -42,23 +43,23 @@ class _TeamAssignmentFormState extends State<TeamAssignmentForm> {
         });
         // Do something with the CSV data
         // ...
-        var alldata = <String, dynamic>{};
-        var names = csvData.sublist(1);
-        alldata.addEntries([MapEntry('evaluator_names', names)]);
-        int newpanelid = 0;
-        FirebaseFirestore.instance.collection('panels').get().then((value) {
-          //TODO change to len + 1
-          newpanelid = value.docs.length + 2;
-          alldata.addEntries([
-            MapEntry('number_of_evaluators', csvData[0]),
-            MapEntry('panel_id', newpanelid.toString()),
-            MapEntry(
-                'evaluator_ids',
-                List<String>.generate(
-                    names.length, (index) => index.toString())),
-          ]);
-          FirebaseFirestore.instance.collection('panels').add(alldata);
-        });
+        // var alldata = <String, dynamic>{};
+        // var names = csvData.sublist(1);
+        // alldata.addEntries([MapEntry('evaluator_names', names)]);
+        // int newpanelid = 0;
+        // FirebaseFirestore.instance.collection('panels').get().then((value) {
+        //   //TODO change to len + 1
+        //   newpanelid = value.docs.length + 2;
+        //   alldata.addEntries([
+        //     MapEntry('number_of_evaluators', csvData[0]),
+        //     MapEntry('panel_id', newpanelid.toString()),
+        //     MapEntry(
+        //         'evaluator_ids',
+        //         List<String>.generate(
+        //             names.length, (index) => index.toString())),
+        //   ]);
+        //   FirebaseFirestore.instance.collection('panels').add(alldata);
+        // });
       }
     }
   }
@@ -90,7 +91,7 @@ class _TeamAssignmentFormState extends State<TeamAssignmentForm> {
           const SizedBox(
             width: 500,
             child: CustomisedText(
-              text: 'Format: Panelsize,Name1,Name2...',
+              text: 'Format: PanelID,TeamID,TeamID...',
               color: Colors.black,
               fontSize: 23,
             ),

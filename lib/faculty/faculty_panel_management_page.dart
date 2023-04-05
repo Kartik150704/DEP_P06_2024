@@ -8,6 +8,7 @@ import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:casper/components/student_team_assignment_form.dart';
 
 import '../components/add_panel_form.dart';
 
@@ -220,6 +221,37 @@ class _FacultyPanelManagementPageState
                         return const AlertDialog(
                           title: Center(
                             child: TeamAssignmentForm(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+              child: Tooltip(
+                message: 'Import Panel Assignment(s)',
+                child: FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
+                  splashColor: Colors.black,
+                  hoverColor: Colors.grey,
+                  child: const Icon(
+                    Icons.upload_file,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Center(
+                            child: StudentTeamAssignmentForm(),
                           ),
                         );
                       },
