@@ -1,4 +1,5 @@
 import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/faculty/faculty_criteria_management_page.dart';
 import 'package:casper/faculty/faculty_enrollments_page.dart';
 import 'package:casper/faculty/faculty_panel_management_page.dart';
 import 'package:casper/faculty/faculty_panel_page.dart';
@@ -70,6 +71,12 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
             viewPanel: viewPanel,
           );
           break;
+        case 3:
+          displayPage = FacultyCriteriaManagementPage(
+            userRole: widget.userRole,
+            viewCritera: () {},
+          );
+          break;
       }
     });
   }
@@ -82,6 +89,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
         'My Enrollments',
         'My Panels',
         'Panel Management',
+        'Criteria Management',
       ];
     }
 
