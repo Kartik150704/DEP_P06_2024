@@ -208,6 +208,14 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               Container(
                                 margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                                 child: CustomisedText(
+                                  text: 'Cgpa: ${student[i]}',
+                                  fontSize: 25,
+                                ),
+                              ),
+                            if (i == 4)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
                                   text: 'Contact: ${student[i]}',
                                   fontSize: 25,
                                 ),
