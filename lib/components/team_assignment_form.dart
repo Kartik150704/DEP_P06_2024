@@ -42,23 +42,31 @@ class _TeamAssignmentFormState extends State<TeamAssignmentForm> {
         });
         // Do something with the CSV data
         // ...
-        var alldata = <String, dynamic>{};
-        var names = csvData.sublist(1);
-        alldata.addEntries([MapEntry('evaluator_names', names)]);
-        int newpanelid = 0;
-        FirebaseFirestore.instance.collection('panels').get().then((value) {
-          //TODO change to len + 1
-          newpanelid = value.docs.length + 2;
-          alldata.addEntries([
-            MapEntry('number_of_evaluators', csvData[0]),
-            MapEntry('panel_id', newpanelid.toString()),
-            MapEntry(
-                'evaluator_ids',
-                List<String>.generate(
-                    names.length, (index) => index.toString())),
-          ]);
-          FirebaseFirestore.instance.collection('panels').add(alldata);
-        });
+        for (int i = 0; i < csvData.length; i++) {
+          var csvData1 = csvData.sublist(i, i + 1 + int.parse(csvData[i]));
+          i += int.parse(csvData[i]);
+          print(csvData1);
+          var alldata = <String, dynamic>{};
+          var names = csvData1.sublist(1);
+          alldata.addEntries([MapEntry('evaluator_names', names)]);
+          int newpanelid = 0;
+          await FirebaseFirestore.instance
+              .collection('panels')
+              .get()
+              .then((value) async {
+            //TODO change to len + 1
+            newpanelid = value.docs.length + 2;
+            alldata.addEntries([
+              MapEntry('number_of_evaluators', csvData1[0]),
+              MapEntry('panel_id', newpanelid.toString()),
+              MapEntry(
+                  'evaluator_ids',
+                  List<String>.generate(
+                      names.length, (index) => index.toString())),
+            ]);
+            FirebaseFirestore.instance.collection('panels').add(alldata);
+          });
+        }
       }
     }
   }

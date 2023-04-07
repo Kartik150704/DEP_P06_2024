@@ -43,47 +43,46 @@ class _StudentTeamAssignmentFormState extends State<StudentTeamAssignmentForm> {
         });
         // Do something with the CSV data
         // ...
-        var alldata = <String, dynamic>{};
-        List<String> name = [], entry = [];
-        alldata.addEntries([MapEntry('panel_id', csvData[0])]);
-        int newpanelid = 0;
-        FirebaseFirestore.instance.collection('team').get().then((value) async {
-          //TODO change to len + 1
-          for (var doc in value.docs) {
-            if (doc['id'].toString() == csvData[1].toString()) {
-              for (String x in doc['students']) {
-                // print(doc['id']);
-                // print(x);
-                entry.add(x);
-                // var col1 = await FirebaseFirestore.instance
-                //     .collection('student')
-                //     .get();
-                // for (var c in col1.docs) {
-                //   var data = c.data();
-                //   name.add(data['name']);
-                //   print(name);
-                // }
-                await FirebaseFirestore.instance
-                    .collection('student')
-                    .get()
-                    .then((values) {
-                  for (var docc in values.docs) {
-                    if (docc['id'] == x) {
-                      name.add(docc['name']);
+        for (int i = 0; i < csvData.length; i += 2) {
+          var alldata = <String, dynamic>{};
+          List<String> name = [], entry = [];
+          alldata.addEntries([MapEntry('panel_id', csvData[i])]);
+          int newpanelid = 0;
+          FirebaseFirestore.instance
+              .collection('team')
+              .get()
+              .then((value) async {
+            //TODO change to len + 1
+            for (var doc in value.docs) {
+              if (doc['id'].toString() == csvData[i + 1].toString()) {
+                for (String x in doc['students']) {
+                  // print(doc['id']);
+                  // print(x);
+                  entry.add(x);
+                  await FirebaseFirestore.instance
+                      .collection('student')
+                      .get()
+                      .then((values) {
+                    for (var docc in values.docs) {
+                      if (docc['id'] == x) {
+                        name.add(docc['name']);
+                      }
                     }
-                  }
-                });
+                  });
+                }
               }
             }
-          }
-          print(name);
-          alldata.addEntries([
-            MapEntry('entry_no', entry),
-            MapEntry('name', name),
-            MapEntry('team_id', csvData[1]),
-          ]);
-          FirebaseFirestore.instance.collection('assigned_panel').add(alldata);
-        });
+            print(name);
+            alldata.addEntries([
+              MapEntry('entry_no', entry),
+              MapEntry('name', name),
+              MapEntry('team_id', csvData[i + 1]),
+            ]);
+            FirebaseFirestore.instance
+                .collection('assigned_panel')
+                .add(alldata);
+          });
+        }
       }
     }
   }
