@@ -3,6 +3,8 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelsPage extends StatefulWidget {
@@ -30,12 +32,49 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      // TODO: fix very temporary logic to display only my panels
-      if (widget.userRole == 'co')
-        assignedPanels = [assignedPanelsGLOBAL[0]];
-      else
-        assignedPanels = [];
+    FirebaseFirestore.instance
+        .collection('instructors')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      var doc = value.docs[0];
+      List<String> panelids = List<String>.from(doc['panel_ids']);
+      FirebaseFirestore.instance
+          .collection('panels')
+          .where('panel_id', whereIn: panelids)
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          // print(doc['assigned_project_ids'].runtimeType);
+          setState(() {
+            assignedPanels.add(AssignedPanel(
+                id: doc['panel_id'],
+                course: 'CP302',
+                term: 'MidTerm',
+                semester: '2',
+                year: '2023',
+                numberOfAssignedTeams: 0,
+                panel: Panel(
+                    course: 'CP302',
+                    semester: '2',
+                    year: '2023',
+                    id: doc['panel_id'],
+                    numberOfEvaluators: int.parse(doc['number_of_evaluators']),
+                    evaluators: List<Faculty>.generate(
+                        int.parse(doc['number_of_evaluators']),
+                        (index) => Faculty(
+                            id: doc['evaluator_ids'][index],
+                            name: doc['evaluator_names'][index],
+                            email: ''))),
+                assignedTeams: [],
+                evaluations: [evaluationsGLOBAL[4]],
+                assignedProjectIds:
+                    List<String>.from(doc['assigned_project_ids']),
+                numberOfAssignedProjects:
+                    int.tryParse(doc['number_of_assigned_projects'])));
+          });
+        }
+      });
     });
   }
 

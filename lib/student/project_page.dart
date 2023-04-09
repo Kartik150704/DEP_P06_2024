@@ -30,19 +30,30 @@ class _ProjectPageState extends State<ProjectPage> {
         .where('project_id', isEqualTo: project_id)
         .get()
         .then((value) {
+      print(value.docs.length);
       var doc = value.docs[0];
-      int n = doc['number_of_evaluations'];
+      int n = int.tryParse(doc['number_of_evaluations'])!;
+      List<String> studentIds = List<String>.generate(
+          doc['student_ids'].length, (index) => doc['student_ids'][index]);
+      List<String> studentNames = List<String>.generate(
+          doc['student_names'].length, (index) => doc['student_names'][index]);
       for (int i = 0; i < n; i++) {
-        setState(() {
-          evaluations.add(Evaluation(
-            week: (i + 1).toString(),
-            date: '05/04 - 12/04',
-            marks: doc['weekly_evaluations'][i] ?? '',
-            remarks: doc['weekly_comments'][i] ?? '',
-            status: doc['weekly_evaluations'][i] == null ? '1' : '2',
-            evaluation_id: doc.id,
-          ));
-        });
+        for (int j = 0; j < studentIds.length; j++) {
+          String studentId = studentIds[i], studentName = studentNames[i];
+          setState(() {
+            evaluations.add(Evaluation(
+              week: (i + 1).toString(),
+              date: '05/04 - 12/04',
+              marks: doc['weekly_evaluations'][i][studentId] ?? '',
+              remarks: doc['weekly_comments'][i][studentId] ?? '',
+              status:
+                  doc['weekly_evaluations'][i][studentId] == null ? '1' : '2',
+              evaluation_id: doc.id,
+              student_id: studentId,
+              student_name: studentName,
+            ));
+          });
+        }
       }
     });
   }
@@ -185,7 +196,14 @@ class _ProjectPageState extends State<ProjectPage> {
 }
 
 class Evaluation {
-  final String week, date, marks, remarks, status, evaluation_id;
+  final String week,
+      date,
+      marks,
+      remarks,
+      status,
+      evaluation_id,
+      student_id,
+      student_name;
 
   const Evaluation({
     required this.week,
@@ -194,5 +212,7 @@ class Evaluation {
     required this.remarks,
     required this.status,
     required this.evaluation_id,
+    required this.student_id,
+    required this.student_name,
   });
 }

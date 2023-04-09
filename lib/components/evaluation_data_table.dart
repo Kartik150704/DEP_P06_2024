@@ -85,6 +85,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
   Widget build(BuildContext context) {
     final columns = [
       'Week',
+      'Student Name',
       'Date',
       'Marks',
       'Remarks',
@@ -143,8 +144,12 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
           text: columns[4],
         ),
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[5],
+        ),
+      ),
     ];
-
     return headings;
   }
 
@@ -154,6 +159,12 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
             DataCell(
               CustomisedText(
                 text: evaluation.week,
+                color: Colors.black,
+              ),
+            ),
+            DataCell(
+              CustomisedText(
+                text: evaluation.student_name,
                 color: Colors.black,
               ),
             ),
@@ -228,6 +239,11 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
             compareString(ascending, evaluation1.date, evaluation2.date),
       );
     } else if (columnIndex == 2) {
+      widget.evaluations.sort(
+        (evaluation1, evaluation2) =>
+            compareString(ascending, evaluation1.marks, evaluation2.marks),
+      );
+    } else if (columnIndex == 3) {
       widget.evaluations.sort(
         (evaluation1, evaluation2) =>
             compareString(ascending, evaluation1.marks, evaluation2.marks),

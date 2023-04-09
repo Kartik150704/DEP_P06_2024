@@ -54,23 +54,25 @@ class _FacultyPanelManagementPageState
   void getPanels() {
     setState(() {
       assignedPanels.clear();
-      assignedPanels.add(assignedPanelsGLOBAL[0]);
+      // assignedPanels.add(assignedPanelsGLOBAL[0]);
       // assignedPanels = assignedPanelsGLOBAL;
     });
-    FirebaseFirestore.instance.collection('panels').get().then((value) {
+    FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
       for (var doc in value.docs) {
+        // print(doc['assigned_project_ids'].runtimeType);
         setState(() {
-          assignedPanels.add(AssignedPanel(
+          assignedPanels.add(
+            AssignedPanel(
               id: doc['panel_id'],
-              course: 'CP302',
-              term: 'MidTerm',
-              semester: '2',
-              year: '2023',
+              course: doc['course'],
+              term: doc['term'],
+              semester: doc['semester'],
+              year: doc['year'],
               numberOfAssignedTeams: 0,
               panel: Panel(
-                  course: 'CP302',
-                  semester: '2',
-                  year: '2023',
+                  course: doc['course'],
+                  semester: doc['semester'],
+                  year: doc['year'],
                   id: doc['panel_id'],
                   numberOfEvaluators: int.parse(doc['number_of_evaluators']),
                   evaluators: List<Faculty>.generate(
@@ -80,7 +82,13 @@ class _FacultyPanelManagementPageState
                           name: doc['evaluator_names'][index],
                           email: ''))),
               assignedTeams: [],
-              evaluations: []));
+              evaluations: [],
+              assignedProjectIds:
+                  List<String>.from(doc['assigned_project_ids']),
+              numberOfAssignedProjects:
+                  int.tryParse(doc['number_of_assigned_projects']),
+            ),
+          );
         });
       }
     });

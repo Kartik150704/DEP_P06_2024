@@ -5,14 +5,16 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/evaluation_submission_form.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
-  final AssignedPanel assignedPanel;
+  AssignedPanel assignedPanel;
+
   // ignore: prefer_typing_uninitialized_variables
   final actionType;
 
-  const PanelTeamsDataTable({
+  PanelTeamsDataTable({
     super.key,
     required this.assignedPanel,
     required this.actionType,
@@ -26,10 +28,13 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
+  List<Team> assignedTeams = [];
+  int numberOfAssignedTeams = 0;
+
   // TODO: Fetch these values
   final myId = '1',
       totalMidTermMarks = evaluationCriteriasGLOBAL[0].midtermPanel;
-  final List<StudentData> studentData = [];
+  List<StudentData> studentData = [];
 
   void confirmAction(teamId, panelId) {
     showDialog(
@@ -63,8 +68,110 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
     );
   }
 
+  void fetchPanelData() {
+    List<Team> temp = [];
+    FirebaseFirestore.instance
+        .collection('projects')
+        .where(FieldPath.documentId,
+            whereIn: widget.assignedPanel.assignedProjectIds)
+        .get()
+        .then((value) {
+      setState(() {
+        numberOfAssignedTeams = widget.assignedPanel.numberOfAssignedProjects!;
+      });
+
+      for (var doc in value.docs) {
+        List<Student> students = [];
+        for (int i = 0; i < doc['student_ids'].length; i++) {
+          students.add(Student(
+              id: doc['student_ids'][i],
+              name: doc['student_name'][i],
+              entryNumber: doc['student_ids'][i],
+              email: doc['student_ids'][i] + '@iitrpr.ac.in'));
+        }
+        Team team = Team(
+            id: doc['team_id'],
+            numberOfMembers: doc['student_ids'].length,
+            students: students);
+        setState(() {
+          assignedTeams.add(team);
+        });
+
+        FirebaseFirestore.instance
+            .collection('evaluations')
+            .where('project_id', isEqualTo: doc.id)
+            .get()
+            .then((value) {
+          List<Evaluation> evals = [];
+
+          for (var doc in value.docs) {
+            // midsem-panel
+            for (int i = 0;
+                i < widget.assignedPanel.panel.numberOfEvaluators;
+                i++) {
+              for (Student student in students) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: int.tryParse(
+                      doc['midsem_evaluation'][i][student.entryNumber])!,
+                  remarks: doc['midsem_panel_comments'][i][student.entryNumber],
+                  type: 'midterm-panel',
+                  student: student,
+                  faculty: widget.assignedPanel.panel.evaluators[i],
+                );
+                evals.add(evaluation);
+              }
+            }
+            // endsem-panel
+            for (int i = 0;
+                i < widget.assignedPanel.panel.numberOfEvaluators;
+                i++) {
+              for (Student student in students) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: int.tryParse(
+                      doc['endsem_evaluation'][i][student.entryNumber])!,
+                  remarks: doc['endsem_panel_comments'][i][student.entryNumber],
+                  type: 'endterm-panel',
+                  student: student,
+                  faculty: widget.assignedPanel.panel.evaluators[i],
+                );
+                evals.add(evaluation);
+              }
+            }
+            // weekly
+            for (Student student in students) {
+              for (int week = 0;
+                  week < int.tryParse(doc['number_of_evaluations'])!;
+                  week++) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: int.tryParse(
+                      doc['weekly_evaluations'][week][student.entryNumber])!,
+                  remarks: doc['weekly_comments'][week][student.entryNumber],
+                  type: 'week-${week + 1}',
+                  student: student,
+                  //TODO: add name and email
+                  faculty: Faculty(
+                      id: doc['supervisor_id'],
+                      name: 'temp',
+                      email: 'temp@iitrpr.ac.iin'),
+                );
+                evals.add(evaluation);
+              }
+            }
+          }
+
+          widget.assignedPanel.evaluations.addAll(evals);
+        });
+      }
+      getStudentData();
+    });
+    // List<Evaluation> evaluation;
+  }
+
   void getStudentData() {
-    for (final team in widget.assignedPanel.assignedTeams) {
+    for (final team in assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
         int evaluation = -1;
@@ -78,23 +185,31 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             }
           }
         }
-
-        studentData.add(StudentData(
-          teamId: team.id,
-          panelId: widget.assignedPanel.panel.id,
-          student: student,
-          type:
-              '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
-          evaluation: evaluation,
-          myPanel: myPanel,
-        ));
+        setState(() {
+          studentData.add(StudentData(
+            teamId: team.id,
+            panelId: widget.assignedPanel.panel.id,
+            student: student,
+            type:
+                '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
+            evaluation: evaluation,
+            myPanel: myPanel,
+          ));
+        });
       }
     }
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchPanelData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (widget.assignedPanel.assignedTeams.isEmpty) {
+    if (assignedTeams.isEmpty) {
       return SizedBox(
         height: 560,
         child: Center(
@@ -118,8 +233,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           ),
         ),
       );
-    } else if (studentData.isEmpty) {
-      getStudentData();
+    } else {
+      // getStudentData();
     }
 
     final columns = [

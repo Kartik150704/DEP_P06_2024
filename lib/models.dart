@@ -88,11 +88,16 @@ class Evaluation {
 }
 
 class AssignedPanel {
-  final int numberOfAssignedTeams;
-  final String id, course, term, semester, year;
+  late int numberOfAssignedTeams;
+  late String id, course, term, semester, year;
   final Panel panel;
-  final List<Team> assignedTeams;
-  final List<Evaluation> evaluations;
+
+  late List<Team> assignedTeams;
+  late List<Evaluation> evaluations;
+
+  //TODO: remove null and make required
+  final int? numberOfAssignedProjects;
+  final List<String>? assignedProjectIds;
 
   AssignedPanel({
     required this.id,
@@ -104,6 +109,8 @@ class AssignedPanel {
     required this.panel,
     required this.assignedTeams,
     required this.evaluations,
+    this.numberOfAssignedProjects,
+    this.assignedProjectIds,
   });
 }
 

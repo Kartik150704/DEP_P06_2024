@@ -2,11 +2,13 @@ import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class EnrollmentsDataTable extends StatefulWidget {
   final List<Enrollment> enrollments;
   final String userRole;
+
   // ignore: prefer_typing_uninitialized_variables
   final showProject;
 
@@ -51,7 +53,6 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             endtermPanelCount = 0,
             report = -1;
         String grade = 'NA';
-
         for (final panel in assignedPanels) {
           for (final team in panel.assignedTeams) {
             if (team.id == enrollment.team.id) {
@@ -82,7 +83,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
           if (evaluation.student.id == student.id) {
             if (evaluation.type == 'midterm-supervisor') {
               midterm = evaluation.marks;
-            } else if (evaluation.type == 'endterm-suerpvisor') {
+            } else if (evaluation.type == 'endterm-supervisor') {
               endterm = evaluation.marks;
             } else if (evaluation.type.contains('week')) {
               weekCount += 1;
@@ -115,7 +116,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             endtermPanelCount: endtermPanelCount,
             report: report,
             grade: grade,
-            projectId: enrollment.offering.project.id,
+            projectId: enrollment.id,
             projectTitle: enrollment.offering.project.title,
             teamId: enrollment.team.id,
             type:
@@ -127,10 +128,161 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
     }
   }
 
+  void initializeEvaluations() {
+    for (int i = 0; i < assignedPanels.length; i++) {
+      AssignedPanel assignedPanel = assignedPanels[i];
+
+      FirebaseFirestore.instance
+          .collection('evaluations')
+          .where('project_id', whereIn: assignedPanel.assignedProjectIds)
+          .get()
+          .then((value) {
+        List<Evaluation> evals = [];
+        for (var doc in value.docs) {
+          List<Student> students = [];
+          for (int j = 0; j < doc['student_ids'].length; j++) {
+            students.add(Student(
+                id: doc['student_ids'][j],
+                name: doc['student_names'][j],
+                entryNumber: doc['student_ids'][j],
+                email: doc['student_ids'][j] + '@iitrpr.ac.in'));
+          }
+          // midsem-panel
+          for (int i = 0; i < assignedPanel.panel.numberOfEvaluators; i++) {
+            for (Student student in students) {
+              Evaluation evaluation = Evaluation(
+                id: '1',
+                marks: int.tryParse(
+                    doc['midsem_evaluation'][i][student.entryNumber])!,
+                remarks: doc['midsem_panel_comments'][i][student.entryNumber],
+                type: 'midterm-panel',
+                student: student,
+                faculty: assignedPanel.panel.evaluators[i],
+              );
+              evals.add(evaluation);
+            }
+          }
+          // endsem-panel
+          for (int i = 0; i < assignedPanel.panel.numberOfEvaluators; i++) {
+            for (Student student in students) {
+              Evaluation evaluation = Evaluation(
+                id: '1',
+                marks: int.tryParse(
+                    doc['endsem_evaluation'][i][student.entryNumber])!,
+                remarks: doc['endsem_panel_comments'][i][student.entryNumber],
+                type: 'endterm-panel',
+                student: student,
+                faculty: assignedPanel.panel.evaluators[i],
+              );
+              evals.add(evaluation);
+            }
+          }
+          // weekly
+          for (Student student in students) {
+            for (int week = 0;
+                week < int.tryParse(doc['number_of_evaluations'])!;
+                week++) {
+              Evaluation evaluation = Evaluation(
+                id: '1',
+                marks: int.tryParse(
+                    doc['weekly_evaluations'][week][student.entryNumber])!,
+                remarks: doc['weekly_comments'][week][student.entryNumber],
+                type: 'week-${week + 1}',
+                student: student,
+                //TODO: add name and email
+                faculty: Faculty(
+                    id: doc['supervisor_id'],
+                    name: 'temp',
+                    email: 'temp@iitrpr.ac.iin'),
+              );
+              evals.add(evaluation);
+            }
+          }
+        }
+
+        assignedPanel.evaluations.addAll(evals);
+      });
+      assignedPanels[i] = assignedPanel;
+    }
+    getStudentData();
+  }
+
+  void initializeTeams() {
+    for (int i = 0; i < assignedPanels.length; i++) {
+      AssignedPanel assignedPanel = assignedPanels[i];
+      FirebaseFirestore.instance
+          .collection('projects')
+          .where(FieldPath.documentId,
+              whereIn: assignedPanel.assignedProjectIds)
+          .get()
+          .then((value) {
+        for (final doc in value.docs) {
+          // one project
+          List<Student> students = [];
+          for (int j = 0; j < doc['student_ids'].length; j++) {
+            students.add(Student(
+                id: doc['student_ids'][j],
+                name: doc['student_name'][j],
+                entryNumber: doc['student_ids'][j],
+                email: doc['student_ids'][j] + '@iitrpr.ac.in'));
+          }
+          Team team = Team(
+              id: doc['team_id'],
+              numberOfMembers: doc['student_ids'].length,
+              students: students);
+          assignedPanel.assignedTeams.add(team);
+        }
+        assignedPanels[i] = assignedPanel;
+      });
+    }
+    initializeEvaluations();
+  }
+
+  void getPanels() {
+    setState(() {
+      assignedPanels.clear();
+    });
+    FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
+      for (var doc in value.docs) {
+        setState(() {
+          assignedPanels.add(
+            AssignedPanel(
+              id: doc['panel_id'],
+              course: doc['course'],
+              term: doc['term'],
+              semester: doc['semester'],
+              year: doc['year'],
+              numberOfAssignedTeams: 0,
+              panel: Panel(
+                  course: doc['course'],
+                  semester: doc['semester'],
+                  year: doc['year'],
+                  id: doc['panel_id'],
+                  numberOfEvaluators: int.parse(doc['number_of_evaluators']),
+                  evaluators: List<Faculty>.generate(
+                      int.parse(doc['number_of_evaluators']),
+                      (index) => Faculty(
+                          id: doc['evaluator_ids'][index],
+                          name: doc['evaluator_names'][index],
+                          email: ''))),
+              assignedTeams: [],
+              evaluations: [],
+              assignedProjectIds:
+                  List<String>.from(doc['assigned_project_ids']),
+              numberOfAssignedProjects:
+                  int.tryParse(doc['number_of_assigned_projects']),
+            ),
+          );
+        });
+      }
+      initializeTeams();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    assignedPanels = assignedPanelsGLOBAL;
+    getPanels();
   }
 
   @override

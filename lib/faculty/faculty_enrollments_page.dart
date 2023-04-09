@@ -55,60 +55,86 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           .then((value) {
         for (var doc in value.docs) {
           final val = doc.data();
-          setState(() {
-            enrollments.add(
-              // Enrollment(
-              //   title: val['title'],
-              //   students:
-              //       val['student_name'][0] + ', ' + val['student_name'][1],
-              //   semester: val['semester'],
-              //   year: val['year'],
-              //   description: val['description'],
-              //   projectId: doc.id,
-              // ),
-              Enrollment(
-                id: doc.id,
-                offering: Offering(
-                  id: val['offering_id'],
-                  instructor: Faculty(
-                    id: FirebaseAuth.instance.currentUser!.uid,
-                    name: val['instructor_name'],
-                    email: FirebaseAuth.instance.currentUser!.email.toString(),
-                  ),
-                  course: val['type'],
-                  semester: val['semester'],
-                  year: val['year'],
-                  project: Project(
-                    id: doc.id,
-                    title: val['title'],
-                    description: val['description'],
-                  ),
-                ),
-                team: Team(
-                  id: 'placeholder: TEAMID',
-                  numberOfMembers: 2,
-                  students: [
-                    Student(
-                      id: val['student_ids'][0],
-                      name: val['student_name'][0],
-                      entryNumber: val['student_ids'][0],
-                      email: '${val['student_ids'][0]}@iitrpr.ac.in',
+          print(doc.id);
+          List<Evaluation> supervisorEvaluations = [];
+          Map studentNames = {};
+          print(val['student_name'][0]);
+          var temp = List<MapEntry<String, String>>.generate(
+              val['student_name'].length,
+              (index) => MapEntry(
+                  val['student_ids'][index], val['student_name'][index]));
+          studentNames.addEntries(temp);
+          FirebaseFirestore.instance
+              .collection('evaluations')
+              .where('project_id', isEqualTo: doc.id)
+              .get()
+              .then((value) {
+            var evaluation_doc = value.docs[0];
+            List<String> studentIds =
+                evaluation_doc['weekly_evaluations'][0].keys.toList();
+            for (String studentId in studentIds) {
+              for (int week = 0;
+                  week < int.tryParse(evaluation_doc['number_of_evaluations'])!;
+                  week++) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: int.tryParse(
+                      evaluation_doc['weekly_evaluations'][week][studentId])!,
+                  remarks: evaluation_doc['weekly_comments'][week][studentId],
+                  type: 'week-${week + 1}',
+                  student: Student(
+                      id: studentId,
+                      email: '$studentId@iitrpr.ac.in',
+                      entryNumber: studentId,
+                      name: studentNames[studentId]),
+                  faculty: Faculty(
+                      id: evaluation_doc['supervisor_id'],
+                      name: val['instructor_name'],
+                      //TODO: email
+                      email: 'temp@iitrpr.ac.iin'),
+                );
+                supervisorEvaluations.add(evaluation);
+              }
+            }
+
+            setState(() {
+              enrollments.add(
+                Enrollment(
+                  id: doc.id,
+                  offering: Offering(
+                    id: val['offering_id'],
+                    instructor: Faculty(
+                      id: FirebaseAuth.instance.currentUser!.uid,
+                      name: val['instructor_name'],
+                      email:
+                          FirebaseAuth.instance.currentUser!.email.toString(),
                     ),
-                    Student(
-                      id: val['student_ids'][1],
-                      name: val['student_name'][1],
-                      entryNumber: val['student_ids'][1],
-                      email: '${val['student_ids'][1]}@iitrpr.ac.in',
+                    course: val['type'],
+                    semester: val['semester'],
+                    year: val['year'],
+                    project: Project(
+                      id: doc.id,
+                      title: val['title'],
+                      description: val['description'],
                     ),
-                  ],
+                  ),
+                  team: Team(
+                    id: val['team_id'],
+                    numberOfMembers: val['student_ids'].length,
+                    students: List<Student>.generate(
+                      val['student_ids'].length,
+                      (index) => Student(
+                        id: val['student_ids'][index],
+                        name: val['student_name'][index],
+                        entryNumber: val['student_ids'][index],
+                        email: '${val['student_ids'][index]}@iitrpr.ac.in',
+                      ),
+                    ),
+                  ),
+                  supervisorEvaluations: supervisorEvaluations,
                 ),
-                supervisorEvaluations: [
-                  evaluationsGLOBAL[6],
-                  evaluationsGLOBAL[7],
-                  evaluationsGLOBAL[8],
-                ],
-              ),
-            );
+              );
+            });
           });
         }
       });
