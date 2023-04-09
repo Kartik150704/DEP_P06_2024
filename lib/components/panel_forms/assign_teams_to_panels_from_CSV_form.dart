@@ -13,17 +13,18 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:csv/csv.dart';
 
-class StudentTeamAssignmentForm extends StatefulWidget {
-  const StudentTeamAssignmentForm({
+class AssignTeamsToPanelsFromCSVForm extends StatefulWidget {
+  const AssignTeamsToPanelsFromCSVForm({
     super.key,
   });
 
   @override
-  State<StudentTeamAssignmentForm> createState() =>
-      _StudentTeamAssignmentFormState();
+  State<AssignTeamsToPanelsFromCSVForm> createState() =>
+      _AssignTeamsToPanelsFromCSVFormState();
 }
 
-class _StudentTeamAssignmentFormState extends State<StudentTeamAssignmentForm> {
+class _AssignTeamsToPanelsFromCSVFormState
+    extends State<AssignTeamsToPanelsFromCSVForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   List<String> csvData = [];
 
@@ -102,15 +103,6 @@ class _StudentTeamAssignmentFormState extends State<StudentTeamAssignmentForm> {
           const SizedBox(
             height: 10,
           ),
-          // Text(
-          //   'Upload file',
-          //   style: SafeGoogleFont(
-          //     'Ubuntu',
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.w500,
-          //     color: const Color(0xff000000),
-          //   ),
-          // ),
           const SizedBox(
             width: 500,
             child: CustomisedText(

@@ -13,16 +13,16 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:csv/csv.dart';
 
-class TeamAssignmentForm extends StatefulWidget {
-  const TeamAssignmentForm({
+class CreatePanelFromCSVForm extends StatefulWidget {
+  const CreatePanelFromCSVForm({
     super.key,
   });
 
   @override
-  State<TeamAssignmentForm> createState() => _TeamAssignmentFormState();
+  State<CreatePanelFromCSVForm> createState() => _CreatePanelFromCSVFormState();
 }
 
-class _TeamAssignmentFormState extends State<TeamAssignmentForm> {
+class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   List<String> csvData = [];
 

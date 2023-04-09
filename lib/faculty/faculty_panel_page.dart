@@ -51,7 +51,7 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
-
+    final scrollController = ScrollController();
     return Expanded(
       child: Scaffold(
         body: Container(
@@ -67,7 +67,7 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        Column(
                           children: [
                             CustomisedText(
                               text: 'Panel ${widget.assignedPanel.panel.id}: ',
@@ -160,7 +160,7 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                     ),
                     Container(
                       width: 1200 * fem,
-                      height: 675,
+                      height: 625,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -177,10 +177,18 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
-                          child: PanelTeamsDataTable(
-                            assignedPanel: widget.assignedPanel,
-                            actionType: widget.actionType,
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: scrollController,
+                            child: SingleChildScrollView(
+                              child: PanelTeamsDataTable(
+                                assignedPanel: widget.assignedPanel,
+                                actionType: widget.actionType,
+                              ),
+                            ),
                           ),
                         ),
                       ),

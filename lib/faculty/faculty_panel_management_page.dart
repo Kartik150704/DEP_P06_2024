@@ -2,15 +2,15 @@ import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/components/team_assignment_form.dart';
+import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
 import 'package:casper/models.dart';
 import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/student_team_assignment_form.dart';
+import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
 
-import '../components/add_panel_form.dart';
+import '../components/panel_forms/add_panel_form.dart';
 
 class FacultyPanelManagementPage extends StatefulWidget {
   final String userRole;
@@ -96,7 +96,7 @@ class _FacultyPanelManagementPageState
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
-
+    final ScrollController scrollController = ScrollController();
     return Expanded(
       child: Scaffold(
         body: Container(
@@ -184,10 +184,19 @@ class _FacultyPanelManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
-                          child: PanelsDataTable(
-                            assignedPanels: assignedPanels,
-                            viewPanel: widget.viewPanel,
+                        child: Scrollbar(
+                          controller: scrollController,
+                          thumbVisibility: true,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: scrollController,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: PanelsDataTable(
+                                assignedPanels: assignedPanels,
+                                viewPanel: widget.viewPanel,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -204,7 +213,7 @@ class _FacultyPanelManagementPageState
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Import Team Assignment(s)',
+                message: 'Create Panel(s)',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
@@ -220,7 +229,7 @@ class _FacultyPanelManagementPageState
                       builder: (context) {
                         return const AlertDialog(
                           title: Center(
-                            child: TeamAssignmentForm(),
+                            child: CreatePanelFromCSVForm(),
                           ),
                         );
                       },
@@ -235,7 +244,7 @@ class _FacultyPanelManagementPageState
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Import Panel Assignment(s)',
+                message: 'Assign Teams to Panel(s)',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
@@ -251,7 +260,7 @@ class _FacultyPanelManagementPageState
                       builder: (context) {
                         return const AlertDialog(
                           title: Center(
-                            child: StudentTeamAssignmentForm(),
+                            child: AssignTeamsToPanelsFromCSVForm(),
                           ),
                         );
                       },
