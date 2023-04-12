@@ -5,16 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class FacultyProfile extends StatefulWidget {
+class FacultyProfilePage extends StatefulWidget {
   final role;
 
-  const FacultyProfile({Key? key, required this.role}) : super(key: key);
+  const FacultyProfilePage({Key? key, required this.role}) : super(key: key);
 
   @override
-  State<FacultyProfile> createState() => _FacultyProfileState();
+  State<FacultyProfilePage> createState() => _FacultyProfilePageState();
 }
 
-class _FacultyProfileState extends State<FacultyProfile> {
+class _FacultyProfilePageState extends State<FacultyProfilePage> {
   var faculty = ['', '', ''];
   var name = ['', '', ''];
   void onPressed() {}
