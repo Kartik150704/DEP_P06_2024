@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
-import 'package:casper/faculty/faculty_offerings_page.dart';
+import 'package:casper/faculty/faculty_offerings.dart';
 import 'package:casper/faculty/faculty_profile_page.dart';
 import 'package:casper/faculty/faculty_home_page.dart';
 import 'package:casper/utilites.dart';
@@ -45,7 +45,7 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
           displayPage = FacultyHomePage(userRole: widget.userRole);
           break;
         case 2:
-          displayPage = FacultyOfferingsPage(role: widget.userRole);
+          displayPage = FacultyOfferings(role: widget.userRole);
           break;
       }
     });
