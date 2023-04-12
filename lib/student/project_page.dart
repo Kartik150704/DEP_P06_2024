@@ -39,7 +39,7 @@ class _ProjectPageState extends State<ProjectPage> {
           doc['student_names'].length, (index) => doc['student_names'][index]);
       for (int i = 0; i < n; i++) {
         for (int j = 0; j < studentIds.length; j++) {
-          String studentId = studentIds[i], studentName = studentNames[i];
+          String studentId = studentIds[j], studentName = studentNames[j];
           setState(() {
             evaluations.add(Evaluation(
               week: (i + 1).toString(),
