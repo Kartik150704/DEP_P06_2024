@@ -1,13 +1,15 @@
-import 'package:casper/utilites.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/button.dart';
 
 class ConfirmAction extends StatefulWidget {
-  final onSubmit;
+  // ignore: prefer_typing_uninitialized_variables
+  final text, onSubmit;
 
   const ConfirmAction({
     super.key,
-    this.onSubmit,
+    required this.onSubmit,
+    this.text = '',
   });
 
   @override
@@ -18,41 +20,35 @@ class _ConfirmActionState extends State<ConfirmAction> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 400,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
             height: 10,
           ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Are you sure?',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff000000),
-                ),
-              ),
-            ],
+          SizedBox(
+            width: 450,
+            child: CustomisedText(
+              text: '${widget.text} Are you sure?',
+              fontSize: 23,
+              color: Colors.black,
+            ),
           ),
           const SizedBox(
-            height: 20,
+            height: 30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                buttonText: 'Yes',
-                onPressed: widget.onSubmit,
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Yes',
+                onPressed: () => {},
               ),
-              CustomButton(
-                buttonText: 'No',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'No',
                 onPressed: () => {
                   Navigator.pop(context),
                 },
@@ -60,7 +56,7 @@ class _ConfirmActionState extends State<ConfirmAction> {
             ],
           ),
           const SizedBox(
-            height: 25,
+            height: 15,
           ),
         ],
       ),

@@ -3,13 +3,14 @@ import 'package:casper/utilites.dart';
 
 class CustomisedButton extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final width, height, text, onPressed;
+  final width, height, text, onPressed, elevation;
   const CustomisedButton({
     super.key,
     required this.width,
     required this.height,
     required this.text,
     required this.onPressed,
+    this.elevation = 10,
   });
 
   @override
@@ -18,23 +19,25 @@ class CustomisedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xff12141D),
-        elevation: 10,
+        elevation: elevation,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      child: Container(
+      child: SizedBox(
         width: width,
         height: height,
         child: Center(
-          child: Text(
-            text,
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              height: 1.2175,
-              color: const Color(0xffffffff),
-            ),
-          ),
+          child: (text is String)
+              ? Text(
+                  text,
+                  style: SafeGoogleFont(
+                    'Ubuntu',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2175,
+                    color: const Color(0xffffffff),
+                  ),
+                )
+              : text,
         ),
       ),
     );

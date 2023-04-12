@@ -1,18 +1,25 @@
 import 'package:casper/components/course_tile.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/student/logged_in_scaffold_student.dart';
+import 'package:casper/student/student_logged_in_scaffold.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/confirm_action.dart';
 
 class StudentProfilePage extends StatefulWidget {
-  const StudentProfilePage({Key? key}) : super(key: key);
+  final uid;
+  const StudentProfilePage({
+    Key? key,
+    this.uid,
+  }) : super(key: key);
 
   @override
   State<StudentProfilePage> createState() => _StudentProfilePageState();
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
+  var student = ['', '', '', '', '', ''];
+  var team = ['', ''];
   var canJoinNewTeam = false;
   var studentDetails = [
     'Name: Aman Kumar',
@@ -53,7 +60,47 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     );
   }
 
+  void fetchName() {
+    setState(() {
+      student = ['', '', '', '', '', ''];
+      team = ['', ''];
+    });
+    FirebaseFirestore.instance.collection('student').get().then((value) {
+      value.docs.forEach((element) {
+        var doc = element.data();
+        if (doc['uid'] == widget.uid && widget.uid != null) {
+          setState(() {
+            student[0] = (doc['name']);
+            student[1] = (doc['department']);
+            student[2] = (doc['id']);
+            student[3] = (doc['cgpa']);
+            student[4] = (doc['contact']);
+            student[5] = (doc['proj_id'][0]);
+
+            FirebaseFirestore.instance
+                .collection('projects')
+                .doc(student[5])
+                .get()
+                .then((value) {
+              var doc = value.data();
+              setState(() {
+                team[0] = doc!['student_name'][0];
+                team[1] = doc['student_name'][1];
+              });
+            });
+          });
+        }
+      });
+    });
+  }
+
   void joinNewTeam() {}
+
+  @override
+  void initState() {
+    super.initState();
+    fetchName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +108,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return SelectionArea(
-      child: LoggedInScaffoldStudent(
+      child: StudentLoggedInScaffold(
+        uid: widget.uid,
         studentScaffoldBody: Row(
           children: [
             Container(
@@ -94,8 +142,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           text: 'Join A New Team',
                           onPressed: joinNewTeam,
                         )
-                      ] else ...const [
-                        CustomisedText(text: 'Team ID - CS48'),
+                      ] else ...[
+                        CustomisedText(text: 'Team ID - ${student[5]}'),
                         SizedBox(
                           height: 15,
                         ),
@@ -104,7 +152,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           height: 4,
                         ),
                         CustomisedText(
-                          text: 'Ojassvi Kumar\nAman Kumar',
+                          text: '${team[0]}\n${team[1]}',
                           fontSize: 17,
                         ),
                       ],
@@ -124,23 +172,56 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CustomisedText(
-                            text: 'Aman\'s Profile',
+                          CustomisedText(
+                            text: student[0].split(' ')[0] + '\'s Profile',
                             fontSize: 50,
                           ),
                           const SizedBox(
                             height: 25,
                           ),
-                          for (int i = 0; i < studentDetails.length; i++) ...[
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
-                              child: CustomisedText(
-                                text: studentDetails[i],
-                                fontSize: 25,
+                          for (int i = 0; i < student.length; i++) ...[
+                            if (i == 0)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
+                                  text: 'Name: ${student[i]}',
+                                  fontSize: 25,
+                                ),
                               ),
-                            ),
+                            if (i == 1)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
+                                  text: 'Program: ${student[i]}',
+                                  fontSize: 25,
+                                ),
+                              ),
+                            if (i == 2)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
+                                  text: 'Entry No: ${student[i]}',
+                                  fontSize: 25,
+                                ),
+                              ),
+                            if (i == 3)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
+                                  text: 'Cgpa: ${student[i]}',
+                                  fontSize: 25,
+                                ),
+                              ),
+                            if (i == 4)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                child: CustomisedText(
+                                  text: 'Contact: ${student[i]}',
+                                  fontSize: 25,
+                                ),
+                              ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                           ],
                         ],

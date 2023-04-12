@@ -1,51 +1,44 @@
-import 'package:casper/components/add_project_form.dart';
-import 'package:casper/components/button.dart';
+import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_field.dart';
-import 'package:casper/components/projecttile.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/components/offering_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../components/text_field.dart';
-
-class OfferingsPageFaculty extends StatefulWidget {
-  OfferingsPageFaculty({Key? key}) : super(key: key);
+class StudentOfferings extends StatefulWidget {
+  const StudentOfferings({Key? key}) : super(key: key);
 
   @override
-  State<OfferingsPageFaculty> createState() => _OfferingsPageFacultyState();
+  State<StudentOfferings> createState() => _StudentOfferingsState();
 }
 
-class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
-  final semester_controller = TextEditingController(),
-      year_controller = TextEditingController(),
-      supervisor_name_controller = TextEditingController(),
-      project_title_controller = TextEditingController();
+class _StudentOfferingsState extends State<StudentOfferings> {
+  final supervisorNameController = TextEditingController(),
+      projectTitleController = TextEditingController(),
+      semesterController = TextEditingController(),
+      yearController = TextEditingController();
+  var db = FirebaseFirestore.instance;
 
-  final projectNameController = TextEditingController(),
-      projectSemesterController = TextEditingController(),
-      projectYearController = TextEditingController(),
-      projectDescriptionController = TextEditingController();
-
-  void addProject() {
+  void confirmAction() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Center(
-            child: AddProjectForm(),
+            child: ConfirmAction(
+              onSubmit: () {},
+            ),
           ),
         );
       },
     );
   }
 
-  var db = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
     return Expanded(
       child: Container(
         color: const Color(0xff302c42),
@@ -57,20 +50,9 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      const CustomisedText(
-                        text: 'Projects',
-                        fontSize: 50,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(668 * fem, 20.0, 8.0, 8.0),
-                        child: CustomButton(
-                          buttonText: 'Add Project',
-                          onPressed: addProject,
-                        ),
-                      ),
-                    ],
+                  const CustomisedText(
+                    text: 'Available Projects',
+                    fontSize: 50,
                   ),
                   const SizedBox(
                     height: 20,
@@ -78,25 +60,25 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                   Row(
                     children: [
                       CustomisedTextField(
-                        textEditingController: supervisor_name_controller,
+                        textEditingController: supervisorNameController,
                         hintText: 'Supervisor Name',
                         obscureText: false,
                         width: 150 * fem,
                       ),
                       CustomisedTextField(
-                        textEditingController: project_title_controller,
+                        textEditingController: projectTitleController,
                         hintText: 'Project Title',
                         obscureText: false,
                         width: 150 * fem,
                       ),
                       CustomisedTextField(
-                        textEditingController: semester_controller,
+                        textEditingController: semesterController,
                         hintText: 'Semester',
                         obscureText: false,
                         width: 150 * fem,
                       ),
                       CustomisedTextField(
-                        textEditingController: year_controller,
+                        textEditingController: yearController,
                         hintText: 'Year',
                         obscureText: false,
                         width: 150 * fem,
@@ -123,7 +105,7 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                   Container(
                     height: 670,
                     width: 1200 * fem,
-                    margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 25, 0, 65),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: const [
@@ -140,49 +122,61 @@ class _OfferingsPageFacultyState extends State<OfferingsPageFaculty> {
                     child: SingleChildScrollView(
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            StreamBuilder(
-                              stream: db
-                                  .collection('offerings')
-                                  .where('status', isEqualTo: 'open')
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView.builder(
+                        child: StreamBuilder(
+                          stream: db
+                              .collection('offerings')
+                              .where(
+                                'status',
+                                isEqualTo: 'open',
+                              )
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: [
+                                  ListView.builder(
                                     shrinkWrap: true,
-                                    physics: ClampingScrollPhysics(),
+                                    physics: const ClampingScrollPhysics(),
                                     itemCount: snapshot.data?.docs.length,
                                     itemBuilder: (context, index) {
-                                      return ProjectTile(
-                                        info:
-                                            'Supervisor Name - ${snapshot.data?.docs[index]['instructor_name']}\nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
-                                        title:
-                                            '${snapshot.data?.docs[index]['title']}',
-                                        type:
-                                            '${snapshot.data?.docs[index]['type']}',
-                                        theme: 'w',
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 120,
+                                          vertical: 15,
+                                        ),
+                                        child: OfferingTile(
+                                          status: '0',
+                                          header: snapshot.data?.docs[index]
+                                              ['title'],
+                                          secondaryHeader: '',
+                                          details: [
+                                            snapshot.data?.docs[index]
+                                                ['instructor_name'],
+                                            snapshot.data?.docs[index]
+                                                ['semester'],
+                                            snapshot.data?.docs[index]['year'],
+                                            snapshot.data?.docs[index]
+                                                ['description'],
+                                          ],
+                                          text:
+                                              'You want to apply in this project?',
+                                        ),
                                       );
                                     },
-                                  );
-                                } else {
-                                  return const CustomisedText(
-                                      text: 'loading...');
-                                }
-                              },
-                            ),
-                          ],
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const CustomisedText(text: 'Loading...');
+                            }
+                          },
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 100,
-                  ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

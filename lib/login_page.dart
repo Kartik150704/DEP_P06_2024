@@ -1,11 +1,9 @@
 import 'package:casper/components/customised_text_field.dart';
 import 'package:casper/components/customised_button.dart';
+import 'package:casper/utilites.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:casper/faculty/facultyHome.dart';
-import 'package:casper/student/student_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/utilites.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,43 +24,47 @@ class _LoginPageState extends State<LoginPage> {
       'assets/images/carousel_image_2.jpg',
     ];
 
-    Future<void> signUserIn() async {
-      try {
-        final credential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: usernameController.text,
-          password: passwordController.text,
+    void displayErrorMessage(String message) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                message,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    void signUserIn() async {
+      if (true) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ),
+            );
+          },
         );
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: usernameController.text,
+            password: passwordController.text,
+          );
+
+          // ignore: use_build_context_synchronously
+          Navigator.pop(context);
+        } on FirebaseAuthException catch (e) {
+          Navigator.pop(context);
+          displayErrorMessage(e.code);
         }
       }
-
-      // if (usernameController.text.trim() == 'student') {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const StudentHomePage()),
-      //   );
-      // } else if (usernameController.text.trim() == 'supervisor') {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => const FacultyHome(
-      //               role: 'su',
-      //             )),
-      //   );
-      // } else if (usernameController.text.trim() == 'coordinator') {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => const FacultyHome(
-      //               role: 'co',
-      //             )),
-      //   );
-      // }
     }
 
     void forgotPassword() {}

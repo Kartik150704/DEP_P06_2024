@@ -1,53 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:casper/utilites.dart';
 
-class CustomisedTextField extends StatelessWidget {
+class SearchTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final textEditingController, hintText, obscureText, width, margin;
+  final textEditingController, hintText, width;
 
-  const CustomisedTextField({
+  const SearchTextField({
     super.key,
     required this.textEditingController,
     required this.hintText,
-    required this.obscureText,
-    this.width = double.infinity,
-    this.margin = 50,
+    required this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: margin),
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
         border: Border.all(color: const Color(0xff000000)),
-        color: const Color(0xffe1e3e8),
+        color: const Color(0xff545161),
       ),
       child: TextField(
-        obscureText: obscureText,
+        obscureText: false,
         controller: textEditingController,
         cursorColor: Colors.black,
         decoration: InputDecoration(
           border: InputBorder.none,
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
-          enabledBorder: InputBorder.none,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           hintText: hintText,
-          hintStyle: TextStyle(color: Color(0xff818488)),
+          hintStyle: const TextStyle(color: Colors.grey),
         ),
         style: SafeGoogleFont(
           'Ubuntu',
           fontSize: 15,
           fontWeight: FontWeight.w400,
           height: 1.2175,
-          color: const Color(0xff000000),
+          color: Colors.white,
         ),
       ),
     );

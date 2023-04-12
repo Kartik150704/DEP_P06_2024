@@ -1,4 +1,5 @@
-import 'package:casper/faculty/facultyHome.dart';
+import 'package:casper/faculty/faculty_home_page.dart';
+import 'package:casper/faculty/faculty_scaffold.dart';
 import 'package:casper/login_page.dart';
 import 'package:casper/login_scaffold.dart';
 import 'package:casper/student/student_home_page.dart';
@@ -6,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: must_be_immutable
 class AuthPage extends StatelessWidget {
   AuthPage({Key? key}) : super(key: key);
 
@@ -14,17 +16,17 @@ class AuthPage extends StatelessWidget {
   late final String role;
 
   Future<String> getRole() async {
-    var role1 = '';
+    var currentRole = '';
     await db
         .collection("users")
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then(
       (querySnapshot) {
-        role1 = querySnapshot.docs[0]['role'];
+        currentRole = querySnapshot.docs[0]['role'];
       },
     );
-    return role1;
+    return currentRole;
   }
 
   @override
@@ -34,7 +36,6 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            // print(getRole());
             return FutureBuilder(
               future: getRole(),
               builder: (context, snapshot) {
@@ -42,16 +43,20 @@ class AuthPage extends StatelessWidget {
                   if (snapshot.data == 'student') {
                     return const StudentHomePage();
                   } else if (snapshot.data == 'supervisor') {
-                    return const FacultyHome(
-                      role: 'su',
+                    return const FacultyScaffold(
+                      userRole: 'su',
                     );
                   } else {
-                    return const FacultyHome(
-                      role: 'co',
+                    return const FacultyScaffold(
+                      userRole: 'co',
                     );
                   }
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+                  );
                 }
               },
             );

@@ -40,6 +40,11 @@ dependencies:
   google_fonts: ^3.0.1
   cloud_firestore: any
   firebase_auth: ^4.3.0
+  flutter_form_builder: ^7.7.0
+  multiselect: ^0.1.0
+  form_builder_validators: ^8.4.0
+  form_builder_file_picker: ^2.3.0
+  csv: ^5.0.1
 
 
 dev_dependencies:

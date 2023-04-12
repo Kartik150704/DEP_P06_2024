@@ -1,5 +1,5 @@
+import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/faculty/enrollmentRequestsFaculty.dart';
-import 'package:casper/faculty/loggedinscaffoldFaculty.dart';
 import 'package:casper/faculty/offeringsPageFaculty.dart';
 import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,19 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
   dynamic shownpage;
   var option;
 
+  var options = ['Projects', 'Enrollmet Requests'];
+
+  void selectOption(opt) {
+    setState(() {
+      option = opt;
+      if (option == 1) {
+        shownpage = OfferingsPageFaculty();
+      } else {
+        shownpage = EnrollmentRequestsPageFaculty();
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -28,84 +41,32 @@ class _FacultyOfferingsState extends State<FacultyOfferings> {
 
   @override
   Widget build(BuildContext context) {
-    return LoggedInScaffoldFaculty(
-      role: widget.role,
-      scaffoldbody: Row(
-        children: [
-          Container(
-            width: 300,
-            color: Color(0xff545161),
-            child: ListView(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 1 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 1;
-                              shownpage = OfferingsPageFaculty();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Projects',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              option == 2 ? const Color(0xff302c42) : null),
-                          shape: MaterialStateProperty.all(
-                            const ContinuousRectangleBorder(),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              option = 2;
-                              shownpage = EnrollmentRequestsPageFaculty();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Enrollment Requests',
-                          style: SafeGoogleFont(
-                            'Ubuntu',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffffffff),
-                          ),
-                        ),
-                      ),
-                    ),
+    double baseWidth = 1440;
+    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    return Row(
+      children: [
+        Container(
+          width: 300 * fem,
+          color: Color(0xff545161),
+          child: ListView(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (int i = 0; i < options.length; i++) ...[
+                    CustomisedSidebarButton(
+                      text: options[i],
+                      isSelected: (option == (i + 1)),
+                      onPressed: () => selectOption(i + 1),
+                    )
                   ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
-          shownpage,
-        ],
-      ),
+        ),
+        shownpage,
+      ],
     );
   }
 }

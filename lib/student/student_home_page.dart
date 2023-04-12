@@ -1,7 +1,9 @@
-import 'package:casper/components/textstyle.dart';
-import 'package:casper/student/logged_in_scaffold_student.dart';
-import 'package:casper/student/projectPage.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/student/no_projects_found_page.dart';
+import 'package:casper/student/project_page.dart';
+import 'package:casper/student/student_logged_in_scaffold.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentHomePage extends StatefulWidget {
@@ -12,137 +14,85 @@ class StudentHomePage extends StatefulWidget {
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
+  var courses = [
+    'CP301',
+    'CP302',
+    'CP303',
+  ];
+
   // ignore: prefer_typing_uninitialized_variables
-  var selectedOption;
+  var selectedOption, projectPage;
+  var uid;
 
   @override
   void initState() {
     super.initState();
     selectedOption = 1;
+    projectPage = NoProjectsFoundPage();
+    FirebaseFirestore.instance
+        .collection('student')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      fetchProject(value.docs[0]['proj_id'][selectedOption - 1]);
+    });
+    uid = FirebaseAuth.instance.currentUser?.uid;
+  }
+
+  fetchProject(var project_id) {
+    setState(() {
+      projectPage = ProjectPage(
+        project_id: project_id,
+      );
+    });
+  }
+
+  void selectCourse(selectOption) {
+    setState(() {
+      selectedOption = selectOption;
+    });
+    FirebaseFirestore.instance
+        .collection('student')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) {
+      fetchProject(value.docs[0]['proj_id'][selectOption - 1]);
+    });
   }
 
   void onPressed() {}
 
-  ProjectPage projectpage = ProjectPage(
-    flag: true,
-  );
-
   @override
   Widget build(BuildContext context) {
-    return SelectionArea(
-      child: LoggedInScaffoldStudent(
-        studentScaffoldBody: Row(
-          children: [
-            Container(
-              width: 300,
-              color: Color(0xff545161),
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 1
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 1;
-                                projectpage = ProjectPage(
-                                  flag: true,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP301',
-                            style: CustomTextStyle(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 2
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 2;
-                                projectpage = ProjectPage(
-                                  flag: false,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP302',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 80,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                selectedOption == 3
-                                    ? const Color(0xff302c42)
-                                    : null),
-                            shape: MaterialStateProperty.all(
-                              const ContinuousRectangleBorder(),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(
-                              () {
-                                selectedOption = 3;
-                                projectpage = ProjectPage(
-                                  flag: false,
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'CP303',
-                            style: SafeGoogleFont(
-                              'Ubuntu',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                      ),
+    double baseWidth = 1440;
+    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+
+    return StudentLoggedInScaffold(
+      uid: uid,
+      studentScaffoldBody: Row(
+        children: [
+          Container(
+            width: 300 * fem,
+            color: const Color(0xff545161),
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (int i = 0; i < courses.length; i++) ...[
+                      CustomisedSidebarButton(
+                        text: courses[i],
+                        isSelected: (selectedOption == (i + 1)),
+                        onPressed: () => selectCourse(i + 1),
+                      )
                     ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            projectpage,
-          ],
-        ),
+          ),
+          projectPage,
+        ],
       ),
     );
   }
