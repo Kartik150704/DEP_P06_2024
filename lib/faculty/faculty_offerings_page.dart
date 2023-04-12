@@ -5,16 +5,16 @@ import 'package:casper/utilites.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FacultyOfferings extends StatefulWidget {
+class FacultyOfferingsPage extends StatefulWidget {
   final role;
 
-  const FacultyOfferings({Key? key, required this.role}) : super(key: key);
+  const FacultyOfferingsPage({Key? key, required this.role}) : super(key: key);
 
   @override
-  State<FacultyOfferings> createState() => _FacultyOfferingsState();
+  State<FacultyOfferingsPage> createState() => _FacultyOfferingsPageState();
 }
 
-class _FacultyOfferingsState extends State<FacultyOfferings> {
+class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
   void onPressed() {}
   dynamic shownpage;
   var option;
