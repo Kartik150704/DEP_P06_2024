@@ -2,11 +2,13 @@ import 'package:casper/components/add_project_form.dart';
 import 'package:casper/components/button.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_field.dart';
+import 'package:casper/components/offerings_data_table.dart';
 import 'package:casper/components/projecttile.dart';
 import 'package:casper/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../components/search_text_field.dart';
 import '../components/text_field.dart';
 
 class FacultyOfferingsPage extends StatefulWidget {
@@ -76,48 +78,62 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                     height: 20,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CustomisedTextField(
+                      SizedBox(
+                        width: 33 * fem,
+                      ),
+                      SearchTextField(
                         textEditingController: supervisor_name_controller,
                         hintText: 'Supervisor Name',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: project_title_controller,
-                        hintText: 'Project Title',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: semester_controller,
-                        hintText: 'Semester',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: year_controller,
-                        hintText: 'Year',
-                        obscureText: false,
-                        width: 150 * fem,
+                        width: 180 * fem,
                       ),
                       SizedBox(
-                        height: 50,
-                        width: 55,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 158, 157, 168),
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: project_title_controller,
+                        hintText: 'Project Title',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: semester_controller,
+                        hintText: 'Semester',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: year_controller,
+                        hintText: 'Year',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 50 * fem,
+                      ),
+                      SizedBox(
+                        height: 47,
+                        width: 47,
+                        child: FloatingActionButton(
+                          shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          onPressed: () => {},
+                          backgroundColor:
+                              const Color.fromARGB(255, 212, 203, 216),
+                          splashColor: Colors.black,
+                          hoverColor: Colors.grey,
                           child: const Icon(
                             Icons.search,
+                            color: Colors.black,
+                            size: 29,
                           ),
+                          onPressed: () {},
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Container(
@@ -139,40 +155,12 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                     ),
                     child: SingleChildScrollView(
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            StreamBuilder(
-                              stream: db
-                                  .collection('offerings')
-                                  .where('status', isEqualTo: 'open')
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: ClampingScrollPhysics(),
-                                    itemCount: snapshot.data?.docs.length,
-                                    itemBuilder: (context, index) {
-                                      return ProjectTile(
-                                        info:
-                                            'Supervisor Name - ${snapshot.data?.docs[index]['instructor_name']}\nSemester - ${snapshot.data?.docs[index]['semester']}\nYear - ${snapshot.data?.docs[index]['year']}\nProject Description - ${snapshot.data?.docs[index]['description']}',
-                                        title:
-                                            '${snapshot.data?.docs[index]['title']}',
-                                        type:
-                                            '${snapshot.data?.docs[index]['type']}',
-                                        theme: 'w',
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  return const CustomisedText(
-                                      text: 'loading...');
-                                }
-                              },
-                            ),
-                          ],
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: SingleChildScrollView(
+                            child: OfferingsDataTable(),
+                          ),
                         ),
                       ),
                     ),
