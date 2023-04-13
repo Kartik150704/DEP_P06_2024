@@ -19,7 +19,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferings> {
   dynamic shownpage;
   var option;
 
-  var options = ['Projects', 'Enrollmet Requests'];
+  var options = ['Projects', 'Enrollment Requests'];
 
   void selectOption(opt) {
     setState(() {

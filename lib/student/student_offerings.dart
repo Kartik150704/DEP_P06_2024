@@ -5,6 +5,9 @@ import 'package:casper/components/offering_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../components/offerings_data_table.dart';
+import '../components/search_text_field.dart';
+
 class StudentOfferings extends StatefulWidget {
   const StudentOfferings({Key? key}) : super(key: key);
 
@@ -58,48 +61,62 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     height: 20,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CustomisedTextField(
+                      SizedBox(
+                        width: 33 * fem,
+                      ),
+                      SearchTextField(
                         textEditingController: supervisorNameController,
                         hintText: 'Supervisor Name',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: projectTitleController,
-                        hintText: 'Project Title',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: semesterController,
-                        hintText: 'Semester',
-                        obscureText: false,
-                        width: 150 * fem,
-                      ),
-                      CustomisedTextField(
-                        textEditingController: yearController,
-                        hintText: 'Year',
-                        obscureText: false,
-                        width: 150 * fem,
+                        width: 180 * fem,
                       ),
                       SizedBox(
-                        height: 50,
-                        width: 55,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 158, 157, 168),
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: projectTitleController,
+                        hintText: 'Project Title',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: semesterController,
+                        hintText: 'Semester',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 30 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: yearController,
+                        hintText: 'Year',
+                        width: 180 * fem,
+                      ),
+                      SizedBox(
+                        width: 50 * fem,
+                      ),
+                      SizedBox(
+                        height: 47,
+                        width: 47,
+                        child: FloatingActionButton(
+                          shape: BeveledRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          onPressed: () => {},
+                          backgroundColor:
+                              const Color.fromARGB(255, 212, 203, 216),
+                          splashColor: Colors.black,
+                          hoverColor: Colors.grey,
                           child: const Icon(
                             Icons.search,
+                            color: Colors.black,
+                            size: 29,
                           ),
+                          onPressed: () {},
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Container(
@@ -121,55 +138,12 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     ),
                     child: SingleChildScrollView(
                       child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                        child: StreamBuilder(
-                          stream: db
-                              .collection('offerings')
-                              .where(
-                                'status',
-                                isEqualTo: 'open',
-                              )
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Column(
-                                children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const ClampingScrollPhysics(),
-                                    itemCount: snapshot.data?.docs.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 120,
-                                          vertical: 15,
-                                        ),
-                                        child: OfferingTile(
-                                          status: '0',
-                                          header: snapshot.data?.docs[index]
-                                              ['title'],
-                                          secondaryHeader: '',
-                                          details: [
-                                            snapshot.data?.docs[index]
-                                                ['instructor_name'],
-                                            snapshot.data?.docs[index]
-                                                ['semester'],
-                                            snapshot.data?.docs[index]['year'],
-                                            snapshot.data?.docs[index]
-                                                ['description'],
-                                          ],
-                                          text:
-                                              'You want to apply in this project?',
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const CustomisedText(text: 'Loading...');
-                            }
-                          },
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: SingleChildScrollView(
+                            child: OfferingsDataTable(),
+                          ),
                         ),
                       ),
                     ),

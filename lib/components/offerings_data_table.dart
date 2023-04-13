@@ -21,6 +21,7 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
   void fill() {
     FirebaseFirestore.instance
         .collection('offerings')
+        .where('status', isEqualTo: 'open')
         .get()
         .then((value) async {
       for (var doc in value.docs) {
