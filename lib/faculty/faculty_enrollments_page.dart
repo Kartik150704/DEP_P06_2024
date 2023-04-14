@@ -55,10 +55,10 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           .then((value) {
         for (var doc in value.docs) {
           final val = doc.data();
-          print(doc.id);
+          // print(doc.id);
           List<Evaluation> supervisorEvaluations = [];
           Map studentNames = {};
-          print(val['student_name'][0]);
+          // print(val['student_name'][0]);
           var temp = List<MapEntry<String, String>>.generate(
               val['student_name'].length,
               (index) => MapEntry(

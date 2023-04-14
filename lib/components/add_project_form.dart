@@ -189,7 +189,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
                         ];
                         alldata.addEntries(
                             entries.map((e) => MapEntry(e[0], e[1])));
-                        print(alldata);
+                        // print(alldata);
                         FirebaseFirestore.instance
                             .collection('offerings')
                             .add(alldata);

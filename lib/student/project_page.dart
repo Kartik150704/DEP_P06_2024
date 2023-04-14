@@ -30,7 +30,7 @@ class _ProjectPageState extends State<ProjectPage> {
         .where('project_id', isEqualTo: project_id)
         .get()
         .then((value) {
-      print(value.docs.length);
+      // print(value.docs.length);
       var doc = value.docs[0];
       int n = int.tryParse(doc['number_of_evaluations'])!;
       List<String> studentIds = List<String>.generate(

@@ -51,7 +51,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
                   var doc = value.data();
                   var evals = doc!['weekly_evaluations'];
                   var remarks = doc['weekly_comments'];
-                  print(marksInputController.text == '');
+                  // print(marksInputController.text == '');
                   if (marksInputController.text != '') {
                     evals[int.parse(evaluation.week) - 1] =
                         marksInputController.text;
@@ -60,8 +60,8 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
                     remarks[int.parse(evaluation.week) - 1] =
                         remarksInputController.text;
                   }
-                  print(evals);
-                  print(remarks);
+                  // print(evals);
+                  // print(remarks);
                   FirebaseFirestore.instance
                       .collection('evaluations')
                       .doc(evaluation.evaluation_id)

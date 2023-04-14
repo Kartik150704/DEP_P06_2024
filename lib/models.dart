@@ -152,3 +152,16 @@ class Enrollment {
     required this.supervisorEvaluations,
   });
 }
+
+class EnrollmentRequest {
+  final String id, status;
+  final Offering offering;
+  String team_id;
+
+  EnrollmentRequest({
+    required this.id,
+    required this.status,
+    required this.offering,
+    required this.team_id,
+  });
+}
