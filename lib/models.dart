@@ -165,3 +165,16 @@ class EnrollmentRequest {
     required this.team_id,
   });
 }
+
+class StudentEnrollmentRequest {
+  final String id, status;
+  final Offering offering;
+  String team_id;
+
+  StudentEnrollmentRequest({
+    required this.id,
+    required this.status,
+    required this.offering,
+    required this.team_id,
+  });
+}

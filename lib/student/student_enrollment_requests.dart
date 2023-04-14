@@ -1,5 +1,6 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/offering_tile.dart';
+import 'package:casper/components/student_request_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/confirm_action.dart';
 
@@ -95,23 +96,11 @@ class _StudentEnrollmentRequestsState extends State<StudentEnrollmentRequests> {
                     child: SingleChildScrollView(
                       child: Container(
                         margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            for (int i = 0; i < requestDetails.length; i++) ...[
-                              OfferingTile(
-                                status: requestDetails[i][0],
-                                header: requestDetails[i][1],
-                                secondaryHeader: '',
-                                details: requestDetails[i][2],
-                                text: 'You want to withdraw this request?',
-                                isStatus: true,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: SingleChildScrollView(
+                            child: StudentRequestDataTable(),
+                          ),
                         ),
                       ),
                     ),
