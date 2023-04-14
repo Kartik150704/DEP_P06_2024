@@ -33,12 +33,100 @@ class _AddPanelFormState extends State<AddPanelForm> {
     number_of_evaluators = 1;
   }
 
+  String? integerValidator(
+      String? value, String fieldName, int lowerLimit, int higherLimit) {
+    if (value == null) {
+      return 'enter a valid $fieldName';
+    }
+    int? val = int.tryParse(value);
+    if (val == null) {
+      return 'enter a valid $fieldName';
+    } else if (val > higherLimit || val < lowerLimit) {
+      return 'enter a valid $fieldName';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
       key: _formKey,
       child: Column(
         children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the semester',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'semester',
+            validator: (value) => integerValidator(value, 'semester', 1, 2),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the year',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'year',
+            validator: (value) => integerValidator(value, 'year', 2000, 2100),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the term',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'term',
+            validator: (value) {
+              if (['MidTerm', 'EndTerm'].contains(value)) {
+                return null;
+              }
+              return 'enter a valid term. [MidTerm or EndTerm]';
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the course',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'course',
+            validator: (value) {
+              if (['CP301', 'CP302', 'CP303'].contains(value)) {
+                return null;
+              }
+              return 'enter a valid course. [CP301, CP302, CP303]';
+            },
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -53,14 +141,16 @@ class _AddPanelFormState extends State<AddPanelForm> {
           ),
           FormBuilderTextField(
             name: 'number_of_evaluators',
-            validator: FormBuilderValidators.integer(
-                errorText: 'Enter a valid number'),
+            validator: (value) => integerValidator(
+                value, 'number of evaluators from 1 to 5', 1, 5),
             initialValue: '1',
             onChanged: (value) {
               setState(() {
-                number_of_evaluators = (int.tryParse(value!) == null
-                    ? 0
-                    : min(int.parse(value), 5));
+                if (integerValidator(
+                        value, 'number of evaluators from 1 to 5', 1, 5) ==
+                    null) {
+                  number_of_evaluators = int.parse(value!);
+                }
               });
             },
           ),
@@ -124,12 +214,26 @@ class _AddPanelFormState extends State<AddPanelForm> {
                             'evaluator_ids',
                             List<String>.generate(number_of_evaluators,
                                 (index) => index.toString())),
+                        const MapEntry('number_of_assigned_projects', '0'),
+                        const MapEntry('assigned_project_ids', [])
                       ]);
                       FirebaseFirestore.instance
                           .collection('panels')
                           .add(alldata);
+                      var temp = alldata;
+                      var formdata = _formKey.currentState?.value;
+                      alldata.addEntries([
+                        MapEntry('semester', formdata!['semester']),
+                        MapEntry('year', formdata['year']),
+                        MapEntry('term', formdata['term']),
+                        MapEntry('course', formdata['course']),
+                      ]);
+                      FirebaseFirestore.instance
+                          .collection('assigned_panel')
+                          .add(temp);
                       widget.refresh();
                     });
+
                     Navigator.pop(context);
                   }
                 },
