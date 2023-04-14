@@ -67,7 +67,7 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
       'Evaluators',
       'Assigned',
       'Evaluated',
-      'Type',
+      'Term',
       'View Details',
     ];
 
@@ -175,8 +175,7 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
             DataCell(
               SizedBox(
                 child: CustomisedOverflowText(
-                  text:
-                      '${assignedPanel.course}-${assignedPanel.term}-${assignedPanel.year}-${assignedPanel.semester}',
+                  text: assignedPanel.term,
                   color: Colors.black,
                 ),
               ),
@@ -231,10 +230,8 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
       );
     } else if (columnIndex == 4) {
       widget.assignedPanels.sort(
-        (assignedPanel1, assignedPanel2) => compareString(
-            ascending,
-            '${assignedPanel1.course}-${assignedPanel1.term}-${assignedPanel1.year}-${assignedPanel1.semester}',
-            '${assignedPanel2.course}-${assignedPanel2.term}-${assignedPanel2.year}-${assignedPanel2.semester}'),
+        (assignedPanel1, assignedPanel2) =>
+            compareString(ascending, assignedPanel1.term, assignedPanel2.term),
       );
     }
 

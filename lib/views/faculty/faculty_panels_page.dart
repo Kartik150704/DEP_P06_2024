@@ -26,9 +26,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   late List<AssignedPanel> assignedPanels = [];
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
+      termController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
-      yearController = TextEditingController(text: '2023'),
-      semesterController = TextEditingController(text: '1');
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   @override
   void initState() {
@@ -167,6 +167,14 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                         width: 20 * fem,
                       ),
                       SearchTextField(
+                        textEditingController: termController,
+                        hintText: 'Term',
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
                         textEditingController: courseController,
                         hintText: 'Course',
                         width: 170 * fem,
@@ -175,16 +183,8 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                         width: 20 * fem,
                       ),
                       SearchTextField(
-                        textEditingController: yearController,
-                        hintText: 'Year',
-                        width: 170 * fem,
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: semesterController,
-                        hintText: 'Semester',
+                        textEditingController: yearSemesterController,
+                        hintText: 'Year-Semester',
                         width: 170 * fem,
                       ),
                       SizedBox(

@@ -30,7 +30,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
       courseCodeController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2022-1');
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   void getSupervisorEnrollments() {
     setState(() {

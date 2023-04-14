@@ -85,8 +85,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               teamId: team.id,
               panelId: widget.assignedPanel.panel.id,
               student: student,
-              type:
-                  '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
+              type: widget.assignedPanel.term,
               evaluation: evaluation.toString(),
               myPanel: myPanel,
             ),
@@ -136,7 +135,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
       'Team ID',
       'Student Name',
       'Student Entry Number',
-      'Type',
+      'Term',
       (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
 

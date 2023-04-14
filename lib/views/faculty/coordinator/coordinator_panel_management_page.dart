@@ -1,22 +1,17 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/panel_forms/add_panel_form.dart';
 import 'package:casper/data_tables/faculty/panels_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
 
-import '../../../components/panel_forms/add_panel_form.dart';
-
 class CoordinatorPanelManagementPage extends StatefulWidget {
-  final String userRole;
-
   // ignore: prefer_typing_uninitialized_variables
-  final viewPanel;
+  final userRole, viewPanel;
 
   const CoordinatorPanelManagementPage({
     Key? key,
@@ -31,9 +26,13 @@ class CoordinatorPanelManagementPage extends StatefulWidget {
 
 class _CoordinatorPanelManagementPageState
     extends State<CoordinatorPanelManagementPage> {
-  late List<AssignedPanel> assignedPanels = [];
+  bool loading = true;
+  List<AssignedPanel> assignedPanels = [];
   final panelIDController = TextEditingController(),
-      evaluatorNameController = TextEditingController();
+      evaluatorNameController = TextEditingController(),
+      courseController = TextEditingController(),
+      yearController = TextEditingController(),
+      semesterController = TextEditingController();
 
   void confirmAction() {
     showDialog(
@@ -54,12 +53,10 @@ class _CoordinatorPanelManagementPageState
   void getPanels() {
     setState(() {
       assignedPanels.clear();
-      // assignedPanels.add(assignedPanelsGLOBAL[0]);
-      // assignedPanels = assignedPanelsGLOBAL;
     });
+
     FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
       for (var doc in value.docs) {
-        // print(doc['assigned_project_ids'].runtimeType);
         setState(() {
           assignedPanels.add(
             AssignedPanel(
@@ -90,6 +87,9 @@ class _CoordinatorPanelManagementPageState
             ),
           );
         });
+        setState(() {
+          loading = false;
+        });
       }
     });
   }
@@ -103,7 +103,8 @@ class _CoordinatorPanelManagementPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+
     final ScrollController scrollController = ScrollController();
     return Expanded(
       child: Scaffold(
@@ -134,12 +135,12 @@ class _CoordinatorPanelManagementPageState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 35 * fem,
+                          width: 33 * fem,
                         ),
                         SearchTextField(
                           textEditingController: panelIDController,
                           hintText: 'Panel Identification',
-                          width: 180 * fem,
+                          width: 170 * fem,
                         ),
                         SizedBox(
                           width: 20 * fem,
@@ -147,7 +148,31 @@ class _CoordinatorPanelManagementPageState
                         SearchTextField(
                           textEditingController: evaluatorNameController,
                           hintText: 'Evaluator\'s Name',
-                          width: 180 * fem,
+                          width: 170 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: courseController,
+                          hintText: 'Course',
+                          width: 170 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: yearController,
+                          hintText: 'Year',
+                          width: 170 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
+                          textEditingController: semesterController,
+                          hintText: 'Semester',
+                          width: 170 * fem,
                         ),
                         SizedBox(
                           width: 25 * fem,
@@ -192,19 +217,11 @@ class _CoordinatorPanelManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Scrollbar(
-                          controller: scrollController,
-                          thumbVisibility: true,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            controller: scrollController,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: PanelsDataTable(
-                                assignedPanels: assignedPanels,
-                                viewPanel: widget.viewPanel,
-                              ),
-                            ),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: PanelsDataTable(
+                            assignedPanels: assignedPanels,
+                            viewPanel: widget.viewPanel,
                           ),
                         ),
                       ),

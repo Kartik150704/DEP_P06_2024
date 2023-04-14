@@ -181,14 +181,13 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CustomisedText(
                           text: 'Panel ${widget.assignedPanel.panel.id}: ',
                           fontSize: 50,
                         ),
                         Container(
-                          width: 1200,
                           height: 50,
                           alignment: Alignment.bottomLeft,
                           child: CustomisedOverflowText(
@@ -197,7 +196,16 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                             fontSize: 30,
                           ),
                         ),
-                        Container(),
+                        Container(
+                          height: 45,
+                          alignment: Alignment.bottomRight,
+                          child: CustomisedOverflowText(
+                            text:
+                                '  [${widget.assignedPanel.course}, ${widget.assignedPanel.year}-${widget.assignedPanel.semester}]',
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(
