@@ -1,4 +1,4 @@
-import 'package:casper/models.dart';
+import 'package:casper/models/models.dart';
 
 final evaluationCriteriasGLOBAL = [
   EvaluationCriteria(
