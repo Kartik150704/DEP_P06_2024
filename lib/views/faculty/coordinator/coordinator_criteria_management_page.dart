@@ -3,25 +3,25 @@ import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 
-class FacultyCriteriaManagementPage extends StatefulWidget {
+class CoordinatorCriteriaManagementPage extends StatefulWidget {
   final String userRole;
 
   // ignore: prefer_typing_uninitialized_variables
   final viewCritera;
 
-  const FacultyCriteriaManagementPage({
+  const CoordinatorCriteriaManagementPage({
     Key? key,
     required this.userRole,
     required this.viewCritera,
   }) : super(key: key);
 
   @override
-  State<FacultyCriteriaManagementPage> createState() =>
-      _FacultyCriteriaManagementPageState();
+  State<CoordinatorCriteriaManagementPage> createState() =>
+      _CoordinatorCriteriaManagementPageState();
 }
 
-class _FacultyCriteriaManagementPageState
-    extends State<FacultyCriteriaManagementPage> {
+class _CoordinatorCriteriaManagementPageState
+    extends State<CoordinatorCriteriaManagementPage> {
   late List<AssignedPanel> assignedPanels = [];
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController();

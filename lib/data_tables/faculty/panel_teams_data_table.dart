@@ -112,7 +112,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               for (Student student in students) {
                 Evaluation evaluation = Evaluation(
                   id: '1',
-                  marks: int.tryParse(
+                  marks: double.tryParse(
                       doc['midsem_evaluation'][i][student.entryNumber])!,
                   remarks: doc['midsem_panel_comments'][i][student.entryNumber],
                   type: 'midterm-panel',
@@ -129,7 +129,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               for (Student student in students) {
                 Evaluation evaluation = Evaluation(
                   id: '1',
-                  marks: int.tryParse(
+                  marks: double.tryParse(
                       doc['endsem_evaluation'][i][student.entryNumber])!,
                   remarks: doc['endsem_panel_comments'][i][student.entryNumber],
                   type: 'endterm-panel',
@@ -146,7 +146,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
                   week++) {
                 Evaluation evaluation = Evaluation(
                   id: '1',
-                  marks: int.tryParse(
+                  marks: double.tryParse(
                       doc['weekly_evaluations'][week][student.entryNumber])!,
                   remarks: doc['weekly_comments'][week][student.entryNumber],
                   type: 'week-${week + 1}',
@@ -174,7 +174,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
     for (final team in assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
-        int evaluation = -1;
+        double evaluation = -1;
 
         for (final eval in widget.assignedPanel.evaluations) {
           if (eval.faculty.id == myId) {
@@ -186,15 +186,17 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           }
         }
         setState(() {
-          studentData.add(StudentData(
-            teamId: team.id,
-            panelId: widget.assignedPanel.panel.id,
-            student: student,
-            type:
-                '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
-            evaluation: evaluation,
-            myPanel: myPanel,
-          ));
+          studentData.add(
+            StudentData(
+              teamId: team.id,
+              panelId: widget.assignedPanel.panel.id,
+              student: student,
+              type:
+                  '${widget.assignedPanel.course}-${widget.assignedPanel.term}-${widget.assignedPanel.year}-${widget.assignedPanel.semester}',
+              evaluation: evaluation.toString(),
+              myPanel: myPanel,
+            ),
+          );
         });
       }
     }
@@ -456,7 +458,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
 class StudentData {
   final bool myPanel;
-  final int evaluation;
+  final String evaluation;
   final String teamId, panelId, type;
   final Student student;
 

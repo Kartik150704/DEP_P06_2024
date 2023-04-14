@@ -1,4 +1,4 @@
-import 'package:casper/data_tables/faculty/assigned_panels_data_table.dart';
+import 'package:casper/data_tables/faculty/faculty_panels_data_table.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
@@ -8,10 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelsPage extends StatefulWidget {
-  final String userRole;
-
   // ignore: prefer_typing_uninitialized_variables
-  final viewPanel;
+  final userRole, viewPanel;
 
   const FacultyPanelsPage({
     Key? key,
@@ -24,64 +22,103 @@ class FacultyPanelsPage extends StatefulWidget {
 }
 
 class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
+  bool loading = true;
   late List<AssignedPanel> assignedPanels = [];
   final panelIdController = TextEditingController(),
-      evaluatorNameController = TextEditingController();
+      evaluatorNameController = TextEditingController(),
+      courseController = TextEditingController(text: 'CP302'),
+      yearController = TextEditingController(text: '2023'),
+      semesterController = TextEditingController(text: '1');
 
-  // TODO: Implement this method
   @override
   void initState() {
     super.initState();
     FirebaseFirestore.instance
         .collection('instructors')
-        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .where(
+          'uid',
+          isEqualTo: FirebaseAuth.instance.currentUser?.uid,
+        )
         .get()
-        .then((value) {
-      var doc = value.docs[0];
-      List<String> panelids = List<String>.from(doc['panel_ids']);
-      FirebaseFirestore.instance
-          .collection('panels')
-          .where('panel_id', whereIn: panelids)
-          .get()
-          .then((value) {
-        for (var doc in value.docs) {
-          // print(doc['assigned_project_ids'].runtimeType);
-          setState(() {
-            assignedPanels.add(AssignedPanel(
-                id: doc['panel_id'],
-                course: 'CP302',
-                term: 'MidTerm',
-                semester: '2',
-                year: '2023',
-                numberOfAssignedTeams: 0,
-                panel: Panel(
+        .then(
+      (value) {
+        var doc = value.docs[0];
+        List<String> panelids = List<String>.from(
+          doc['panel_ids'],
+        );
+        FirebaseFirestore.instance
+            .collection('panels')
+            .where('panel_id', whereIn: panelids)
+            .get()
+            .then(
+          (value) {
+            for (var doc in value.docs) {
+              setState(() {
+                assignedPanels.add(
+                  AssignedPanel(
+                    id: doc['panel_id'],
                     course: 'CP302',
+                    term: 'MidTerm',
                     semester: '2',
                     year: '2023',
-                    id: doc['panel_id'],
-                    numberOfEvaluators: int.parse(doc['number_of_evaluators']),
-                    evaluators: List<Faculty>.generate(
-                        int.parse(doc['number_of_evaluators']),
+                    numberOfAssignedTeams: 0,
+                    panel: Panel(
+                      course: 'CP302',
+                      semester: '2',
+                      year: '2023',
+                      id: doc['panel_id'],
+                      numberOfEvaluators: int.parse(
+                        doc['number_of_evaluators'],
+                      ),
+                      evaluators: List<Faculty>.generate(
+                        int.parse(
+                          doc['number_of_evaluators'],
+                        ),
                         (index) => Faculty(
                             id: doc['evaluator_ids'][index],
                             name: doc['evaluator_names'][index],
-                            email: ''))),
-                assignedTeams: [],
-                evaluations: [evaluationsGLOBAL[4]],
-                assignedProjectIds:
-                    List<String>.from(doc['assigned_project_ids']),
-                numberOfAssignedProjects:
-                    int.tryParse(doc['number_of_assigned_projects'])));
-          });
-        }
-      });
-    });
+                            email: ''),
+                      ),
+                    ),
+                    assignedTeams: [],
+                    evaluations: [evaluationsGLOBAL[4]],
+                    assignedProjectIds: List<String>.from(
+                      doc['assigned_project_ids'],
+                    ),
+                    numberOfAssignedProjects: int.tryParse(
+                      doc['number_of_assigned_projects'],
+                    ),
+                  ),
+                );
+              });
+              setState(() {
+                loading = false;
+              });
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+
+    if (loading) {
+      return Expanded(
+        child: Container(
+          width: double.infinity,
+          color: const Color(0xff302c42),
+          child: const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Expanded(
       child: Container(
@@ -111,12 +148,12 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 35 * fem,
+                        width: 33 * fem,
                       ),
                       SearchTextField(
                         textEditingController: panelIdController,
                         hintText: 'Panel Identification',
-                        width: 180 * fem,
+                        width: 170 * fem,
                       ),
                       SizedBox(
                         width: 20 * fem,
@@ -124,7 +161,31 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                       SearchTextField(
                         textEditingController: evaluatorNameController,
                         hintText: 'Evaluator\'s Name',
-                        width: 180 * fem,
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: courseController,
+                        hintText: 'Course',
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: yearController,
+                        hintText: 'Year',
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: semesterController,
+                        hintText: 'Semester',
+                        width: 170 * fem,
                       ),
                       SizedBox(
                         width: 25 * fem,
@@ -170,10 +231,10 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
-                        child: AssignedPanelsDataTable(
-                          assignedPanels: assignedPanels,
+                        child: FacultyPanelsDataTable(
                           userRole: widget.userRole,
                           viewPanel: widget.viewPanel,
+                          assignedPanels: assignedPanels,
                         ),
                       ),
                     ),

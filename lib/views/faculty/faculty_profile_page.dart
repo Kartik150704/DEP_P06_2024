@@ -1,4 +1,4 @@
-import 'package:casper/scaffolds/student_logged_in_scaffold.dart';
+import 'package:casper/scaffolds/student_scaffold.dart';
 import 'package:casper/views/shared/project_page.dart';
 import 'package:casper/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

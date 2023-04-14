@@ -1,7 +1,7 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/views/shared/no_projects_found_page.dart';
 import 'package:casper/views/shared/project_page.dart';
-import 'package:casper/scaffolds/student_logged_in_scaffold.dart';
+import 'package:casper/scaffolds/student_scaffold.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +39,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
     uid = FirebaseAuth.instance.currentUser?.uid;
   }
 
-  fetchProject(var project_id) {
+  fetchProject(var projectId) {
     setState(() {
       projectPage = ProjectPage(
-        project_id: project_id,
+        projectId: projectId,
       );
     });
   }
@@ -67,7 +67,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
-    return StudentLoggedInScaffold(
+    return StudentScaffold(
       uid: uid,
       studentScaffoldBody: Row(
         children: [

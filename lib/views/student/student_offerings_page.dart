@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/student_enrollment_requests.dart';
-import 'package:casper/scaffolds/student_logged_in_scaffold.dart';
+import 'package:casper/scaffolds/student_scaffold.dart';
 import 'package:casper/student_offerings.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +44,7 @@ class _StudentOfferingsPageState extends State<StudentOfferingsPage> {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
-    return StudentLoggedInScaffold(
+    return StudentScaffold(
       uid: uid,
       studentScaffoldBody: Row(
         children: [

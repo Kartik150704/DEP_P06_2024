@@ -90,7 +90,7 @@ class _EnrollmentRequestDataTableState
                     id: (len + 1).toString(),
                     status: doc['status'],
                     offering: offering,
-                    team_id: doc['team_id']);
+                    teamId: doc['team_id']);
                 widget.enrollments.add(enrollment);
               });
             }
@@ -198,7 +198,7 @@ class _EnrollmentRequestDataTableState
               SizedBox(
                 width: 50,
                 child: CustomisedOverflowText(
-                  text: enrollment.team_id,
+                  text: enrollment.teamId,
                   color: Colors.black,
                 ),
               ),
@@ -271,8 +271,8 @@ class _EnrollmentRequestDataTableState
       widget.enrollments.sort(
         (panel1, panel2) => compareString(
           ascending,
-          panel1.team_id.toString(),
-          panel2.team_id.toString(),
+          panel1.teamId.toString(),
+          panel2.teamId.toString(),
         ),
       );
     } else if (columnIndex == 3) {

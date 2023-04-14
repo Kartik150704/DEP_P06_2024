@@ -1,4 +1,3 @@
-import 'package:casper/views/faculty/faculty_home_page.dart';
 import 'package:casper/scaffolds/faculty_scaffold.dart';
 import 'package:casper/views/shared/login_page.dart';
 import 'package:casper/scaffolds/login_scaffold.dart';

@@ -102,7 +102,7 @@ class _StudentRequestDataTableState extends State<StudentRequestDataTable> {
                   id: (len + 1).toString(),
                   status: doc['status'],
                   offering: offering,
-                  team_id: doc['team_id']);
+                  teamId: doc['team_id']);
               widget.enrollments.add(enrollment);
             });
           }
@@ -281,8 +281,8 @@ class _StudentRequestDataTableState extends State<StudentRequestDataTable> {
       widget.enrollments.sort(
         (panel1, panel2) => compareString(
           ascending,
-          panel1.team_id.toString(),
-          panel2.team_id.toString(),
+          panel1.teamId.toString(),
+          panel2.teamId.toString(),
         ),
       );
     } else if (columnIndex == 3) {

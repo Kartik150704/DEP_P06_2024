@@ -10,27 +10,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
 
-import '../../components/panel_forms/add_panel_form.dart';
+import '../../../components/panel_forms/add_panel_form.dart';
 
-class FacultyPanelManagementPage extends StatefulWidget {
+class CoordinatorPanelManagementPage extends StatefulWidget {
   final String userRole;
 
   // ignore: prefer_typing_uninitialized_variables
   final viewPanel;
 
-  const FacultyPanelManagementPage({
+  const CoordinatorPanelManagementPage({
     Key? key,
     required this.userRole,
     required this.viewPanel,
   }) : super(key: key);
 
   @override
-  State<FacultyPanelManagementPage> createState() =>
-      _FacultyPanelManagementPageState();
+  State<CoordinatorPanelManagementPage> createState() =>
+      _CoordinatorPanelManagementPageState();
 }
 
-class _FacultyPanelManagementPageState
-    extends State<FacultyPanelManagementPage> {
+class _CoordinatorPanelManagementPageState
+    extends State<CoordinatorPanelManagementPage> {
   late List<AssignedPanel> assignedPanels = [];
   final panelIDController = TextEditingController(),
       evaluatorNameController = TextEditingController();

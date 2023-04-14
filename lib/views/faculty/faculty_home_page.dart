@@ -1,20 +1,20 @@
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/views/faculty/faculty_criteria_management_page.dart';
+import 'package:casper/views/faculty/coordinator/coordinator_criteria_management_page.dart';
 import 'package:casper/views/faculty/faculty_enrollments_page.dart';
-import 'package:casper/views/faculty/faculty_panel_management_page.dart';
+import 'package:casper/views/faculty/coordinator/coordinator_panel_management_page.dart';
 import 'package:casper/views/faculty/faculty_panel_page.dart';
 import 'package:casper/views/faculty/faculty_panels_page.dart';
 import 'package:casper/views/shared/project_page.dart';
 import 'package:flutter/material.dart';
 
 class FacultyHomePage extends StatefulWidget {
-  final String userRole;
   final int projectId;
+  final String userRole;
 
   const FacultyHomePage({
     Key? key,
-    required this.userRole,
     this.projectId = -1,
+    required this.userRole,
   }) : super(key: key);
 
   @override
@@ -22,18 +22,17 @@ class FacultyHomePage extends StatefulWidget {
 }
 
 class _FacultyHomePageState extends State<FacultyHomePage> {
-  var options = [
-        'My Enrollments',
-        'My Panels',
-      ],
-      selectedOption = 0;
-
+  int selectedOption = 0;
   dynamic displayPage;
+  var options = [
+    'My Enrollments',
+    'My Panels',
+  ];
 
-  void showProject(projectId) {
+  void viewProject(projectId) {
     setState(() {
       displayPage = ProjectPage(
-        project_id: projectId,
+        projectId: projectId,
         isFaculty: true,
       );
     });
@@ -55,8 +54,8 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
       switch (option) {
         case 0:
           displayPage = FacultyEnrollmentsPage(
-            role: widget.userRole,
-            showProject: showProject,
+            userRole: widget.userRole,
+            viewProject: viewProject,
           );
           break;
         case 1:
@@ -66,13 +65,13 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
           );
           break;
         case 2:
-          displayPage = FacultyPanelManagementPage(
+          displayPage = CoordinatorPanelManagementPage(
             userRole: widget.userRole,
             viewPanel: viewPanel,
           );
           break;
         case 3:
-          displayPage = FacultyCriteriaManagementPage(
+          displayPage = CoordinatorCriteriaManagementPage(
             userRole: widget.userRole,
             viewCritera: () {},
           );
@@ -94,8 +93,8 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     }
 
     displayPage = FacultyEnrollmentsPage(
-      role: widget.userRole,
-      showProject: showProject,
+      userRole: widget.userRole,
+      viewProject: viewProject,
     );
   }
 

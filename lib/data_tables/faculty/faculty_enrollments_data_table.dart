@@ -5,25 +5,24 @@ import 'package:casper/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class EnrollmentsDataTable extends StatefulWidget {
-  final List<Enrollment> enrollments;
-  final String userRole;
-
+class FacultyEnrollmentsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final showProject;
+  final userRole, enrollments, viewProject;
 
-  const EnrollmentsDataTable({
+  const FacultyEnrollmentsDataTable({
     super.key,
-    required this.enrollments,
     required this.userRole,
-    required this.showProject,
+    required this.enrollments,
+    required this.viewProject,
   });
 
   @override
-  State<EnrollmentsDataTable> createState() => _EnrollmentsDataTableState();
+  State<FacultyEnrollmentsDataTable> createState() =>
+      _FacultyEnrollmentsDataTableState();
 }
 
-class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
+class _FacultyEnrollmentsDataTableState
+    extends State<FacultyEnrollmentsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -43,7 +42,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
     for (final enrollment in widget.enrollments) {
       for (final student in enrollment.team.students) {
-        int weekly = -1,
+        double weekly = -1,
             weekCount = 0,
             midterm = -1,
             midtermPanel = -1,
@@ -102,19 +101,21 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
         studentData.add(
           StudentData(
-            weekly: (weekCount == 0 ? -1 : (weekly / weekCount).round()),
-            weekCount: weekCount,
-            midterm: midterm,
+            weekly: (weekCount == 0
+                ? '-1'
+                : (weekly / weekCount).toStringAsFixed(2)),
+            weekCount: weekCount.toString(),
+            midterm: midterm.toString(),
             midtermPanel: (midtermPanelCount == 0
-                ? -1
-                : (midtermPanel / midtermPanelCount).round()),
-            midtermPanelCount: midtermPanelCount,
-            endterm: endterm,
+                ? '-1'
+                : (midtermPanel / midtermPanelCount).toStringAsFixed(2)),
+            midtermPanelCount: midtermPanelCount.toString(),
+            endterm: endterm.toString(),
             endtermPanel: (endtermPanelCount == 0
-                ? -1
-                : (endtermPanel / endtermPanelCount).round()),
-            endtermPanelCount: endtermPanelCount,
-            report: report,
+                ? '-1'
+                : (endtermPanel / endtermPanelCount).toStringAsFixed(2)),
+            endtermPanelCount: endtermPanelCount.toString(),
+            report: report.toString(),
             grade: grade,
             projectId: enrollment.id,
             projectTitle: enrollment.offering.project.title,
@@ -147,12 +148,11 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                 entryNumber: doc['student_ids'][j],
                 email: doc['student_ids'][j] + '@iitrpr.ac.in'));
           }
-          // midsem-panel
           for (int i = 0; i < assignedPanel.panel.numberOfEvaluators; i++) {
             for (Student student in students) {
               Evaluation evaluation = Evaluation(
                 id: '1',
-                marks: int.tryParse(
+                marks: double.tryParse(
                     doc['midsem_evaluation'][i][student.entryNumber])!,
                 remarks: doc['midsem_panel_comments'][i][student.entryNumber],
                 type: 'midterm-panel',
@@ -162,12 +162,11 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
               evals.add(evaluation);
             }
           }
-          // endsem-panel
           for (int i = 0; i < assignedPanel.panel.numberOfEvaluators; i++) {
             for (Student student in students) {
               Evaluation evaluation = Evaluation(
                 id: '1',
-                marks: int.tryParse(
+                marks: double.tryParse(
                     doc['endsem_evaluation'][i][student.entryNumber])!,
                 remarks: doc['endsem_panel_comments'][i][student.entryNumber],
                 type: 'endterm-panel',
@@ -177,14 +176,13 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
               evals.add(evaluation);
             }
           }
-          // weekly
           for (Student student in students) {
             for (int week = 0;
                 week < int.tryParse(doc['number_of_evaluations'])!;
                 week++) {
               Evaluation evaluation = Evaluation(
                 id: '1',
-                marks: int.tryParse(
+                marks: double.tryParse(
                     doc['weekly_evaluations'][week][student.entryNumber])!,
                 remarks: doc['weekly_comments'][week][student.entryNumber],
                 type: 'week-${week + 1}',
@@ -199,7 +197,6 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             }
           }
         }
-
         assignedPanel.evaluations.addAll(evals);
       });
       assignedPanels[i] = assignedPanel;
@@ -217,7 +214,6 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
           .get()
           .then((value) {
         for (final doc in value.docs) {
-          // one project
           List<Student> students = [];
           for (int j = 0; j < doc['student_ids'].length; j++) {
             students.add(Student(
@@ -242,6 +238,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
     setState(() {
       assignedPanels.clear();
     });
+
     FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
       for (var doc in value.docs) {
         setState(() {
@@ -317,12 +314,12 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 
     final columns = [
       'Project',
+      'Team',
       'Student',
       'W (${totalWeekly.toString()})',
       'M (${totalMidterm.toString()}+${totalMidtermPanel.toString()})',
       'E (${totalEndterm.toString()}+${totalEndtermPanel.toString()})',
       'R (${totalReport.toString()})',
-      'G',
     ];
 
     return Theme(
@@ -362,17 +359,14 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
         onSort: onSort,
       ),
       DataColumn(
-        label: Tooltip(
-          message: 'Weekly Evaluations Weightage',
-          child: CustomisedText(
-            text: columns[2],
-          ),
+        label: CustomisedText(
+          text: columns[2],
         ),
         onSort: onSort,
       ),
       DataColumn(
         label: Tooltip(
-          message: 'Midterm Weightage (Supervisor + Panel)',
+          message: 'Weekly Evaluations Weightage',
           child: CustomisedText(
             text: columns[3],
           ),
@@ -381,7 +375,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
       ),
       DataColumn(
         label: Tooltip(
-          message: 'Endterm Weightage (Supervisor + Panel)',
+          message: 'Midterm Weightage (Supervisor + Panel)',
           child: CustomisedText(
             text: columns[4],
           ),
@@ -390,7 +384,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
       ),
       DataColumn(
         label: Tooltip(
-          message: 'Report Weightage',
+          message: 'Endterm Weightage (Supervisor + Panel)',
           child: CustomisedText(
             text: columns[5],
           ),
@@ -399,7 +393,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
       ),
       DataColumn(
         label: Tooltip(
-          message: 'Grade Assigned',
+          message: 'Report Weightage',
           child: CustomisedText(
             text: columns[6],
           ),
@@ -419,7 +413,7 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                 width: 170,
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () => widget.showProject(
+                  onPressed: () => widget.viewProject(
                     data.projectId,
                   ),
                   child: CustomisedOverflowText(
@@ -427,6 +421,14 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
                     color: Colors.blue[900],
                     selectable: false,
                   ),
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                child: CustomisedOverflowText(
+                  text: data.teamId,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -441,11 +443,11 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             ),
             DataCell(
               Tooltip(
-                message: (data.weekCount == 0
+                message: (data.weekCount.compareTo('0') == 0
                     ? 'No Evaluations Completed'
                     : 'Average Marks Obtained Over ${data.weekCount.toString()} Weeks'),
                 child: CustomisedText(
-                  text: (data.weekly == -1
+                  text: (data.weekly.compareTo('-1') == 0
                       ? 'NA'
                       : '${data.weekly.toString()} (${data.weekCount.toString()})'),
                   color: Colors.black,
@@ -455,10 +457,10 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             DataCell(
               Tooltip(
                 message:
-                    '${data.midterm == -1 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.midtermPanel == -1 ? 'No Panel Evaluation Completed' : 'Average Of ${data.midtermPanelCount} Panel Evaluators'}',
+                    '${data.midterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.midtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.midtermPanelCount} Panel Evaluators'}',
                 child: CustomisedText(
                   text:
-                      '${data.midterm == -1 ? 'NA' : data.midterm.toString()} + ${data.midtermPanel == -1 ? 'NA' : '${data.midtermPanel.toString()} (${data.midtermPanelCount})'}',
+                      '${data.midterm.compareTo('-1') == 0 ? 'NA' : data.midterm.toString()} + ${data.midtermPanel.compareTo('-1') == 0 ? 'NA' : '${data.midtermPanel.toString()} (${data.midtermPanelCount})'}',
                   color: Colors.black,
                 ),
               ),
@@ -466,27 +468,20 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
             DataCell(
               Tooltip(
                 message:
-                    '${data.endterm == -1 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.endtermPanel == -1 ? 'No Panel Evaluation Completed' : 'Average Of ${data.endtermPanelCount} Panel Evaluators'}',
+                    '${data.endterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.endtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.endtermPanelCount} Panel Evaluators'}',
                 child: CustomisedText(
                   text:
-                      '${data.endterm == -1 ? 'NA' : data.endterm.toString()} + ${data.endtermPanel == -1 ? 'NA' : '${data.endtermPanel.toString()} (${data.endtermPanelCount})'}',
+                      '${data.endterm.compareTo('-1') == 0 ? 'NA' : data.endterm.toString()} + ${data.endtermPanel.compareTo('-1') == 0 ? 'NA' : '${data.endtermPanel.toString()} (${data.endtermPanelCount})'}',
                   color: Colors.black,
                 ),
               ),
             ),
             DataCell(
               CustomisedText(
-                text:
-                    (data.report == -1 ? 'NA' : '${data.report}/$totalReport'),
+                text: (data.report.compareTo('-1') == 0
+                    ? 'NA'
+                    : '${data.report}/$totalReport'),
                 color: Colors.black,
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                child: CustomisedText(
-                  text: data.grade,
-                  color: Colors.black,
-                ),
               ),
             ),
           ];
@@ -508,32 +503,32 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
       );
     } else if (columnIndex == 1) {
       studentData.sort(
-        (data1, data2) =>
-            compareString(ascending, data1.student.name, data2.student.name),
+        (data1, data2) => compareString(ascending, data1.teamId, data2.teamId),
       );
     } else if (columnIndex == 2) {
       studentData.sort(
-        (data1, data2) => compareString(
-            ascending, data1.weekly.toString(), data2.weekly.toString()),
+        (data1, data2) =>
+            compareString(ascending, data1.student.name, data2.student.name),
       );
     } else if (columnIndex == 3) {
       studentData.sort(
         (data1, data2) => compareString(
-            ascending, data1.midterm.toString(), data2.midterm.toString()),
+            ascending, data1.weekly.toString(), data2.weekly.toString()),
       );
     } else if (columnIndex == 4) {
       studentData.sort(
         (data1, data2) => compareString(
-            ascending, data1.endterm.toString(), data2.endterm.toString()),
+            ascending, data1.midterm.toString(), data2.midterm.toString()),
       );
     } else if (columnIndex == 5) {
       studentData.sort(
         (data1, data2) => compareString(
-            ascending, data1.report.toString(), data2.report.toString()),
+            ascending, data1.endterm.toString(), data2.endterm.toString()),
       );
     } else if (columnIndex == 6) {
       studentData.sort(
-        (data1, data2) => compareString(ascending, data1.grade, data2.grade),
+        (data1, data2) => compareString(
+            ascending, data1.report.toString(), data2.report.toString()),
       );
     }
 
@@ -548,7 +543,12 @@ class _EnrollmentsDataTableState extends State<EnrollmentsDataTable> {
 }
 
 class StudentData {
-  final int weekly,
+  final String projectTitle,
+      teamId,
+      projectId,
+      type,
+      grade,
+      weekly,
       weekCount,
       midterm,
       midtermPanel,
@@ -557,7 +557,6 @@ class StudentData {
       endtermPanel,
       endtermPanelCount,
       report;
-  final String projectTitle, teamId, projectId, type, grade;
   final Student student;
 
   StudentData({

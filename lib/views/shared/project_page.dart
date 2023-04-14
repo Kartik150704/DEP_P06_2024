@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final project_id, isFaculty;
+  final projectId, isFaculty;
 
   ProjectPage({
     Key? key,
-    this.project_id,
+    this.projectId,
     this.isFaculty = false,
   }) : super(key: key);
 
@@ -24,10 +24,10 @@ class _ProjectPageState extends State<ProjectPage> {
   List<Evaluation> evaluations = [];
 
   void fetchEvaluations() {
-    var project_id = widget.project_id;
+    var projectId = widget.projectId;
     FirebaseFirestore.instance
         .collection('evaluations')
-        .where('project_id', isEqualTo: project_id)
+        .where('project_id', isEqualTo: projectId)
         .get()
         .then((value) {
       // print(value.docs.length);
@@ -66,7 +66,7 @@ class _ProjectPageState extends State<ProjectPage> {
     fetchEvaluations();
     FirebaseFirestore.instance
         .collection('projects')
-        .doc(widget.project_id)
+        .doc(widget.projectId)
         .get()
         .then((value) {
       var doc = value.data();
@@ -92,7 +92,7 @@ class _ProjectPageState extends State<ProjectPage> {
     double baseWidth = 1440;
     double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
-    if (widget.project_id == null) {
+    if (widget.projectId == null) {
       return const NoProjectsFoundPage();
     } else if (project_details.length < 5) {
       return const Center(

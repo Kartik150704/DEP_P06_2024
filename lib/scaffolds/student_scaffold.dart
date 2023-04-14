@@ -1,3 +1,4 @@
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/views/student/student_home_page.dart';
 import 'package:casper/views/student/student_offerings_page.dart';
@@ -7,25 +8,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../components/customised_text.dart';
-
-class StudentLoggedInScaffold extends StatefulWidget {
+class StudentScaffold extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final studentScaffoldBody;
   final uid;
 
-  const StudentLoggedInScaffold({
+  const StudentScaffold({
     Key? key,
     this.uid,
     required this.studentScaffoldBody,
   }) : super(key: key);
 
   @override
-  State<StudentLoggedInScaffold> createState() =>
-      _StudentLoggedInScaffoldState();
+  State<StudentScaffold> createState() =>
+      _StudentScaffoldState();
 }
 
-class _StudentLoggedInScaffoldState extends State<StudentLoggedInScaffold> {
+class _StudentScaffoldState extends State<StudentScaffold> {
   final appBarOptions = [
     'PROFILE',
     'HOME',
@@ -45,7 +44,6 @@ class _StudentLoggedInScaffoldState extends State<StudentLoggedInScaffold> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FirebaseFirestore.instance
         .collection('student')
@@ -72,12 +70,6 @@ class _StudentLoggedInScaffoldState extends State<StudentLoggedInScaffold> {
               CustomisedTextButton(
                 text: appBarOptions[i],
                 onPressed: () => {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => appBarFunctions[i],
-                  //   ),
-                  // )
                   Navigator.of(context).push(
                     _createRoute(i),
                   ),

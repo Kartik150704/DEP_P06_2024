@@ -72,7 +72,7 @@ class Panel {
 }
 
 class Evaluation {
-  final int marks;
+  final double marks;
   final String id, remarks, type;
   final Student student;
   final Faculty faculty;
@@ -153,28 +153,30 @@ class Enrollment {
   });
 }
 
+
+
 class EnrollmentRequest {
   final String id, status;
   final Offering offering;
-  String team_id;
+  String teamId;
 
   EnrollmentRequest({
     required this.id,
     required this.status,
     required this.offering,
-    required this.team_id,
+    required this.teamId,
   });
 }
 
 class StudentEnrollmentRequest {
   final String id, status;
   final Offering offering;
-  String team_id;
+  String teamId;
 
   StudentEnrollmentRequest({
     required this.id,
     required this.status,
     required this.offering,
-    required this.team_id,
+    required this.teamId,
   });
 }

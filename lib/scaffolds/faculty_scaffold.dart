@@ -1,16 +1,15 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/faculty_offerings.dart';
-import 'package:casper/views/faculty/faculty_profile_page.dart';
-import 'package:casper/views/faculty/faculty_home_page.dart';
 import 'package:casper/utilites.dart';
+import 'package:casper/views/faculty/faculty_home_page.dart';
+import 'package:casper/views/faculty/faculty_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyScaffold extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final userRole;
+  final String userRole;
 
   const FacultyScaffold({
     Key? key,
@@ -22,17 +21,20 @@ class FacultyScaffold extends StatefulWidget {
 }
 
 class _FacultyScaffoldState extends State<FacultyScaffold> {
+  String userName = '';
+  dynamic displayPage;
   final appBarOptions = [
     'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
-  String username = '';
-  dynamic displayPage;
 
   void signUserOut(context) {
     FirebaseAuth.instance.signOut();
-    Navigator.popUntil(context, ModalRoute.withName("/"));
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName('/'),
+    );
   }
 
   void selectOption(option) {
@@ -61,7 +63,7 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
         .get()
         .then((value) {
       setState(() {
-        username = value.docs[0]['name'];
+        userName = value.docs[0]['name'];
       });
     });
   }
@@ -93,7 +95,7 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
             alignment: Alignment.center,
             child: CustomisedText(
               text:
-                  '$username (${(widget.userRole == 'co') ? 'Coordinator' : 'Supervisor'})',
+                  '$userName (${(widget.userRole == 'co') ? 'Coordinator' : 'Supervisor'})',
             ),
           ),
           const SizedBox(
