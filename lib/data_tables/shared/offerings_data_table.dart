@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 
 class OfferingsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final List<Offering> offerings = [];
-  OfferingsDataTable({super.key});
+  List<Offering> offerings;
+
+// TODO: make required
+  OfferingsDataTable({super.key, required this.offerings});
 
   @override
   State<OfferingsDataTable> createState() => _OfferingsDataTableState();
@@ -18,45 +20,9 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
-  void fill() {
-    FirebaseFirestore.instance
-        .collection('offerings')
-        .where('status', isEqualTo: 'open')
-        .get()
-        .then((value) async {
-      for (var doc in value.docs) {
-        var len = widget.offerings.length;
-        Project project = Project(
-            id: doc.id, title: doc['title'], description: doc['description']);
-        Faculty faculty = Faculty(id: '', name: '', email: '');
-        await FirebaseFirestore.instance
-            .collection('instructors')
-            .where('uid', isEqualTo: doc['instructor_id'])
-            .get()
-            .then((value) {
-          for (var doc1 in value.docs) {
-            faculty = Faculty(
-                id: doc1['uid'], name: doc1['name'], email: doc1['email']);
-          }
-        });
-        setState(() {
-          Offering offering = Offering(
-              id: (len + 1).toString(),
-              project: project,
-              instructor: faculty,
-              semester: doc['semester'],
-              year: doc['year'],
-              course: doc['type']);
-          widget.offerings.add(offering);
-        });
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    fill();
   }
 
   @override
@@ -68,7 +34,6 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
       'Type',
       'View Details',
     ];
-
     return Theme(
       data: Theme.of(context).copyWith(
           iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),

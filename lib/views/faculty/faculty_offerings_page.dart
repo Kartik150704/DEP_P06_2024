@@ -147,7 +147,10 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: SingleChildScrollView(
-                              child: OfferingsDataTable(),
+                              //TODO: add the data table here
+                              child: OfferingsDataTable(
+                                offerings: [],
+                              ),
                             ),
                           ),
                         ),

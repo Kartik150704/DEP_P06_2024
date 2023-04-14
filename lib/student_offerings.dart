@@ -1,12 +1,11 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components/customised_text_field.dart';
-import 'package:casper/components/offering_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'data_tables/shared/offerings_data_table.dart';
 import 'components/search_text_field.dart';
+import 'models/models.dart';
 
 class StudentOfferings extends StatefulWidget {
   const StudentOfferings({Key? key}) : super(key: key);
@@ -22,6 +21,8 @@ class _StudentOfferingsState extends State<StudentOfferings> {
       yearController = TextEditingController();
   var db = FirebaseFirestore.instance;
 
+  String? supervisorName, projectTitle, semester, year;
+
   void confirmAction() {
     showDialog(
       context: context,
@@ -35,6 +36,79 @@ class _StudentOfferingsState extends State<StudentOfferings> {
         );
       },
     );
+  }
+
+  OfferingsDataTable? offeringsDataTable;
+
+  List<Offering> offerings = [];
+
+  void fill() {
+    offerings.clear();
+    FirebaseFirestore.instance
+        .collection('offerings')
+        .where('status', isEqualTo: 'open')
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        var len = offerings.length;
+        Project project = Project(
+            id: doc.id, title: doc['title'], description: doc['description']);
+        Faculty faculty = Faculty(id: '', name: '', email: '');
+        await FirebaseFirestore.instance
+            .collection('instructors')
+            .where('uid', isEqualTo: doc['instructor_id'])
+            .get()
+            .then((value) {
+          for (var doc1 in value.docs) {
+            faculty = Faculty(
+                id: doc1['uid'], name: doc1['name'], email: doc1['email']);
+          }
+        });
+        setState(() {
+          int flag = 1;
+          if (supervisorName != null) {
+            String name = supervisorName.toString().toLowerCase();
+            if (!faculty.name.toLowerCase().contains(name)) flag = 0;
+          }
+
+          if (projectTitle != null) {
+            String name = projectTitle.toString().toLowerCase();
+            if (!project.title.toLowerCase().contains(name.toLowerCase()))
+              flag = 0;
+          }
+
+          if (semester != null) {
+            String semester = this.semester.toString().toLowerCase();
+            if (!doc['semester'].toLowerCase().contains(semester)) flag = 0;
+          }
+
+          if (year != null) {
+            String year = this.year.toString().toLowerCase();
+            if (!doc['year'].toLowerCase().contains(year)) flag = 0;
+          }
+          if (flag == 1) {
+            Offering offering = Offering(
+                id: (len + 1).toString(),
+                project: project,
+                instructor: faculty,
+                semester: doc['semester'],
+                year: doc['year'],
+                course: doc['type']);
+            offerings.add(offering);
+          }
+          offeringsDataTable = OfferingsDataTable(
+            offerings: offerings,
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fill();
   }
 
   @override
@@ -114,7 +188,24 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                             color: Colors.black,
                             size: 29,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              supervisorName =
+                                  supervisorNameController.text == ''
+                                      ? null
+                                      : supervisorNameController.text;
+                              projectTitle = projectTitleController.text == ''
+                                  ? null
+                                  : projectTitleController.text;
+                              semester = semesterController.text == ''
+                                  ? null
+                                  : semesterController.text;
+                              year = yearController.text == ''
+                                  ? null
+                                  : yearController.text;
+                            });
+                            fill();
+                          },
                         ),
                       ),
                     ],
@@ -142,7 +233,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: SingleChildScrollView(
-                            child: OfferingsDataTable(),
+                            child: offeringsDataTable,
                           ),
                         ),
                       ),
