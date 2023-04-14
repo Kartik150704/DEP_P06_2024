@@ -191,18 +191,19 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                           onPressed: () {
                             setState(() {
                               supervisorName =
-                                  supervisorNameController.text == ''
+                                  supervisorNameController.text.trim() == ''
                                       ? null
-                                      : supervisorNameController.text;
-                              projectTitle = projectTitleController.text == ''
+                                      : supervisorNameController.text.trim();
+                              projectTitle =
+                                  projectTitleController.text.trim() == ''
+                                      ? null
+                                      : projectTitleController.text.trim();
+                              semester = semesterController.text.trim() == ''
                                   ? null
-                                  : projectTitleController.text;
-                              semester = semesterController.text == ''
+                                  : semesterController.text.trim();
+                              year = yearController.text.trim() == ''
                                   ? null
-                                  : semesterController.text;
-                              year = yearController.text == ''
-                                  ? null
-                                  : yearController.text;
+                                  : yearController.text.trim();
                             });
                             fill();
                           },

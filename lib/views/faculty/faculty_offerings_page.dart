@@ -4,6 +4,7 @@ import 'package:casper/data_tables/shared/offerings_data_table.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../components/search_text_field.dart';
+import '../../models/models.dart';
 
 class FacultyOfferingsPage extends StatefulWidget {
   FacultyOfferingsPage({Key? key}) : super(key: key);
@@ -13,10 +14,10 @@ class FacultyOfferingsPage extends StatefulWidget {
 }
 
 class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
-  final semester_controller = TextEditingController(),
-      year_controller = TextEditingController(),
-      supervisor_name_controller = TextEditingController(),
-      project_title_controller = TextEditingController();
+  final supervisorNameController = TextEditingController(),
+      projectTitleController = TextEditingController(),
+      semesterController = TextEditingController(),
+      yearController = TextEditingController();
 
   final projectNameController = TextEditingController(),
       projectSemesterController = TextEditingController(),
@@ -37,6 +38,81 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
   }
 
   var db = FirebaseFirestore.instance;
+
+  String? supervisorName, projectTitle, semester, year;
+
+  OfferingsDataTable? offeringsDataTable;
+
+  List<Offering> offerings = [];
+
+  void fill() {
+    offerings.clear();
+    FirebaseFirestore.instance
+        .collection('offerings')
+        .where('status', isEqualTo: 'open')
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        var len = offerings.length;
+        Project project = Project(
+            id: doc.id, title: doc['title'], description: doc['description']);
+        Faculty faculty = Faculty(id: '', name: '', email: '');
+        await FirebaseFirestore.instance
+            .collection('instructors')
+            .where('uid', isEqualTo: doc['instructor_id'])
+            .get()
+            .then((value) {
+          for (var doc1 in value.docs) {
+            faculty = Faculty(
+                id: doc1['uid'], name: doc1['name'], email: doc1['email']);
+          }
+        });
+        setState(() {
+          int flag = 1;
+          if (supervisorName != null) {
+            String name = supervisorName.toString().toLowerCase();
+            if (!faculty.name.toLowerCase().contains(name)) flag = 0;
+          }
+
+          if (projectTitle != null) {
+            String name = projectTitle.toString().toLowerCase();
+            if (!project.title.toLowerCase().contains(name.toLowerCase()))
+              flag = 0;
+          }
+
+          if (semester != null) {
+            String semester = this.semester.toString().toLowerCase();
+            if (!doc['semester'].toLowerCase().contains(semester)) flag = 0;
+          }
+
+          if (year != null) {
+            String year = this.year.toString().toLowerCase();
+            if (!doc['year'].toLowerCase().contains(year)) flag = 0;
+          }
+          if (flag == 1) {
+            Offering offering = Offering(
+                id: (len + 1).toString(),
+                project: project,
+                instructor: faculty,
+                semester: doc['semester'],
+                year: doc['year'],
+                course: doc['type']);
+            offerings.add(offering);
+          }
+          offeringsDataTable = OfferingsDataTable(
+            offerings: offerings,
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fill();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +148,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           width: 33 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: supervisor_name_controller,
+                          textEditingController: supervisorNameController,
                           hintText: 'Supervisor Name',
                           width: 180 * fem,
                         ),
@@ -80,7 +156,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           width: 30 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: project_title_controller,
+                          textEditingController: projectTitleController,
                           hintText: 'Project Title',
                           width: 180 * fem,
                         ),
@@ -88,7 +164,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           width: 30 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: semester_controller,
+                          textEditingController: semesterController,
                           hintText: 'Semester',
                           width: 180 * fem,
                         ),
@@ -96,7 +172,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           width: 30 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: year_controller,
+                          textEditingController: yearController,
                           hintText: 'Year',
                           width: 180 * fem,
                         ),
@@ -119,7 +195,25 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                               color: Colors.black,
                               size: 29,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                supervisorName =
+                                    supervisorNameController.text.trim() == ''
+                                        ? null
+                                        : supervisorNameController.text.trim();
+                                projectTitle =
+                                    projectTitleController.text.trim() == ''
+                                        ? null
+                                        : projectTitleController.text.trim();
+                                semester = semesterController.text.trim() == ''
+                                    ? null
+                                    : semesterController.text.trim();
+                                year = yearController.text.trim() == ''
+                                    ? null
+                                    : yearController.text.trim();
+                              });
+                              fill();
+                            },
                           ),
                         ),
                       ],
@@ -147,10 +241,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: SingleChildScrollView(
-                              //TODO: add the data table here
-                              child: OfferingsDataTable(
-                                offerings: [],
-                              ),
+                              child: offeringsDataTable,
                             ),
                           ),
                         ),
