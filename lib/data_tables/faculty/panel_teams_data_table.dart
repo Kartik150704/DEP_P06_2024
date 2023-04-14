@@ -9,15 +9,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
-  AssignedPanel assignedPanel;
-
   // ignore: prefer_typing_uninitialized_variables
-  final actionType;
+  final actionType, assignedPanel, assignedTeams;
 
-  PanelTeamsDataTable({
+  const PanelTeamsDataTable({
     super.key,
-    required this.assignedPanel,
     required this.actionType,
+    required this.assignedPanel,
+    required this.assignedTeams,
   });
 
   @override
@@ -27,9 +26,6 @@ class PanelTeamsDataTable extends StatefulWidget {
 class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
-
-  List<Team> assignedTeams = [];
-  int numberOfAssignedTeams = 0;
 
   // TODO: Fetch these values
   final myId = '1',
@@ -68,110 +64,8 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
     );
   }
 
-  void fetchPanelData() {
-    List<Team> temp = [];
-    FirebaseFirestore.instance
-        .collection('projects')
-        .where(FieldPath.documentId,
-            whereIn: widget.assignedPanel.assignedProjectIds)
-        .get()
-        .then((value) {
-      setState(() {
-        numberOfAssignedTeams = widget.assignedPanel.numberOfAssignedProjects!;
-      });
-
-      for (var doc in value.docs) {
-        List<Student> students = [];
-        for (int i = 0; i < doc['student_ids'].length; i++) {
-          students.add(Student(
-              id: doc['student_ids'][i],
-              name: doc['student_name'][i],
-              entryNumber: doc['student_ids'][i],
-              email: doc['student_ids'][i] + '@iitrpr.ac.in'));
-        }
-        Team team = Team(
-            id: doc['team_id'],
-            numberOfMembers: doc['student_ids'].length,
-            students: students);
-        setState(() {
-          assignedTeams.add(team);
-        });
-
-        FirebaseFirestore.instance
-            .collection('evaluations')
-            .where('project_id', isEqualTo: doc.id)
-            .get()
-            .then((value) {
-          List<Evaluation> evals = [];
-
-          for (var doc in value.docs) {
-            // midsem-panel
-            for (int i = 0;
-                i < widget.assignedPanel.panel.numberOfEvaluators;
-                i++) {
-              for (Student student in students) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['midsem_evaluation'][i][student.entryNumber])!,
-                  remarks: doc['midsem_panel_comments'][i][student.entryNumber],
-                  type: 'midterm-panel',
-                  student: student,
-                  faculty: widget.assignedPanel.panel.evaluators[i],
-                );
-                evals.add(evaluation);
-              }
-            }
-            // endsem-panel
-            for (int i = 0;
-                i < widget.assignedPanel.panel.numberOfEvaluators;
-                i++) {
-              for (Student student in students) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['endsem_evaluation'][i][student.entryNumber])!,
-                  remarks: doc['endsem_panel_comments'][i][student.entryNumber],
-                  type: 'endterm-panel',
-                  student: student,
-                  faculty: widget.assignedPanel.panel.evaluators[i],
-                );
-                evals.add(evaluation);
-              }
-            }
-            // weekly
-            for (Student student in students) {
-              for (int week = 0;
-                  week < int.tryParse(doc['number_of_evaluations'])!;
-                  week++) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['weekly_evaluations'][week][student.entryNumber])!,
-                  remarks: doc['weekly_comments'][week][student.entryNumber],
-                  type: 'week-${week + 1}',
-                  student: student,
-                  //TODO: add name and email
-                  faculty: Faculty(
-                      id: doc['supervisor_id'],
-                      name: 'temp',
-                      email: 'temp@iitrpr.ac.iin'),
-                );
-                evals.add(evaluation);
-              }
-            }
-          }
-
-          widget.assignedPanel.evaluations.addAll(evals);
-        });
-      }
-      getStudentData();
-    });
-    // List<Evaluation> evaluation;
-  }
-
   void getStudentData() {
-    for (final team in assignedTeams) {
+    for (final team in widget.assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
         double evaluation = -1;
@@ -185,6 +79,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             }
           }
         }
+
         setState(() {
           studentData.add(
             StudentData(
@@ -204,14 +99,13 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchPanelData();
+    getStudentData();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (assignedTeams.isEmpty) {
+    if (widget.assignedTeams.isEmpty) {
       return SizedBox(
         height: 560,
         child: Center(
@@ -235,9 +129,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           ),
         ),
       );
-    } else {
-      // getStudentData();
-    }
+    } else {}
 
     final columns = [
       'Team ID',
@@ -343,7 +235,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               ),
             ),
             DataCell(
-              (data.evaluation != -1
+              (data.evaluation.compareTo('-1') != 0
                   ? (widget.actionType == 1
                       ? const CustomisedText(
                           text: 'Evaluated',
@@ -392,10 +284,10 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             cells: cells,
             color: MaterialStateProperty.all(
               (widget.actionType == 1
-                  ? (data.evaluation != -1
+                  ? (data.evaluation.compareTo('-1') != 0
                       ? const Color.fromARGB(255, 192, 188, 192)
                       : const Color.fromARGB(255, 212, 203, 216))
-                  : (data.evaluation != -1
+                  : (data.evaluation.compareTo('-1') != 0
                       ? const Color(0xff7ae37b)
                       : const Color.fromARGB(255, 208, 219, 144))),
             ),
@@ -458,8 +350,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
 
 class StudentData {
   final bool myPanel;
-  final String evaluation;
-  final String teamId, panelId, type;
+  final String teamId, panelId, type, evaluation;
   final Student student;
 
   StudentData({

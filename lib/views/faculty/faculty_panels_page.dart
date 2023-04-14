@@ -59,7 +59,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     id: doc['panel_id'],
                     course: 'CP302',
                     term: 'MidTerm',
-                    semester: '2',
+                    semester: '1',
                     year: '2023',
                     numberOfAssignedTeams: 0,
                     panel: Panel(

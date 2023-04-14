@@ -4,14 +4,15 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/data_tables/faculty/panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class FacultyPanelPage extends StatefulWidget {
+class FacultyPanelTeamsPage extends StatefulWidget {
   final int actionType;
   final String userRole;
   final AssignedPanel assignedPanel;
 
-  const FacultyPanelPage({
+  const FacultyPanelTeamsPage({
     Key? key,
     required this.userRole,
     required this.assignedPanel,
@@ -19,15 +20,106 @@ class FacultyPanelPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<FacultyPanelPage> createState() => _FacultyPanelPageState();
+  State<FacultyPanelTeamsPage> createState() => _FacultyPanelTeamsPageState();
 }
 
-class _FacultyPanelPageState extends State<FacultyPanelPage> {
+class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
+  bool loading = true;
+  List<Team> assignedTeams = [];
   final teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
-      studentEntryNumberController = TextEditingController(),
-      courseTermController = TextEditingController(),
-      yearSemesterController = TextEditingController();
+      studentEntryNumberController = TextEditingController();
+
+  void getPanelData() {
+    FirebaseFirestore.instance
+        .collection('projects')
+        .where(FieldPath.documentId,
+            whereIn: widget.assignedPanel.assignedProjectIds)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        List<Student> students = [];
+        for (int i = 0; i < doc['student_ids'].length; i++) {
+          students.add(Student(
+              id: doc['student_ids'][i],
+              name: doc['student_name'][i],
+              entryNumber: doc['student_ids'][i],
+              email: doc['student_ids'][i] + '@iitrpr.ac.in'));
+        }
+        Team team = Team(
+            id: doc['team_id'],
+            numberOfMembers: doc['student_ids'].length,
+            students: students);
+        setState(() {
+          assignedTeams.add(team);
+        });
+
+        FirebaseFirestore.instance
+            .collection('evaluations')
+            .where('project_id', isEqualTo: doc.id)
+            .get()
+            .then((value) {
+          List<Evaluation> evals = [];
+          for (var doc in value.docs) {
+            for (int i = 0;
+                i < widget.assignedPanel.panel.numberOfEvaluators;
+                i++) {
+              for (Student student in students) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: double.tryParse(
+                      doc['midsem_evaluation'][i][student.entryNumber])!,
+                  remarks: doc['midsem_panel_comments'][i][student.entryNumber],
+                  type: 'midterm-panel',
+                  student: student,
+                  faculty: widget.assignedPanel.panel.evaluators[i],
+                );
+                evals.add(evaluation);
+              }
+            }
+            for (int i = 0;
+                i < widget.assignedPanel.panel.numberOfEvaluators;
+                i++) {
+              for (Student student in students) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: double.tryParse(
+                      doc['endsem_evaluation'][i][student.entryNumber])!,
+                  remarks: doc['endsem_panel_comments'][i][student.entryNumber],
+                  type: 'endterm-panel',
+                  student: student,
+                  faculty: widget.assignedPanel.panel.evaluators[i],
+                );
+                evals.add(evaluation);
+              }
+            }
+            for (Student student in students) {
+              for (int week = 0;
+                  week < int.tryParse(doc['number_of_evaluations'])!;
+                  week++) {
+                Evaluation evaluation = Evaluation(
+                  id: '1',
+                  marks: double.tryParse(
+                      doc['weekly_evaluations'][week][student.entryNumber])!,
+                  remarks: doc['weekly_comments'][week][student.entryNumber],
+                  type: 'week-${week + 1}',
+                  student: student,
+                  //TODO: add name and email
+                  faculty: Faculty(
+                      id: doc['supervisor_id'],
+                      name: 'temp',
+                      email: 'temp@iitrpr.ac.iin'),
+                );
+                evals.add(evaluation);
+              }
+            }
+          }
+
+          widget.assignedPanel.evaluations.addAll(evals);
+        });
+      }
+    });
+  }
 
   void addTeams() {
     showDialog(
@@ -50,8 +142,22 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
-    final scrollController = ScrollController();
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+
+    if (loading) {
+      return Expanded(
+        child: Container(
+          width: double.infinity,
+          color: const Color(0xff302c42),
+          child: const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Expanded(
       child: Scaffold(
         body: Container(
@@ -67,23 +173,19 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          children: [
-                            CustomisedText(
-                              text: 'Panel ${widget.assignedPanel.panel.id}: ',
-                              fontSize: 50,
-                            ),
-                            Container(
-                              width: 1200,
-                              height: 50,
-                              alignment: Alignment.bottomLeft,
-                              child: CustomisedOverflowText(
-                                text:
-                                    ' ${widget.assignedPanel.panel.evaluators.map((e) => e.name).join(', ')}',
-                                fontSize: 30,
-                              ),
-                            ),
-                          ],
+                        CustomisedText(
+                          text: 'Panel ${widget.assignedPanel.panel.id}: ',
+                          fontSize: 50,
+                        ),
+                        Container(
+                          width: 1200,
+                          height: 50,
+                          alignment: Alignment.bottomLeft,
+                          child: CustomisedOverflowText(
+                            text:
+                                ' ${widget.assignedPanel.panel.evaluators.map((e) => e.name).join(', ')}',
+                            fontSize: 30,
+                          ),
                         ),
                         Container(),
                       ],
@@ -95,44 +197,28 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 35 * fem,
+                          width: 33 * fem,
                         ),
                         SearchTextField(
                           textEditingController: teamIdController,
                           hintText: 'Team Identification',
-                          width: 175 * fem,
+                          width: 170 * fem,
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: teamIdController,
+                          textEditingController: studentNameController,
                           hintText: 'Student Name',
-                          width: 175 * fem,
+                          width: 170 * fem,
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: teamIdController,
+                          textEditingController: studentEntryNumberController,
                           hintText: 'Student Entry Number',
-                          width: 175 * fem,
-                        ),
-                        SizedBox(
-                          width: 20 * fem,
-                        ),
-                        SearchTextField(
-                          textEditingController: teamIdController,
-                          hintText: 'Course-Term',
-                          width: 175 * fem,
-                        ),
-                        SizedBox(
-                          width: 20 * fem,
-                        ),
-                        SearchTextField(
-                          textEditingController: teamIdController,
-                          hintText: 'Year-Semester',
-                          width: 175 * fem,
+                          width: 170 * fem,
                         ),
                         SizedBox(
                           width: 25 * fem,
@@ -160,7 +246,7 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                     ),
                     Container(
                       width: 1200 * fem,
-                      height: 625,
+                      height: 675,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -177,18 +263,11 @@ class _FacultyPanelPageState extends State<FacultyPanelPage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Scrollbar(
-                          thumbVisibility: true,
-                          controller: scrollController,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            controller: scrollController,
-                            child: SingleChildScrollView(
-                              child: PanelTeamsDataTable(
-                                assignedPanel: widget.assignedPanel,
-                                actionType: widget.actionType,
-                              ),
-                            ),
+                        child: SingleChildScrollView(
+                          child: PanelTeamsDataTable(
+                            actionType: widget.actionType,
+                            assignedPanel: widget.assignedPanel,
+                            assignedTeams: assignedTeams,
                           ),
                         ),
                       ),

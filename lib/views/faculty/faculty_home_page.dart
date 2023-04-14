@@ -2,7 +2,7 @@ import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/views/faculty/coordinator/coordinator_criteria_management_page.dart';
 import 'package:casper/views/faculty/faculty_enrollments_page.dart';
 import 'package:casper/views/faculty/coordinator/coordinator_panel_management_page.dart';
-import 'package:casper/views/faculty/faculty_panel_page.dart';
+import 'package:casper/views/faculty/faculty_panel_teams_page.dart';
 import 'package:casper/views/faculty/faculty_panels_page.dart';
 import 'package:casper/views/shared/project_page.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +38,12 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
-  void viewPanel(panel, action) {
+  void viewPanel(assignedPanel, actionType) {
     setState(() {
-      displayPage = FacultyPanelPage(
-        assignedPanel: panel,
+      displayPage = FacultyPanelTeamsPage(
+        actionType: actionType,
         userRole: widget.userRole,
-        actionType: action,
+        assignedPanel: assignedPanel,
       );
     });
   }
