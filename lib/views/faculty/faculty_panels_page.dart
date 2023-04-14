@@ -61,7 +61,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     term: 'MidTerm',
                     semester: '1',
                     year: '2023',
-                    numberOfAssignedTeams: 0,
+                    numberOfAssignedTeams: 1,
                     panel: Panel(
                       course: 'CP302',
                       semester: '2',

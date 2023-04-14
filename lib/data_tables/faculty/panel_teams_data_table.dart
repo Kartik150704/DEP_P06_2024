@@ -5,7 +5,6 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/evaluation_submission_form.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/seeds.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PanelTeamsDataTable extends StatefulWidget {
@@ -129,7 +128,9 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
           ),
         ),
       );
-    } else {}
+    } else if (studentData.isEmpty) {
+      getStudentData();
+    }
 
     final columns = [
       'Team ID',

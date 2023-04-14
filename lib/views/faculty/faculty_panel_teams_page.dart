@@ -58,64 +58,73 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
             .collection('evaluations')
             .where('project_id', isEqualTo: doc.id)
             .get()
-            .then((value) {
-          List<Evaluation> evals = [];
-          for (var doc in value.docs) {
-            for (int i = 0;
-                i < widget.assignedPanel.panel.numberOfEvaluators;
-                i++) {
+            .then(
+          (value) {
+            List<Evaluation> evals = [];
+            for (var doc in value.docs) {
+              for (int i = 0;
+                  i < widget.assignedPanel.panel.numberOfEvaluators;
+                  i++) {
+                for (Student student in students) {
+                  Evaluation evaluation = Evaluation(
+                    id: '1',
+                    marks: double.tryParse(
+                        doc['midsem_evaluation'][i][student.entryNumber])!,
+                    remarks: doc['midsem_panel_comments'][i]
+                        [student.entryNumber],
+                    type: 'midterm-panel',
+                    student: student,
+                    faculty: widget.assignedPanel.panel.evaluators[i],
+                  );
+                  evals.add(evaluation);
+                }
+              }
+              for (int i = 0;
+                  i < widget.assignedPanel.panel.numberOfEvaluators;
+                  i++) {
+                for (Student student in students) {
+                  Evaluation evaluation = Evaluation(
+                    id: '1',
+                    marks: double.tryParse(
+                        doc['endsem_evaluation'][i][student.entryNumber])!,
+                    remarks: doc['endsem_panel_comments'][i]
+                        [student.entryNumber],
+                    type: 'endterm-panel',
+                    student: student,
+                    faculty: widget.assignedPanel.panel.evaluators[i],
+                  );
+                  evals.add(evaluation);
+                }
+              }
               for (Student student in students) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['midsem_evaluation'][i][student.entryNumber])!,
-                  remarks: doc['midsem_panel_comments'][i][student.entryNumber],
-                  type: 'midterm-panel',
-                  student: student,
-                  faculty: widget.assignedPanel.panel.evaluators[i],
-                );
-                evals.add(evaluation);
+                for (int week = 0;
+                    week < int.tryParse(doc['number_of_evaluations'])!;
+                    week++) {
+                  Evaluation evaluation = Evaluation(
+                    id: '1',
+                    marks: double.tryParse(
+                        doc['weekly_evaluations'][week][student.entryNumber])!,
+                    remarks: doc['weekly_comments'][week][student.entryNumber],
+                    type: 'week-${week + 1}',
+                    student: student,
+                    //TODO: add name and email
+                    faculty: Faculty(
+                        id: doc['supervisor_id'],
+                        name: 'temp',
+                        email: 'temp@iitrpr.ac.iin'),
+                  );
+                  evals.add(evaluation);
+                }
               }
             }
-            for (int i = 0;
-                i < widget.assignedPanel.panel.numberOfEvaluators;
-                i++) {
-              for (Student student in students) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['endsem_evaluation'][i][student.entryNumber])!,
-                  remarks: doc['endsem_panel_comments'][i][student.entryNumber],
-                  type: 'endterm-panel',
-                  student: student,
-                  faculty: widget.assignedPanel.panel.evaluators[i],
-                );
-                evals.add(evaluation);
-              }
-            }
-            for (Student student in students) {
-              for (int week = 0;
-                  week < int.tryParse(doc['number_of_evaluations'])!;
-                  week++) {
-                Evaluation evaluation = Evaluation(
-                  id: '1',
-                  marks: double.tryParse(
-                      doc['weekly_evaluations'][week][student.entryNumber])!,
-                  remarks: doc['weekly_comments'][week][student.entryNumber],
-                  type: 'week-${week + 1}',
-                  student: student,
-                  //TODO: add name and email
-                  faculty: Faculty(
-                      id: doc['supervisor_id'],
-                      name: 'temp',
-                      email: 'temp@iitrpr.ac.iin'),
-                );
-                evals.add(evaluation);
-              }
-            }
-          }
 
-          widget.assignedPanel.evaluations.addAll(evals);
+            setState(() {
+              widget.assignedPanel.evaluations.addAll(evals);
+            });
+          },
+        );
+        setState(() {
+          loading = false;
         });
       }
     });
@@ -137,6 +146,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
   @override
   void initState() {
     super.initState();
+    getPanelData();
   }
 
   @override
