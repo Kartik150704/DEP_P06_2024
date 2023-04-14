@@ -1,5 +1,6 @@
 class EvaluationCriteria {
   final int numberOfWeeks,
+      weeksToConsider,
       regular,
       midtermSupervisor,
       midtermPanel,
@@ -10,6 +11,7 @@ class EvaluationCriteria {
 
   EvaluationCriteria({
     required this.id,
+    required this.weeksToConsider,
     required this.course,
     required this.semester,
     required this.year,
@@ -152,8 +154,6 @@ class Enrollment {
     required this.supervisorEvaluations,
   });
 }
-
-
 
 class EnrollmentRequest {
   final String id, status;

@@ -1,6 +1,8 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
+import 'package:casper/data_tables/faculty/coordinator_criteria_management_data_table.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/seeds.dart';
 import 'package:flutter/material.dart';
 
 class CoordinatorCriteriaManagementPage extends StatefulWidget {
@@ -22,20 +24,22 @@ class CoordinatorCriteriaManagementPage extends StatefulWidget {
 
 class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
-  late List<AssignedPanel> assignedPanels = [];
-  final panelIdController = TextEditingController(),
-      evaluatorNameController = TextEditingController();
+  List<EvaluationCriteria> evaluationCriterias = [];
+  final courseController = TextEditingController(),
+      yearController = TextEditingController(text: '2023'),
+      semesterController = TextEditingController(text: '1');
 
   // TODO: Implement this method
   @override
   void initState() {
     super.initState();
+    evaluationCriterias = evaluationCriteriasGLOBAL;
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
 
     return Expanded(
       child: Container(
@@ -65,20 +69,28 @@ class _CoordinatorCriteriaManagementPageState
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 35 * fem,
+                        width: 33 * fem,
                       ),
                       SearchTextField(
-                        textEditingController: panelIdController,
-                        hintText: '',
-                        width: 180 * fem,
+                        textEditingController: courseController,
+                        hintText: 'Course',
+                        width: 170 * fem,
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
                       SearchTextField(
-                        textEditingController: evaluatorNameController,
-                        hintText: '',
-                        width: 180 * fem,
+                        textEditingController: yearController,
+                        hintText: 'Year',
+                        width: 170 * fem,
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      SearchTextField(
+                        textEditingController: semesterController,
+                        hintText: 'Semester',
+                        width: 170 * fem,
                       ),
                       SizedBox(
                         width: 25 * fem,
@@ -121,16 +133,16 @@ class _CoordinatorCriteriaManagementPageState
                         ),
                       ],
                     ),
-                    // child: Padding(
-                    //   padding: const EdgeInsets.all(20),
-                    //   child: SingleChildScrollView(
-                    //     child: AssignedPanelsDataTable(
-                    //       assignedPanels: assignedPanels,
-                    //       userRole: widget.userRole,
-                    //       viewCritera: widget.viewCritera,
-                    //     ),
-                    //   ),
-                    // ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: SingleChildScrollView(
+                        child: CoordinatorCriteriaManagementDataTable(
+                          evaluationCriterias: evaluationCriterias,
+                          userRole: widget.userRole,
+                          viewProject: widget.viewCritera,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

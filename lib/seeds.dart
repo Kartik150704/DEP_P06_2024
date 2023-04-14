@@ -4,9 +4,10 @@ final evaluationCriteriasGLOBAL = [
   EvaluationCriteria(
     id: '1',
     course: 'CP302',
-    semester: '2',
+    semester: '1',
     year: '2023',
     numberOfWeeks: 14,
+    weeksToConsider: 10,
     regular: 20,
     midtermSupervisor: 10,
     midtermPanel: 20,
