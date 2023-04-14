@@ -14,9 +14,9 @@ class FacultyPanelTeamsPage extends StatefulWidget {
 
   const FacultyPanelTeamsPage({
     Key? key,
+    required this.actionType,
     required this.userRole,
     required this.assignedPanel,
-    required this.actionType,
   }) : super(key: key);
 
   @override

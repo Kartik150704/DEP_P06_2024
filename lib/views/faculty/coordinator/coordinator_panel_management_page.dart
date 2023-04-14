@@ -1,7 +1,7 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
-import 'package:casper/data_tables/faculty/panels_data_table.dart';
+import 'package:casper/data_tables/faculty/coordinator_panel_management_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
 import 'package:casper/models/models.dart';
@@ -28,11 +28,11 @@ class _CoordinatorPanelManagementPageState
     extends State<CoordinatorPanelManagementPage> {
   bool loading = true;
   List<AssignedPanel> assignedPanels = [];
-  final panelIDController = TextEditingController(),
+  final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
-      courseController = TextEditingController(),
-      yearController = TextEditingController(),
-      semesterController = TextEditingController();
+      termController = TextEditingController(),
+      courseController = TextEditingController(text: 'CP302'),
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   void confirmAction() {
     showDialog(
@@ -105,6 +105,20 @@ class _CoordinatorPanelManagementPageState
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
 
+    if (loading) {
+      return Expanded(
+        child: Container(
+          width: double.infinity,
+          color: const Color(0xff302c42),
+          child: const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            ),
+          ),
+        ),
+      );
+    }
+
     final ScrollController scrollController = ScrollController();
     return Expanded(
       child: Scaffold(
@@ -138,7 +152,7 @@ class _CoordinatorPanelManagementPageState
                           width: 33 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: panelIDController,
+                          textEditingController: panelIdController,
                           hintText: 'Panel Identification',
                           width: 170 * fem,
                         ),
@@ -154,6 +168,14 @@ class _CoordinatorPanelManagementPageState
                           width: 20 * fem,
                         ),
                         SearchTextField(
+                          textEditingController: termController,
+                          hintText: 'Term',
+                          width: 170 * fem,
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        SearchTextField(
                           textEditingController: courseController,
                           hintText: 'Course',
                           width: 170 * fem,
@@ -162,16 +184,8 @@ class _CoordinatorPanelManagementPageState
                           width: 20 * fem,
                         ),
                         SearchTextField(
-                          textEditingController: yearController,
-                          hintText: 'Year',
-                          width: 170 * fem,
-                        ),
-                        SizedBox(
-                          width: 20 * fem,
-                        ),
-                        SearchTextField(
-                          textEditingController: semesterController,
-                          hintText: 'Semester',
+                          textEditingController: yearSemesterController,
+                          hintText: 'Year-Semester',
                           width: 170 * fem,
                         ),
                         SizedBox(
@@ -219,7 +233,7 @@ class _CoordinatorPanelManagementPageState
                         padding: const EdgeInsets.all(20),
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
-                          child: PanelsDataTable(
+                          child: CoordinatorPanelManagementDataTable(
                             assignedPanels: assignedPanels,
                             viewPanel: widget.viewPanel,
                           ),

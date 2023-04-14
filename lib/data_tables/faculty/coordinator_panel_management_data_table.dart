@@ -4,22 +4,24 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 
-class PanelsDataTable extends StatefulWidget {
+class CoordinatorPanelManagementDataTable extends StatefulWidget {
   final List<AssignedPanel> assignedPanels;
   // ignore: prefer_typing_uninitialized_variables
   final viewPanel;
 
-  const PanelsDataTable({
+  const CoordinatorPanelManagementDataTable({
     super.key,
     required this.assignedPanels,
     required this.viewPanel,
   });
 
   @override
-  State<PanelsDataTable> createState() => _PanelsDataTableState();
+  State<CoordinatorPanelManagementDataTable> createState() =>
+      _CoordinatorPanelManagementDataTableState();
 }
 
-class _PanelsDataTableState extends State<PanelsDataTable> {
+class _CoordinatorPanelManagementDataTableState
+    extends State<CoordinatorPanelManagementDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -148,8 +150,7 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
             ),
             DataCell(
               CustomisedOverflowText(
-                text:
-                    '${assignedPanel.panel.course}-${assignedPanel.panel.year}-${assignedPanel.panel.semester}',
+                text: assignedPanel.term,
                 color: Colors.black,
               ),
             ),
@@ -191,6 +192,14 @@ class _PanelsDataTableState extends State<PanelsDataTable> {
           ascending,
           panel1.panel.numberOfEvaluators.toString(),
           panel2.panel.numberOfEvaluators.toString(),
+        ),
+      );
+    } else if (columnIndex == 3) {
+      widget.assignedPanels.sort(
+        (panel1, panel2) => compareString(
+          ascending,
+          panel1.term,
+          panel2.term,
         ),
       );
     }
