@@ -205,7 +205,7 @@ class _StudentRequestDataTableState extends State<StudentRequestDataTable> {
             ),
             DataCell(
               SizedBox(
-                child: CustomisedText(
+                child: CustomisedOverflowText(
                   text: enrollment.offering.project.title,
                   color: Colors.black,
                 ),
@@ -213,8 +213,7 @@ class _StudentRequestDataTableState extends State<StudentRequestDataTable> {
             ),
             DataCell(
               SizedBox(
-                width: 50,
-                child: CustomisedOverflowText(
+                child: CustomisedText(
                   text: enrollment.offering.instructor.name,
                   color: Colors.black,
                 ),
