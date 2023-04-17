@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
@@ -31,7 +32,9 @@ class _FacultyEnrollmentsDataTableState
       totalMidtermPanel = evaluationCriteriasGLOBAL[0].midtermPanel,
       totalEndterm = evaluationCriteriasGLOBAL[0].endtermSupervisor,
       totalEndtermPanel = evaluationCriteriasGLOBAL[0].endtermPanel,
-      totalReport = evaluationCriteriasGLOBAL[0].report;
+      totalReport = evaluationCriteriasGLOBAL[0].report,
+      totalWeeksToConsider = evaluationCriteriasGLOBAL[0].weeksToConsider;
+
   late List<StudentData> studentData = [];
   late List<AssignedPanel> assignedPanels = [];
 
@@ -42,8 +45,7 @@ class _FacultyEnrollmentsDataTableState
 
     for (final enrollment in widget.enrollments) {
       for (final student in enrollment.team.students) {
-        double weekly = -1,
-            weekCount = 0,
+        double weekCount = 0,
             midterm = -1,
             midtermPanel = -1,
             midtermPanelCount = 0,
@@ -51,6 +53,7 @@ class _FacultyEnrollmentsDataTableState
             endtermPanel = -1,
             endtermPanelCount = 0,
             report = -1;
+        List<double> weekly = [];
         String grade = 'NA';
         for (final panel in assignedPanels) {
           for (final team in panel.assignedTeams) {
@@ -86,11 +89,7 @@ class _FacultyEnrollmentsDataTableState
               endterm = evaluation.marks;
             } else if (evaluation.type.contains('week')) {
               weekCount += 1;
-              if (weekly == -1) {
-                weekly = evaluation.marks;
-              } else {
-                weekly += evaluation.marks;
-              }
+              weekly.add(evaluation.marks);
             } else if (evaluation.type == 'report') {
               report = evaluation.marks;
             } else if (evaluation.type.contains('grade')) {
@@ -99,11 +98,19 @@ class _FacultyEnrollmentsDataTableState
           }
         }
 
+        weekly.sort();
+        weekly = weekly.reversed.toList();
+        double bestWeekly = 0;
+        weekCount = min(totalWeeksToConsider, weekly.length) as double;
+        for (int i = 0; i < weekCount; i++) {
+          bestWeekly += weekly[i];
+        }
+
         studentData.add(
           StudentData(
             weekly: (weekCount == 0
                 ? '-1'
-                : (weekly / weekCount).toStringAsFixed(2)),
+                : (bestWeekly / weekCount).toStringAsFixed(2)),
             weekCount: weekCount.toString(),
             midterm: midterm.toString(),
             midtermPanel: (midtermPanelCount == 0
