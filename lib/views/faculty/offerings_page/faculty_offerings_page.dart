@@ -1,18 +1,22 @@
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/enrollmentRequestsFaculty.dart';
-import 'package:casper/views/faculty/faculty_offered_projects_page.dart';
+import 'package:casper/views/faculty/offerings_page/faculty_enrollment_requests_page.dart';
+import 'package:casper/views/faculty/offerings_page/faculty_offered_projects_page.dart';
 import 'package:flutter/material.dart';
 
-class FacultyOfferings extends StatefulWidget {
-  final role;
+// ignore: must_be_immutable
+class FacultyOfferingsPage extends StatefulWidget {
+  String userRole;
 
-  const FacultyOfferings({Key? key, required this.role}) : super(key: key);
+  FacultyOfferingsPage({
+    Key? key,
+    required this.userRole,
+  }) : super(key: key);
 
   @override
-  State<FacultyOfferings> createState() => _FacultyOfferingsPageState();
+  State<FacultyOfferingsPage> createState() => _FacultyOfferingsPagePageState();
 }
 
-class _FacultyOfferingsPageState extends State<FacultyOfferings> {
+class _FacultyOfferingsPagePageState extends State<FacultyOfferingsPage> {
   var option = 1;
   dynamic displayPage;
   var options = [
@@ -26,7 +30,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferings> {
       if (option == 1) {
         displayPage = const FacultyOfferedProjectsPage();
       } else {
-        displayPage = const EnrollmentRequestsPageFaculty();
+        displayPage = const FacultyEnrollmentRequestsPage();
       }
     });
   }
@@ -41,6 +45,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferings> {
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
+
     return Row(
       children: [
         Container(
