@@ -4,20 +4,20 @@ import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class FacultyOfferingsDataTable extends StatefulWidget {
+class FacultyOfferedProjectsDataTable extends StatefulWidget {
   List<Offering> offerings;
 
-  FacultyOfferingsDataTable({
+  FacultyOfferedProjectsDataTable({
     super.key,
     required this.offerings,
   });
 
   @override
-  State<FacultyOfferingsDataTable> createState() =>
-      _FacultyOfferingsDataTableState();
+  State<FacultyOfferedProjectsDataTable> createState() =>
+      _FacultyOfferedProjectsDataTableState();
 }
 
-class _FacultyOfferingsDataTableState extends State<FacultyOfferingsDataTable> {
+class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjectsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 

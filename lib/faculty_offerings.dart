@@ -1,9 +1,7 @@
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/enrollmentRequestsFaculty.dart';
-import 'package:casper/views/faculty/faculty_offerings_page.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/views/faculty/faculty_offered_projects_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FacultyOfferings extends StatefulWidget {
   final role;
@@ -15,19 +13,20 @@ class FacultyOfferings extends StatefulWidget {
 }
 
 class _FacultyOfferingsPageState extends State<FacultyOfferings> {
-  void onPressed() {}
-  dynamic shownpage;
-  var option;
-
-  var options = ['Projects', 'Enrollment Requests'];
+  var option = 1;
+  dynamic displayPage;
+  var options = [
+    'Projects',
+    'Enrollment Requests',
+  ];
 
   void selectOption(opt) {
     setState(() {
       option = opt;
       if (option == 1) {
-        shownpage = FacultyOfferingsPage();
+        displayPage = const FacultyOfferedProjectsPage();
       } else {
-        shownpage = EnrollmentRequestsPageFaculty();
+        displayPage = const EnrollmentRequestsPageFaculty();
       }
     });
   }
@@ -35,19 +34,18 @@ class _FacultyOfferingsPageState extends State<FacultyOfferings> {
   @override
   void initState() {
     super.initState();
-    option = 1;
-    shownpage = FacultyOfferingsPage();
+    displayPage = const FacultyOfferedProjectsPage();
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
     return Row(
       children: [
         Container(
           width: 300 * fem,
-          color: Color(0xff545161),
+          color: const Color(0xff545161),
           child: ListView(
             children: [
               Column(
@@ -65,7 +63,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferings> {
             ],
           ),
         ),
-        shownpage,
+        displayPage,
       ],
     );
   }

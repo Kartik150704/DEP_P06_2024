@@ -1,19 +1,22 @@
 import 'package:casper/components/add_project_form.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/data_tables/shared/faculty_offerings_data_table.dart';
+import 'package:casper/data_tables/faculty/faculty_offered_projects_data_table.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class FacultyOfferingsPage extends StatefulWidget {
-  const FacultyOfferingsPage({Key? key}) : super(key: key);
+class FacultyOfferedProjectsPage extends StatefulWidget {
+  const FacultyOfferedProjectsPage({Key? key}) : super(key: key);
 
   @override
-  State<FacultyOfferingsPage> createState() => _FacultyOfferingsPageState();
+  State<FacultyOfferedProjectsPage> createState() =>
+      _FacultyOfferedProjectsPageState();
 }
 
-class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
+class _FacultyOfferedProjectsPageState
+    extends State<FacultyOfferedProjectsPage> {
   bool loading = true, searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
@@ -114,17 +117,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
 
     if (loading) {
-      return Expanded(
-        child: Container(
-          width: double.infinity,
-          color: const Color(0xff302c42),
-          child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-            ),
-          ),
-        ),
-      );
+      return const LoadingPage();
     }
 
     return Expanded(
@@ -265,7 +258,7 @@ class _FacultyOfferingsPageState extends State<FacultyOfferingsPage> {
                                     ),
                                   )
                                 : SingleChildScrollView(
-                                    child: FacultyOfferingsDataTable(
+                                    child: FacultyOfferedProjectsDataTable(
                                       offerings: offerings,
                                     ),
                                   )),

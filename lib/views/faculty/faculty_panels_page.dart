@@ -3,6 +3,7 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -107,17 +108,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
 
     if (loading) {
-      return Expanded(
-        child: Container(
-          width: double.infinity,
-          color: const Color(0xff302c42),
-          child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-            ),
-          ),
-        ),
-      );
+      return const LoadingPage();
     }
 
     return Expanded(

@@ -3,6 +3,7 @@ import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/coordinator_criteria_management_data_table.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/seeds.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:flutter/material.dart';
 
 class CoordinatorCriteriaManagementPage extends StatefulWidget {
@@ -24,6 +25,7 @@ class CoordinatorCriteriaManagementPage extends StatefulWidget {
 
 class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
+  bool loading = false;
   List<EvaluationCriteria> evaluationCriterias = [];
   final courseController = TextEditingController(),
       yearSmesterController = TextEditingController(text: '2023-1');
@@ -39,6 +41,10 @@ class _CoordinatorCriteriaManagementPageState
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
+
+    if (loading) {
+      return const LoadingPage();
+    }
 
     return Expanded(
       child: Scaffold(
