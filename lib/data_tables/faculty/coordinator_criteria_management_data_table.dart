@@ -58,7 +58,7 @@ class _CoordinatorCriteriaManagementDataTableState
     }
 
     final columns = [
-      'Type',
+      'Course',
       'Weeks (T)',
       'Regular',
       'Midterm (S + P)',
@@ -152,8 +152,7 @@ class _CoordinatorCriteriaManagementDataTableState
             DataCell(
               SizedBox(
                 child: CustomisedOverflowText(
-                  text:
-                      '${criteria.course}-${criteria.year}-${criteria.semester}',
+                  text: criteria.course,
                   color: Colors.black,
                 ),
               ),
@@ -216,9 +215,7 @@ class _CoordinatorCriteriaManagementDataTableState
     if (columnIndex == 0) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(
-            ascending,
-            '${criteria1.course}-${criteria1.year}-${criteria1.semester}',
-            '${criteria2.course}-${criteria2.year}-${criteria2.semester}'),
+            ascending, '${criteria1.course}', '${criteria2.course}'),
       );
     } else if (columnIndex == 1) {
       widget.evaluationCriterias.sort(

@@ -1,9 +1,10 @@
 import 'package:casper/components/add_teams_form.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/data_tables/faculty/panel_teams_data_table.dart';
+import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -155,17 +156,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
 
     if (loading) {
-      return Expanded(
-        child: Container(
-          width: double.infinity,
-          color: const Color(0xff302c42),
-          child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-            ),
-          ),
-        ),
-      );
+      return const LoadingPage();
     }
 
     return Expanded(
@@ -201,7 +192,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                           alignment: Alignment.bottomRight,
                           child: CustomisedOverflowText(
                             text:
-                                '  [${widget.assignedPanel.course}, ${widget.assignedPanel.year}-${widget.assignedPanel.semester}]',
+                                '  [${widget.assignedPanel.course}, ${widget.assignedPanel.year}-${widget.assignedPanel.semester}, ${widget.assignedPanel.term}]',
                             fontSize: 20,
                             color: Colors.grey,
                           ),
@@ -264,7 +255,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                     ),
                     Container(
                       width: 1200 * fem,
-                      height: 675,
+                      height: 525 * fem,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -282,7 +273,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: SingleChildScrollView(
-                          child: PanelTeamsDataTable(
+                          child: FacultyPanelTeamsDataTable(
                             actionType: widget.actionType,
                             assignedPanel: widget.assignedPanel,
                             assignedTeams: assignedTeams,

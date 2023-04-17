@@ -7,11 +7,11 @@ import 'package:casper/models/models.dart';
 import 'package:casper/seeds.dart';
 import 'package:flutter/material.dart';
 
-class PanelTeamsDataTable extends StatefulWidget {
+class FacultyPanelTeamsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final actionType, assignedPanel, assignedTeams;
 
-  const PanelTeamsDataTable({
+  const FacultyPanelTeamsDataTable({
     super.key,
     required this.actionType,
     required this.assignedPanel,
@@ -19,10 +19,12 @@ class PanelTeamsDataTable extends StatefulWidget {
   });
 
   @override
-  State<PanelTeamsDataTable> createState() => _PanelTeamsDataTableState();
+  State<FacultyPanelTeamsDataTable> createState() =>
+      _FacultyPanelTeamsDataTableState();
 }
 
-class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
+class _FacultyPanelTeamsDataTableState
+    extends State<FacultyPanelTeamsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -135,7 +137,6 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
       'Team ID',
       'Student Name',
       'Student Entry Number',
-      'Term',
       (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
 
@@ -187,12 +188,6 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
         ),
         onSort: onSort,
       ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[4],
-        ),
-        onSort: onSort,
-      ),
     ];
 
     return headings;
@@ -211,7 +206,7 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
             ),
             DataCell(
               SizedBox(
-                width: 200,
+                width: 250,
                 child: CustomisedOverflowText(
                   text: data.student.name,
                   color: Colors.black,
@@ -222,14 +217,6 @@ class _PanelTeamsDataTableState extends State<PanelTeamsDataTable> {
               SizedBox(
                 child: CustomisedText(
                   text: data.student.entryNumber,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                child: CustomisedText(
-                  text: data.type,
                   color: Colors.black,
                 ),
               ),

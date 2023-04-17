@@ -1,22 +1,23 @@
-import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class OfferingsDataTable extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
+// ignore: must_be_immutable
+class FacultyOfferedProjectsDataTable extends StatefulWidget {
   List<Offering> offerings;
 
-// TODO: make required
-  OfferingsDataTable({super.key, required this.offerings});
+  FacultyOfferedProjectsDataTable({
+    super.key,
+    required this.offerings,
+  });
 
   @override
-  State<OfferingsDataTable> createState() => _OfferingsDataTableState();
+  State<FacultyOfferedProjectsDataTable> createState() =>
+      _FacultyOfferedProjectsDataTableState();
 }
 
-class _OfferingsDataTableState extends State<OfferingsDataTable> {
+class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjectsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -29,11 +30,11 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
   Widget build(BuildContext context) {
     final columns = [
       'ID',
-      'Title',
-      'Supervisor',
-      'Type',
-      'View Details',
+      'Project',
+      'Instructor',
+      'Course',
     ];
+
     return Theme(
       data: Theme.of(context).copyWith(
           iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
@@ -82,11 +83,6 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
         ),
         onSort: onSort,
       ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[4],
-        ),
-      ),
     ];
 
     return headings;
@@ -105,15 +101,17 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
             ),
             DataCell(
               SizedBox(
-                child: CustomisedText(
-                  text: offerings.project.title,
-                  color: Colors.black,
+                child: SizedBox(
+                  child: CustomisedOverflowText(
+                    text: offerings.project.title,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             DataCell(
               SizedBox(
-                width: 200,
+                width: 150,
                 child: CustomisedOverflowText(
                   text: offerings.instructor.name,
                   color: Colors.black,
@@ -122,21 +120,8 @@ class _OfferingsDataTableState extends State<OfferingsDataTable> {
             ),
             DataCell(
               CustomisedOverflowText(
-                text:
-                    '${offerings.course}-${offerings.year}-${offerings.semester}',
+                text: offerings.course,
                 color: Colors.black,
-              ),
-            ),
-            DataCell(
-              CustomisedButton(
-                text: const Icon(
-                  Icons.open_in_new_rounded,
-                  size: 20,
-                ),
-                height: 37,
-                width: double.infinity,
-                onPressed: () => {},
-                elevation: 0,
               ),
             ),
           ];

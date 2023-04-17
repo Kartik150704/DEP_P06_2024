@@ -5,6 +5,7 @@ import 'package:casper/data_tables/faculty/coordinator_panel_management_data_tab
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
@@ -106,17 +107,7 @@ class _CoordinatorPanelManagementPageState
     double fem = MediaQuery.of(context).size.width / baseWidth;
 
     if (loading) {
-      return Expanded(
-        child: Container(
-          width: double.infinity,
-          color: const Color(0xff302c42),
-          child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-            ),
-          ),
-        ),
-      );
+      return const LoadingPage();
     }
 
     final ScrollController scrollController = ScrollController();
@@ -214,7 +205,7 @@ class _CoordinatorPanelManagementPageState
                     ),
                     Container(
                       width: 1200 * fem,
-                      height: 675,
+                      height: 525 * fem,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),

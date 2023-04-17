@@ -330,8 +330,8 @@ class _FacultyEnrollmentsDataTableState
       'Team',
       'Student',
       'W (${totalWeekly.toString()})',
-      'M (${totalMidterm.toString()}+${totalMidtermPanel.toString()})',
-      'E (${totalEndterm.toString()}+${totalEndtermPanel.toString()})',
+      'M (${totalMidterm.toString()} + ${totalMidtermPanel.toString()})',
+      'E (${totalEndterm.toString()} + ${totalEndtermPanel.toString()})',
       'R (${totalReport.toString()})',
     ];
 

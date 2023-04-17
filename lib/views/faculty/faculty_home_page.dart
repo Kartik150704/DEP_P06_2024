@@ -101,7 +101,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
 
     return Row(
       children: [
