@@ -3,6 +3,7 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class EnrollmentRequestsDataTable extends StatefulWidget {
@@ -20,6 +21,7 @@ class EnrollmentRequestsDataTable extends StatefulWidget {
 
 class _EnrollmentRequestDataTableState
     extends State<EnrollmentRequestsDataTable> {
+  var Team_names = {};
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -38,9 +40,55 @@ class _EnrollmentRequestDataTableState
     );
   }
 
+  void getTeams() async {
+    setState(() {
+      Team_names = {};
+    });
+    List<String> Team_ids = [];
+    for (int i = 0; i < widget.requests.length; i++) {
+      setState(() {
+        Team_ids.add(widget.requests[i].teamId);
+      });
+    }
+    if (!mounted) return;
+    await FirebaseFirestore.instance
+        .collection('team')
+        .where('id', whereIn: Team_ids)
+        .get()
+        .then((value) async {
+      for (var doc in value.docs) {
+        List<String> temp = [];
+        for (String stud in doc['students']) {
+          if (!mounted) return;
+          await FirebaseFirestore.instance
+              .collection('student')
+              .where('id', isEqualTo: stud)
+              .get()
+              .then((value) {
+            for (var doc in value.docs) {
+              if (!mounted) return;
+              setState(() {
+                temp.add(doc['name']);
+              });
+            }
+          });
+        }
+        if (!mounted) return;
+        setState(() {
+          Team_names[doc['id']] = (temp);
+        });
+        print(Team_names[doc['id']]);
+      }
+    });
+    // for (int i = 0; i < Team_names.length; i++) {
+    //   print(Team_names[i]);
+    // }
+  }
+
   @override
   void initState() {
     super.initState();
+    getTeams();
   }
 
   @override
@@ -48,6 +96,7 @@ class _EnrollmentRequestDataTableState
     final columns = [
       'Project',
       'Team',
+      'Students',
       'Action',
     ];
 
@@ -93,6 +142,11 @@ class _EnrollmentRequestDataTableState
           text: columns[2],
         ),
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[3],
+        ),
+      ),
     ];
 
     return headings;
@@ -114,6 +168,16 @@ class _EnrollmentRequestDataTableState
                 width: 50,
                 child: CustomisedOverflowText(
                   text: request.teamId,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                width: 300,
+                child: CustomisedOverflowText(
+                  text:
+                      '${Team_names[request.teamId][0]}, ${Team_names[request.teamId][1]}',
                   color: Colors.black,
                 ),
               ),
