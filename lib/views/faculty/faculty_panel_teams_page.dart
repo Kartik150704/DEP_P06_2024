@@ -1,7 +1,7 @@
 import 'package:casper/components/add_teams_form.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/data_tables/faculty/panel_teams_data_table.dart';
+import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -201,7 +201,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                           alignment: Alignment.bottomRight,
                           child: CustomisedOverflowText(
                             text:
-                                '  [${widget.assignedPanel.course}, ${widget.assignedPanel.year}-${widget.assignedPanel.semester}]',
+                                '  [${widget.assignedPanel.course}, ${widget.assignedPanel.year}-${widget.assignedPanel.semester}, ${widget.assignedPanel.term}]',
                             fontSize: 20,
                             color: Colors.grey,
                           ),
@@ -282,7 +282,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: SingleChildScrollView(
-                          child: PanelTeamsDataTable(
+                          child: FacultyPanelTeamsDataTable(
                             actionType: widget.actionType,
                             assignedPanel: widget.assignedPanel,
                             assignedTeams: assignedTeams,

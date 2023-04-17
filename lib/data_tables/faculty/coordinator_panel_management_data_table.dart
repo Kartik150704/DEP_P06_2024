@@ -57,7 +57,7 @@ class _CoordinatorPanelManagementDataTableState
       'ID',
       'Number Of Evaluators',
       'Evaluators',
-      'Type',
+      'Term',
       'View Details',
     ];
 
