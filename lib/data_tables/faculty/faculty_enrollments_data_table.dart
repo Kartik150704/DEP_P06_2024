@@ -136,11 +136,13 @@ class _FacultyEnrollmentsDataTableState
     }
   }
 
-  void initializeEvaluations() {
+  void initializeEvaluations() async {
     for (int i = 0; i < assignedPanels.length; i++) {
       AssignedPanel assignedPanel = assignedPanels[i];
-
-      FirebaseFirestore.instance
+      if (assignedPanel.assignedProjectIds!.isEmpty) {
+        continue;
+      }
+      await FirebaseFirestore.instance
           .collection('evaluations')
           .where('project_id', whereIn: assignedPanel.assignedProjectIds)
           .get()
@@ -211,10 +213,11 @@ class _FacultyEnrollmentsDataTableState
     getStudentData();
   }
 
-  void initializeTeams() {
+  void initializeTeams() async {
     for (int i = 0; i < assignedPanels.length; i++) {
+      if (assignedPanels[i].assignedProjectIds!.isEmpty) continue;
       AssignedPanel assignedPanel = assignedPanels[i];
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('projects')
           .where(FieldPath.documentId,
               whereIn: assignedPanel.assignedProjectIds)
@@ -241,12 +244,15 @@ class _FacultyEnrollmentsDataTableState
     initializeEvaluations();
   }
 
-  void getPanels() {
+  void getPanels() async {
     setState(() {
       assignedPanels.clear();
     });
 
-    FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('assigned_panel')
+        .get()
+        .then((value) {
       for (var doc in value.docs) {
         setState(() {
           assignedPanels.add(

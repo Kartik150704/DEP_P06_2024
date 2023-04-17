@@ -99,6 +99,49 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       );
                       supervisorEvaluations.add(evaluation);
                     }
+                    for (int ii = 0; ii < 2; ii++) {
+                      Evaluation evaluation = Evaluation(
+                        id: '1',
+                        marks: double.tryParse(
+                            evaludationDoc['midsem_supervisor'][studentId])!,
+                        remarks: evaludationDoc['midsem_panel_comments'][ii]
+                            [studentId],
+                        type: 'midterm-supervisor',
+                        student: Student(
+                            id: studentId,
+                            email: '$studentId@iitrpr.ac.in',
+                            entryNumber: studentId,
+                            name: studentNames[studentId]),
+                        faculty: Faculty(
+                          id: evaludationDoc['supervisor_id'],
+                          name: val['instructor_name'],
+                          //TODO: fix email
+                          email: 'temp@iitrpr.ac.iin',
+                        ),
+                      );
+                      supervisorEvaluations.add(evaluation);
+
+                      evaluation = Evaluation(
+                        id: '1',
+                        marks: double.tryParse(
+                            evaludationDoc['endsem_supervisor'][studentId])!,
+                        remarks: evaludationDoc['endsem_panel_comments'][ii]
+                            [studentId],
+                        type: 'endterm-supervisor',
+                        student: Student(
+                            id: studentId,
+                            email: '$studentId@iitrpr.ac.in',
+                            entryNumber: studentId,
+                            name: studentNames[studentId]),
+                        faculty: Faculty(
+                          id: evaludationDoc['supervisor_id'],
+                          name: val['instructor_name'],
+                          //TODO: fix email
+                          email: 'temp@iitrpr.ac.iin',
+                        ),
+                      );
+                      supervisorEvaluations.add(evaluation);
+                    }
                   }
 
                   setState(() {
