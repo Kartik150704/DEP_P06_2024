@@ -278,13 +278,13 @@ class _FacultyOfferedProjectsPageState
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Add Project',
+                message: 'Offer Project',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
                   hoverColor: Colors.grey,
                   child: const Icon(
-                    Icons.my_library_add,
+                    Icons.add,
                     color: Colors.black,
                     size: 35,
                   ),

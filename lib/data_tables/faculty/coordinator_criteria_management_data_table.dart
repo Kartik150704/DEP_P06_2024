@@ -58,7 +58,6 @@ class _CoordinatorCriteriaManagementDataTableState
     }
 
     final columns = [
-      'Course',
       'Weeks (T)',
       'Regular',
       'Midterm (S + P)',
@@ -91,16 +90,10 @@ class _CoordinatorCriteriaManagementDataTableState
   List<DataColumn> getColumns(List<String> columns) {
     var headings = [
       DataColumn(
-        label: CustomisedText(
-          text: columns[0],
-        ),
-        onSort: onSort,
-      ),
-      DataColumn(
         label: Tooltip(
           message: 'Number Of Best Weeks To Consider (Total Number Of Weeks)',
           child: CustomisedText(
-            text: columns[1],
+            text: columns[0],
           ),
         ),
         onSort: onSort,
@@ -109,7 +102,7 @@ class _CoordinatorCriteriaManagementDataTableState
         label: Tooltip(
           message: 'Regular Evaluations Weightage',
           child: CustomisedText(
-            text: columns[2],
+            text: columns[1],
           ),
         ),
         onSort: onSort,
@@ -118,7 +111,7 @@ class _CoordinatorCriteriaManagementDataTableState
         label: Tooltip(
           message: 'Midterm Weightage (Supervisor + Panel)',
           child: CustomisedText(
-            text: columns[3],
+            text: columns[2],
           ),
         ),
         onSort: onSort,
@@ -127,7 +120,7 @@ class _CoordinatorCriteriaManagementDataTableState
         label: Tooltip(
           message: 'Endterm Weightage (Supervisor + Panel)',
           child: CustomisedText(
-            text: columns[4],
+            text: columns[3],
           ),
         ),
         onSort: onSort,
@@ -136,7 +129,7 @@ class _CoordinatorCriteriaManagementDataTableState
         label: Tooltip(
           message: 'Report Weightage',
           child: CustomisedText(
-            text: columns[5],
+            text: columns[4],
           ),
         ),
         onSort: onSort,
@@ -149,14 +142,6 @@ class _CoordinatorCriteriaManagementDataTableState
   List<DataRow> getRows(List<EvaluationCriteria> rows) => rows.map(
         (EvaluationCriteria criteria) {
           final cells = [
-            DataCell(
-              SizedBox(
-                child: CustomisedOverflowText(
-                  text: criteria.course,
-                  color: Colors.black,
-                ),
-              ),
-            ),
             DataCell(
               SizedBox(
                 child: CustomisedOverflowText(
@@ -215,35 +200,30 @@ class _CoordinatorCriteriaManagementDataTableState
     if (columnIndex == 0) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(
-            ascending, '${criteria1.course}', '${criteria2.course}'),
-      );
-    } else if (columnIndex == 1) {
-      widget.evaluationCriterias.sort(
-        (criteria1, criteria2) => compareString(
             ascending,
             '${criteria1.weeksToConsider} (${criteria1.numberOfWeeks})',
             '${criteria2.weeksToConsider} (${criteria2.numberOfWeeks})'),
       );
-    } else if (columnIndex == 2) {
+    } else if (columnIndex == 1) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(ascending,
             criteria1.regular.toString(), criteria2.regular.toString()),
       );
-    } else if (columnIndex == 3) {
+    } else if (columnIndex == 2) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(
             ascending,
             '${criteria1.midtermSupervisor} + ${criteria1.midtermPanel}',
             '${criteria2.midtermSupervisor} + ${criteria2.midtermPanel}'),
       );
-    } else if (columnIndex == 4) {
+    } else if (columnIndex == 3) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(
             ascending,
             '${criteria1.endtermSupervisor} + ${criteria1.endtermPanel}',
             '${criteria2.endtermSupervisor} + ${criteria2.endtermPanel}'),
       );
-    } else if (columnIndex == 5) {
+    } else if (columnIndex == 4) {
       widget.evaluationCriterias.sort(
         (criteria1, criteria2) => compareString(ascending,
             criteria1.report.toString(), criteria2.report.toString()),

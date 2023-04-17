@@ -17,7 +17,8 @@ class FacultyOfferedProjectsDataTable extends StatefulWidget {
       _FacultyOfferedProjectsDataTableState();
 }
 
-class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjectsDataTable> {
+class _FacultyOfferedProjectsDataTableState
+    extends State<FacultyOfferedProjectsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -32,7 +33,6 @@ class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjects
       'ID',
       'Project',
       'Instructor',
-      'Course',
     ];
 
     return Theme(
@@ -77,12 +77,6 @@ class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjects
         ),
         onSort: onSort,
       ),
-      DataColumn(
-        label: CustomisedText(
-          text: columns[3],
-        ),
-        onSort: onSort,
-      ),
     ];
 
     return headings;
@@ -111,17 +105,11 @@ class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjects
             ),
             DataCell(
               SizedBox(
-                width: 150,
+                width: 200,
                 child: CustomisedOverflowText(
                   text: offerings.instructor.name,
                   color: Colors.black,
                 ),
-              ),
-            ),
-            DataCell(
-              CustomisedOverflowText(
-                text: offerings.course,
-                color: Colors.black,
               ),
             ),
           ];
@@ -158,14 +146,6 @@ class _FacultyOfferedProjectsDataTableState extends State<FacultyOfferedProjects
           ascending,
           panel1.instructor.name.toString(),
           panel2.instructor.name.toString(),
-        ),
-      );
-    } else if (columnIndex == 3) {
-      widget.offerings.sort(
-        (panel1, panel2) => compareString(
-          ascending,
-          panel1.course.toString(),
-          panel2.course.toString(),
         ),
       );
     }

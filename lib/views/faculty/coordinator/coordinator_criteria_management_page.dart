@@ -27,7 +27,7 @@ class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
   bool loading = false;
   List<EvaluationCriteria> evaluationCriterias = [];
-  final courseController = TextEditingController(),
+  final courseController = TextEditingController(text: 'CP302'),
       yearSmesterController = TextEditingController(text: '2023-1');
 
   // TODO: Implement this method
