@@ -270,7 +270,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   ),
                   Container(
                     width: 1200 * fem,
-                    height: 675,
+                    height: 525 * fem,
                     margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),

@@ -3,7 +3,7 @@ import 'package:casper/components/customised_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'data_tables/shared/offerings_data_table.dart';
+import 'data_tables/shared/faculty_offerings_data_table.dart';
 import 'components/search_text_field.dart';
 import 'models/models.dart';
 
@@ -38,7 +38,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
     );
   }
 
-  OfferingsDataTable? offeringsDataTable;
+  FacultyOfferingsDataTable? offeringsDataTable;
 
   List<Offering> offerings = [];
 
@@ -96,7 +96,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                 course: doc['type']);
             offerings.add(offering);
           }
-          offeringsDataTable = OfferingsDataTable(
+          offeringsDataTable = FacultyOfferingsDataTable(
             offerings: offerings,
           );
         });
