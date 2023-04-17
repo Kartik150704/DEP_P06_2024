@@ -253,8 +253,16 @@ class _StudentRequestDataTableState extends State<StudentRequestDataTable> {
 
           return DataRow(
             cells: cells,
-            color: MaterialStateProperty.all(
-              const Color.fromARGB(255, 212, 203, 216),
+            color: MaterialStateProperty.resolveWith(
+              (states) {
+                if (enrollment.status == '0') {
+                  return Color.fromARGB(255, 184, 7, 7);
+                } else if (enrollment.status == '1') {
+                  return const Color(0xff7ae37b);
+                } else {
+                  return const Color.fromARGB(255, 212, 203, 216);
+                }
+              },
             ),
           );
         },

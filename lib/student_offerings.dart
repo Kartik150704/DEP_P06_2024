@@ -212,9 +212,9 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                     ],
                   ),
                   Container(
-                    height: 670,
+                    height: 720,
                     width: 1200 * fem,
-                    margin: const EdgeInsets.fromLTRB(0, 25, 0, 65),
+                    margin: const EdgeInsets.fromLTRB(0, 20, 0, 75),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: const [

@@ -15,7 +15,7 @@ class EnrollmentRequestsPageFaculty extends StatefulWidget {
 
 class _EnrollmentRequestsPageFacultyState
     extends State<EnrollmentRequestsPageFaculty> {
-  final supervisorNameController = TextEditingController(),
+  final teamIDController = TextEditingController(),
       projectTitleController = TextEditingController(),
       semesterController = TextEditingController(),
       yearController = TextEditingController();
@@ -68,7 +68,7 @@ class _EnrollmentRequestsPageFacultyState
                             width: 33 * fem,
                           ),
                           SearchTextField(
-                            textEditingController: supervisorNameController,
+                            textEditingController: teamIDController,
                             hintText: 'Team ID',
                             width: 180 * fem,
                           ),
