@@ -34,7 +34,7 @@ class _EnrollmentRequestDataTableState
             title: Center(
               child: ConfirmAction(
                 onSubmit: () {},
-                text: 'You want to accept team $teamId for $Title.',
+                text: "You want to accept 'team $teamId' for '$Title'.",
               ),
             ),
           );
@@ -48,7 +48,7 @@ class _EnrollmentRequestDataTableState
             title: Center(
               child: ConfirmAction(
                 onSubmit: () {},
-                text: 'You want to reject team $teamId for $Title.',
+                text: "You want to reject 'team $teamId' for '$Title'.",
               ),
             ),
           );
