@@ -263,7 +263,9 @@ class _FacultyOfferedProjectsPageState
                                 );
                                 return;
                               }
-                              searcing = true;
+                              setState(() {
+                                searcing = true;
+                              });
                               getOfferings();
                             },
                           ),

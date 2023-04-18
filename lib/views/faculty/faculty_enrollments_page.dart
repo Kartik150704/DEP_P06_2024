@@ -24,13 +24,15 @@ class FacultyEnrollmentsPage extends StatefulWidget {
 
 class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   dynamic displayPage;
-  bool ischecked = false, loading = true;
+  bool ischecked = false, loading = true, searching = false;
   final List<Enrollment> enrollments = [];
+  String? projectTitle, teamId, studentName, courseCode, year, semester;
   final projectTitleController = TextEditingController(),
       teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
       courseCodeController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      yearController = TextEditingController(text: '2023'),
+      semesterController = TextEditingController(text: '1');
 
   void getSupervisorEnrollments() {
     setState(() {
@@ -54,6 +56,52 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           (value) {
             for (var doc in value.docs) {
               final val = doc.data();
+              if (projectTitle != null) {
+                if (!val['title']
+                    .toLowerCase()
+                    .contains(projectTitle!.toLowerCase())) {
+                  continue;
+                }
+              }
+              if (teamId != null) {
+                if (!val['team_id']
+                    .toLowerCase()
+                    .contains(teamId!.toLowerCase())) {
+                  continue;
+                }
+              }
+
+              if (studentName != null) {
+                bool flag = false;
+                for (String name in val['student_name']) {
+                  if (name.toLowerCase().contains(studentName!.toLowerCase())) {
+                    flag = true;
+                    break;
+                  }
+                }
+                if (flag == false) {
+                  continue;
+                }
+              }
+              if (courseCode != null) {
+                if (!val['type']
+                    .toLowerCase()
+                    .contains(courseCode!.toLowerCase())) {
+                  continue;
+                }
+              }
+              if (year != null) {
+                if (!val['year'].toLowerCase().contains(year!.toLowerCase())) {
+                  continue;
+                }
+              }
+              if (semester != null) {
+                if (!val['semester']
+                    .toLowerCase()
+                    .contains(semester!.toLowerCase())) {
+                  continue;
+                }
+              }
               List<Evaluation> supervisorEvaluations = [];
               Map studentNames = {};
               var temp = List<MapEntry<String, String>>.generate(
@@ -185,6 +233,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   });
                   setState(() {
                     loading = false;
+                    searching = false;
                   });
                 },
               );
@@ -250,42 +299,68 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       SizedBox(
                         width: 33 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: projectTitleController,
-                        hintText: 'Project',
-                        width: 170 * fem,
+                      Tooltip(
+                        message: 'Project',
+                        child: SearchTextField(
+                          textEditingController: projectTitleController,
+                          hintText: 'Project',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: teamIdController,
-                        hintText: 'Team Identification',
-                        width: 170 * fem,
+                      Tooltip(
+                        message: 'Team Identification',
+                        child: SearchTextField(
+                          textEditingController: teamIdController,
+                          hintText: 'Team Identification',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: studentNameController,
-                        hintText: 'Student\'s Name',
-                        width: 170 * fem,
+                      Tooltip(
+                        message: 'Student\'s Name',
+                        child: SearchTextField(
+                          textEditingController: studentNameController,
+                          hintText: 'Student\'s Name',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: courseCodeController,
-                        hintText: 'Course',
-                        width: 170 * fem,
+                      Tooltip(
+                        message: 'Course',
+                        child: SearchTextField(
+                          textEditingController: courseCodeController,
+                          hintText: 'Course',
+                          width: 100 * fem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: yearSemesterController,
-                        hintText: 'Year-Semester',
-                        width: 170 * fem,
+                      Tooltip(
+                        message: 'Year',
+                        child: SearchTextField(
+                          textEditingController: yearController,
+                          hintText: 'Year',
+                          width: 100 * fem,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      Tooltip(
+                        message: 'Semester',
+                        child: SearchTextField(
+                          textEditingController: semesterController,
+                          hintText: 'Semester',
+                          width: 100 * fem,
+                        ),
                       ),
                       SizedBox(
                         width: 25 * fem,
@@ -306,7 +381,51 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                             color: Colors.black,
                             size: 29,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (searching) {
+                              return;
+                            }
+                            setState(() {
+                              projectTitle = projectTitleController.text == ''
+                                  ? null
+                                  : projectTitleController.text.trim();
+                              teamId = teamIdController.text == ''
+                                  ? null
+                                  : teamIdController.text.trim();
+                              studentName = studentNameController.text == ''
+                                  ? null
+                                  : studentNameController.text.trim();
+                              courseCode = courseCodeController.text == ''
+                                  ? null
+                                  : courseCodeController.text.trim();
+                              year = yearController.text == ''
+                                  ? null
+                                  : yearController.text.trim();
+                              semester = semesterController.text == ''
+                                  ? null
+                                  : semesterController.text.trim();
+                            });
+                            if (courseCode == null ||
+                                year == null ||
+                                semester == null) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                    title: Center(
+                                      child: Text(
+                                          'Course, Semester and Year are required'),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              setState(() {
+                                searching = true;
+                              });
+                              getSupervisorEnrollments();
+                            }
+                          },
                         ),
                       ),
                     ],
@@ -330,13 +449,30 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: SingleChildScrollView(
-                        child: FacultyEnrollmentsDataTable(
-                          enrollments: enrollments,
-                          userRole: widget.userRole,
-                          viewProject: widget.viewProject,
-                        ),
-                      ),
+                      child: (searching
+                          ? Expanded(
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 500 * fem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: FacultyEnrollmentsDataTable(
+                                  enrollments: enrollments,
+                                  userRole: widget.userRole,
+                                  viewProject: widget.viewProject,
+                                ),
+                              ),
+                            )),
                     ),
                   ),
                 ],
