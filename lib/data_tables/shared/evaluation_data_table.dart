@@ -138,6 +138,7 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
         label: CustomisedText(
           text: columns[3],
         ),
+        onSort: onSort,
       ),
       DataColumn(
         label: CustomisedText(
@@ -235,13 +236,13 @@ class _EvaluationDataTableState extends State<EvaluationDataTable> {
       );
     } else if (columnIndex == 1) {
       widget.evaluations.sort(
-        (evaluation1, evaluation2) =>
-            compareString(ascending, evaluation1.date, evaluation2.date),
+        (evaluation1, evaluation2) => compareString(
+            ascending, evaluation1.student_name, evaluation2.student_name),
       );
     } else if (columnIndex == 2) {
       widget.evaluations.sort(
         (evaluation1, evaluation2) =>
-            compareString(ascending, evaluation1.marks, evaluation2.marks),
+            compareString(ascending, evaluation1.date, evaluation2.date),
       );
     } else if (columnIndex == 3) {
       widget.evaluations.sort(
