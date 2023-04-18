@@ -32,6 +32,12 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
       studentEntryNumberController = TextEditingController();
 
   void getPanelData() {
+    if (widget.assignedPanel.assignedProjectIds!.isEmpty) {
+      setState(() {
+        loading = false;
+      });
+      return;
+    }
     FirebaseFirestore.instance
         .collection('projects')
         .where(FieldPath.documentId,
@@ -39,6 +45,7 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
         .get()
         .then((value) {
       for (var doc in value.docs) {
+        print(doc.id);
         List<Student> students = [];
         for (int i = 0; i < doc['student_ids'].length; i++) {
           students.add(Student(

@@ -20,11 +20,12 @@ class _FacultyOfferedProjectsPageState
   bool loading = true, searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
-  String? supervisorName, projectTitle, semester, year;
+  String? supervisorName, projectTitle, course, semester, year;
   final instructorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      yearController = TextEditingController(text: '2023'),
+      semesterController = TextEditingController(text: '1');
 
   void addProject() {
     showDialog(
@@ -74,6 +75,11 @@ class _FacultyOfferedProjectsPageState
               if (!project.title.toLowerCase().contains(name.toLowerCase())) {
                 flag = 0;
               }
+            }
+
+            if (course != null) {
+              String course = this.course.toString().toLowerCase();
+              if (!doc['type'].toLowerCase().contains(course)) flag = 0;
             }
 
             if (semester != null) {
@@ -149,34 +155,57 @@ class _FacultyOfferedProjectsPageState
                         SizedBox(
                           width: 33 * fem,
                         ),
-                        SearchTextField(
-                          textEditingController: projectTitleController,
-                          hintText: 'Project',
-                          width: 170 * fem,
+                        Tooltip(
+                          message: 'Project Title',
+                          child: SearchTextField(
+                            textEditingController: projectTitleController,
+                            hintText: 'Project',
+                            width: 170 * fem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
-                        SearchTextField(
-                          textEditingController: instructorNameController,
-                          hintText: 'Instructor\'s Name',
-                          width: 170 * fem,
+                        Tooltip(
+                          message: 'Instuctor\'s Name',
+                          child: SearchTextField(
+                            textEditingController: instructorNameController,
+                            hintText: 'Instructor\'s Name',
+                            width: 170 * fem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
-                        SearchTextField(
-                          textEditingController: courseController,
-                          hintText: 'Course',
-                          width: 170 * fem,
+                        Tooltip(
+                          message: 'Course',
+                          child: SearchTextField(
+                            textEditingController: courseController,
+                            hintText: 'Course',
+                            width: 170 * fem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * fem,
                         ),
-                        SearchTextField(
-                          textEditingController: yearSemesterController,
-                          hintText: 'Year-Semester',
-                          width: 170 * fem,
+                        Tooltip(
+                          message: 'Year',
+                          child: SearchTextField(
+                            textEditingController: yearController,
+                            hintText: 'Year',
+                            width: 100 * fem,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20 * fem,
+                        ),
+                        Tooltip(
+                          message: 'Semester',
+                          child: SearchTextField(
+                            textEditingController: semesterController,
+                            hintText: 'Semester',
+                            width: 100 * fem,
+                          ),
                         ),
                         SizedBox(
                           width: 25 * fem,
@@ -198,23 +227,43 @@ class _FacultyOfferedProjectsPageState
                               size: 29,
                             ),
                             onPressed: () {
+                              if (loading || searcing) return;
                               setState(() {
-                                // supervisorName =
-                                //     instructorNameController.text.trim() == ''
-                                //         ? null
-                                //         : instructorNameController.text.trim();
-                                // projectTitle =
-                                //     projectTitleController.text.trim() == ''
-                                //         ? null
-                                //         : projectTitleController.text.trim();
-                                // semester = semesterController.text.trim() == ''
-                                //     ? null
-                                //     : semesterController.text.trim();
-                                // year = yearController.text.trim() == ''
-                                //     ? null
-                                //     : yearController.text.trim();
-                                searcing = true;
+                                supervisorName =
+                                    instructorNameController.text.trim() == ''
+                                        ? null
+                                        : instructorNameController.text.trim();
+                                projectTitle =
+                                    projectTitleController.text.trim() == ''
+                                        ? null
+                                        : projectTitleController.text.trim();
+                                course = courseController.text.trim() == ''
+                                    ? null
+                                    : courseController.text.trim();
+                                semester = semesterController.text.trim() == ''
+                                    ? null
+                                    : semesterController.text.trim();
+                                year = yearController.text.trim() == ''
+                                    ? null
+                                    : yearController.text.trim();
                               });
+                              if (course == null ||
+                                  semester == null ||
+                                  year == null) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const AlertDialog(
+                                      title: Center(
+                                        child: Text(
+                                            'Course, Semester and Year are required'),
+                                      ),
+                                    );
+                                  },
+                                );
+                                return;
+                              }
+                              searcing = true;
                               getOfferings();
                             },
                           ),
