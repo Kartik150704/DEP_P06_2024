@@ -25,32 +25,55 @@ class _EnrollmentRequestDataTableState
   int? sortColumnIndex;
   bool isAscending = false;
 
-  void confirmAction() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Center(
-            child: ConfirmAction(
-              onSubmit: () {},
+  void confirmAction(bool check, String teamId, String Title) {
+    if (check) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: ConfirmAction(
+                onSubmit: () {},
+                text: 'You want to accept team $teamId for $Title.',
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: ConfirmAction(
+                onSubmit: () {},
+                text: 'You want to reject team $teamId for $Title.',
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTeams();
   }
 
   void getTeams() async {
     setState(() {
-      Team_names = {};
+      for (var id in widget.requests) {
+        Team_names[id.teamId] = [''];
+      }
     });
     List<String> Team_ids = [];
     for (int i = 0; i < widget.requests.length; i++) {
-      setState(() {
-        Team_ids.add(widget.requests[i].teamId);
-      });
+      Team_ids.add(widget.requests[i].teamId);
+      // print(Team_ids);
     }
-    if (!mounted) return;
     await FirebaseFirestore.instance
         .collection('team')
         .where('id', whereIn: Team_ids)
@@ -73,22 +96,25 @@ class _EnrollmentRequestDataTableState
             }
           });
         }
-        if (!mounted) return;
         setState(() {
           Team_names[doc['id']] = (temp);
         });
-        print(Team_names[doc['id']]);
+        // print(Team_names[doc['id']]);
       }
     });
     // for (int i = 0; i < Team_names.length; i++) {
     //   print(Team_names[i]);
+    // print(Team_names);
     // }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getTeams();
+  String teamname(String id) {
+    String temp = '';
+    for (String name in Team_names[id]) {
+      temp = '$temp$name, ';
+    }
+    if (temp.length >= 2) temp = temp.substring(0, temp.length - 2);
+    return temp;
   }
 
   @override
@@ -176,8 +202,7 @@ class _EnrollmentRequestDataTableState
               SizedBox(
                 width: 300,
                 child: CustomisedOverflowText(
-                  text:
-                      '${Team_names[request.teamId][0]}, ${Team_names[request.teamId][1]}',
+                  text: teamname(request.teamId),
                   color: Colors.black,
                 ),
               ),
@@ -192,7 +217,8 @@ class _EnrollmentRequestDataTableState
                     ),
                     height: 30,
                     width: 30,
-                    onPressed: () => confirmAction(),
+                    onPressed: () => confirmAction(
+                        true, request.teamId, request.offering.project.title),
                     elevation: 0,
                   ),
                   const SizedBox(
@@ -205,7 +231,8 @@ class _EnrollmentRequestDataTableState
                     ),
                     height: 30,
                     width: 30,
-                    onPressed: () => confirmAction(),
+                    onPressed: () => confirmAction(
+                        false, request.teamId, request.offering.project.title),
                     elevation: 0,
                   ),
                 ],
