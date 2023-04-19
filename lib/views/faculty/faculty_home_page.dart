@@ -1,3 +1,5 @@
+import 'package:casper/components/add_event_form.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_sidebar_button.dart';
 import 'package:casper/views/faculty/coordinator/coordinator_criteria_management_page.dart';
 import 'package:casper/views/faculty/faculty_enrollments_page.dart';
@@ -80,6 +82,25 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
+  void addEvent() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Center(
+            child: AddEventForm(
+              events: [
+                'Week 3',
+                'MidTerm',
+                'EndTerm',
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,22 +128,44 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
       children: [
         Container(
           width: 300 * fem,
-          color: const Color(0xff545161),
-          child: ListView(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Scaffold(
+            body: Container(
+              color: const Color(0xff545161),
+              child: ListView(
                 children: [
-                  for (int i = 0; i < options.length; i++) ...[
-                    CustomisedSidebarButton(
-                      text: options[i],
-                      isSelected: (selectedOption == (i)),
-                      onPressed: () => selectOption(i),
-                    )
-                  ],
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (int i = 0; i < options.length; i++) ...[
+                        CustomisedSidebarButton(
+                          text: options[i],
+                          isSelected: (selectedOption == (i)),
+                          onPressed: () => selectOption(i),
+                        )
+                      ],
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: (widget.userRole == 'co'
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomisedButton(
+                        width: 250,
+                        height: 60,
+                        text: 'Add Event',
+                        onPressed: addEvent,
+                      ),
+                      SizedBox(
+                        height: 50 * fem,
+                      ),
+                    ],
+                  )
+                : null),
           ),
         ),
         displayPage,
