@@ -26,13 +26,12 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   dynamic displayPage;
   bool ischecked = false, loading = true, searching = false;
   final List<Enrollment> enrollments = [];
-  String? projectTitle, teamId, studentName, courseCode, year, semester;
+  String? projectTitle, teamId, studentName, courseCode, year_semester;
   final projectTitleController = TextEditingController(),
       teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
       courseCodeController = TextEditingController(text: 'CP302'),
-      yearController = TextEditingController(text: '2023'),
-      semesterController = TextEditingController(text: '1');
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   void getSupervisorEnrollments() {
     setState(() {
@@ -90,18 +89,15 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   continue;
                 }
               }
-              if (year != null) {
-                if (!val['year'].toLowerCase().contains(year!.toLowerCase())) {
-                  continue;
-                }
-              }
-              if (semester != null) {
-                if (!val['semester']
+              if (year_semester != null) {
+                String year_semester = val['year'] + '-' + val['semester'];
+                if (!year_semester
                     .toLowerCase()
-                    .contains(semester!.toLowerCase())) {
+                    .contains(this.year_semester!.toLowerCase())) {
                   continue;
                 }
               }
+
               List<Evaluation> supervisorEvaluations = [];
               Map studentNames = {};
               var temp = List<MapEntry<String, String>>.generate(
@@ -337,29 +333,18 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         child: SearchTextField(
                           textEditingController: courseCodeController,
                           hintText: 'Course',
-                          width: 100 * fem,
+                          width: 170 * fem,
                         ),
                       ),
                       SizedBox(
                         width: 20 * fem,
                       ),
                       Tooltip(
-                        message: 'Year',
+                        message: 'Session',
                         child: SearchTextField(
-                          textEditingController: yearController,
-                          hintText: 'Year',
-                          width: 100 * fem,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20 * fem,
-                      ),
-                      Tooltip(
-                        message: 'Semester',
-                        child: SearchTextField(
-                          textEditingController: semesterController,
-                          hintText: 'Semester',
-                          width: 100 * fem,
+                          textEditingController: yearSemesterController,
+                          hintText: 'Session',
+                          width: 170 * fem,
                         ),
                       ),
                       SizedBox(
@@ -398,23 +383,18 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                               courseCode = courseCodeController.text == ''
                                   ? null
                                   : courseCodeController.text.trim();
-                              year = yearController.text == ''
+                              year_semester = yearSemesterController.text == ''
                                   ? null
-                                  : yearController.text.trim();
-                              semester = semesterController.text == ''
-                                  ? null
-                                  : semesterController.text.trim();
+                                  : yearSemesterController.text.trim();
                             });
-                            if (courseCode == null ||
-                                year == null ||
-                                semester == null) {
+                            if (courseCode == null || year_semester == null) {
                               showDialog(
                                 context: context,
                                 builder: (context) {
                                   return const AlertDialog(
                                     title: Center(
                                       child: Text(
-                                          'Course, Semester and Year are required'),
+                                          'Course and Session are required'),
                                     ),
                                   );
                                 },
