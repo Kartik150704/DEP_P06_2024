@@ -243,6 +243,50 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   @override
   void initState() {
     super.initState();
+    updateSearchParameters();
+    getSupervisorEnrollments();
+  }
+
+  bool updateSearchParameters() {
+    setState(() {
+      projectTitle = projectTitleController.text == ''
+          ? null
+          : projectTitleController.text.trim();
+      teamId =
+          teamIdController.text == '' ? null : teamIdController.text.trim();
+      studentName = studentNameController.text == ''
+          ? null
+          : studentNameController.text.trim();
+      courseCode = courseCodeController.text == ''
+          ? null
+          : courseCodeController.text.trim();
+      year_semester = yearSemesterController.text == ''
+          ? null
+          : yearSemesterController.text.trim();
+    });
+    if (courseCode == null || year_semester == null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Center(
+              child: Text('Course and Session are required'),
+            ),
+          );
+        },
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void search() {
+    if (searching) {
+      return;
+    }
+    setState(() {
+      searching = true;
+    });
     getSupervisorEnrollments();
   }
 
@@ -367,44 +411,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                             size: 29,
                           ),
                           onPressed: () {
-                            if (searching) {
-                              return;
-                            }
-                            setState(() {
-                              projectTitle = projectTitleController.text == ''
-                                  ? null
-                                  : projectTitleController.text.trim();
-                              teamId = teamIdController.text == ''
-                                  ? null
-                                  : teamIdController.text.trim();
-                              studentName = studentNameController.text == ''
-                                  ? null
-                                  : studentNameController.text.trim();
-                              courseCode = courseCodeController.text == ''
-                                  ? null
-                                  : courseCodeController.text.trim();
-                              year_semester = yearSemesterController.text == ''
-                                  ? null
-                                  : yearSemesterController.text.trim();
-                            });
-                            if (courseCode == null || year_semester == null) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return const AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                          'Course and Session are required'),
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              setState(() {
-                                searching = true;
-                              });
-                              getSupervisorEnrollments();
-                            }
+                            if (updateSearchParameters()) search();
                           },
                         ),
                       ),
@@ -430,15 +437,13 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: (searching
-                          ? Expanded(
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 500 * fem,
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.black),
-                                  ),
+                          ? SizedBox(
+                              width: double.infinity,
+                              height: 500 * fem,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
                                 ),
                               ),
                             )

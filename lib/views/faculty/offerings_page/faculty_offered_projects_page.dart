@@ -20,12 +20,11 @@ class _FacultyOfferedProjectsPageState
   bool loading = true, searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
-  String? supervisorName, projectTitle, course, semester, year;
+  String? supervisorName, projectTitle, course, year_semester;
   final instructorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
-      yearController = TextEditingController(text: '2023'),
-      semesterController = TextEditingController(text: '1');
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   void addProject() {
     showDialog(
@@ -72,7 +71,7 @@ class _FacultyOfferedProjectsPageState
 
             if (projectTitle != null) {
               String name = projectTitle.toString().toLowerCase();
-              if (!project.title.toLowerCase().contains(name.toLowerCase())) {
+              if (!project.title.toLowerCase().contains(name)) {
                 flag = 0;
               }
             }
@@ -82,14 +81,12 @@ class _FacultyOfferedProjectsPageState
               if (!doc['type'].toLowerCase().contains(course)) flag = 0;
             }
 
-            if (semester != null) {
-              String semester = this.semester.toString().toLowerCase();
-              if (!doc['semester'].toLowerCase().contains(semester)) flag = 0;
-            }
-
-            if (year != null) {
-              String year = this.year.toString().toLowerCase();
-              if (!doc['year'].toLowerCase().contains(year)) flag = 0;
+            if (year_semester != null) {
+              String year_semester = doc['year'] + '-' + doc['semester'];
+              if (!year_semester
+                  .toLowerCase()
+                  .contains(this.year_semester.toString().toLowerCase()))
+                flag = 0;
             }
             if (flag == 1) {
               Offering offering = Offering(
@@ -114,6 +111,46 @@ class _FacultyOfferedProjectsPageState
   @override
   void initState() {
     super.initState();
+    updateSearchParameters();
+    getOfferings();
+  }
+
+  bool updateSearchParameters() {
+    setState(() {
+      supervisorName = instructorNameController.text.trim() == ''
+          ? null
+          : instructorNameController.text.trim();
+      projectTitle = projectTitleController.text.trim() == ''
+          ? null
+          : projectTitleController.text.trim();
+      course = courseController.text.trim() == ''
+          ? null
+          : courseController.text.trim();
+      year_semester = yearSemesterController.text.trim() == ''
+          ? null
+          : yearSemesterController.text.trim();
+    });
+    if (course == null || year_semester == null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Center(
+              child: Text('Course and Session are required'),
+            ),
+          );
+        },
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void search() {
+    if (loading || searcing) return;
+    setState(() {
+      searcing = true;
+    });
     getOfferings();
   }
 
@@ -121,7 +158,6 @@ class _FacultyOfferedProjectsPageState
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-
     if (loading) {
       return const LoadingPage();
     }
@@ -191,20 +227,9 @@ class _FacultyOfferedProjectsPageState
                         Tooltip(
                           message: 'Year',
                           child: SearchTextField(
-                            textEditingController: yearController,
+                            textEditingController: yearSemesterController,
                             hintText: 'Year',
-                            width: 100 * fem,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20 * fem,
-                        ),
-                        Tooltip(
-                          message: 'Semester',
-                          child: SearchTextField(
-                            textEditingController: semesterController,
-                            hintText: 'Semester',
-                            width: 100 * fem,
+                            width: 170 * fem,
                           ),
                         ),
                         SizedBox(
@@ -227,46 +252,7 @@ class _FacultyOfferedProjectsPageState
                               size: 29,
                             ),
                             onPressed: () {
-                              if (loading || searcing) return;
-                              setState(() {
-                                supervisorName =
-                                    instructorNameController.text.trim() == ''
-                                        ? null
-                                        : instructorNameController.text.trim();
-                                projectTitle =
-                                    projectTitleController.text.trim() == ''
-                                        ? null
-                                        : projectTitleController.text.trim();
-                                course = courseController.text.trim() == ''
-                                    ? null
-                                    : courseController.text.trim();
-                                semester = semesterController.text.trim() == ''
-                                    ? null
-                                    : semesterController.text.trim();
-                                year = yearController.text.trim() == ''
-                                    ? null
-                                    : yearController.text.trim();
-                              });
-                              if (course == null ||
-                                  semester == null ||
-                                  year == null) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const AlertDialog(
-                                      title: Center(
-                                        child: Text(
-                                            'Course, Semester and Year are required'),
-                                      ),
-                                    );
-                                  },
-                                );
-                                return;
-                              }
-                              setState(() {
-                                searcing = true;
-                              });
-                              getOfferings();
+                              if (updateSearchParameters()) search();
                             },
                           ),
                         ),
@@ -295,16 +281,14 @@ class _FacultyOfferedProjectsPageState
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: (searcing
-                                ? Expanded(
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 500 * fem,
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.black),
-                                        ),
+                                ? SizedBox(
+                                    width: double.infinity,
+                                    height: 500 * fem,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.black),
                                       ),
                                     ),
                                   )
