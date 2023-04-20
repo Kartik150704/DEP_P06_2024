@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 
 class EnrollmentRequestsDataTable extends StatefulWidget {
   final List<EnrollmentRequest> requests;
+  final Map Team_names;
 
   const EnrollmentRequestsDataTable({
     super.key,
     required this.requests,
+    required this.Team_names,
   });
 
   @override
@@ -21,7 +23,6 @@ class EnrollmentRequestsDataTable extends StatefulWidget {
 
 class _EnrollmentRequestDataTableState
     extends State<EnrollmentRequestsDataTable> {
-  var Team_names = {};
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -60,57 +61,11 @@ class _EnrollmentRequestDataTableState
   @override
   void initState() {
     super.initState();
-    getTeams();
-  }
-
-  void getTeams() async {
-    setState(() {
-      for (var id in widget.requests) {
-        Team_names[id.teamId] = [''];
-      }
-    });
-    List<String> Team_ids = [];
-    for (int i = 0; i < widget.requests.length; i++) {
-      Team_ids.add(widget.requests[i].teamId);
-      // print(Team_ids);
-    }
-    await FirebaseFirestore.instance
-        .collection('team')
-        .where('id', whereIn: Team_ids)
-        .get()
-        .then((value) async {
-      for (var doc in value.docs) {
-        List<String> temp = [];
-        for (String stud in doc['students']) {
-          if (!mounted) return;
-          await FirebaseFirestore.instance
-              .collection('student')
-              .where('id', isEqualTo: stud)
-              .get()
-              .then((value) {
-            for (var doc in value.docs) {
-              if (!mounted) return;
-              setState(() {
-                temp.add(doc['name']);
-              });
-            }
-          });
-        }
-        setState(() {
-          Team_names[doc['id']] = (temp);
-        });
-        // print(Team_names[doc['id']]);
-      }
-    });
-    // for (int i = 0; i < Team_names.length; i++) {
-    //   print(Team_names[i]);
-    // print(Team_names);
-    // }
   }
 
   String teamname(String id) {
     String temp = '';
-    for (String name in Team_names[id]) {
+    for (String name in widget.Team_names[id]) {
       temp = '$temp$name, ';
     }
     if (temp.length >= 2) temp = temp.substring(0, temp.length - 2);

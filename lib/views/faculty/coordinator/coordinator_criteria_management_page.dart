@@ -4,6 +4,7 @@ import 'package:casper/data_tables/faculty/coordinator_criteria_management_data_
 import 'package:casper/models/models.dart';
 import 'package:casper/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CoordinatorCriteriaManagementPage extends StatefulWidget {
@@ -34,7 +35,29 @@ class _CoordinatorCriteriaManagementPageState
   @override
   void initState() {
     super.initState();
-    evaluationCriterias = evaluationCriteriasGLOBAL;
+    FirebaseFirestore.instance
+        .collection('evaluation_criteria')
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        setState(() {
+          evaluationCriterias.add(EvaluationCriteria(
+            id: doc.id,
+            course: doc['course'],
+            year: doc['year'],
+            semester: doc['semester'],
+            regular: int.parse(doc['regular']),
+            midtermPanel: int.parse(doc['midtermPanel']),
+            endtermPanel: int.parse(doc['endtermPanel']),
+            endtermSupervisor: int.parse(doc['endtermSupervisor']),
+            midtermSupervisor: int.parse(doc['midtermSupervisor']),
+            numberOfWeeks: int.parse(doc['numberOfWeeks']),
+            weeksToConsider: int.parse(doc['weeksToConsider']),
+            report: int.parse(doc['report']),
+          ));
+        });
+      }
+    });
   }
 
   @override
