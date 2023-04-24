@@ -1,4 +1,4 @@
-import 'package:casper/controllers/auth.dart';
+import 'package:casper/utilities/auth.dart';
 import 'package:casper/utilities/firebase_options.dart';
 import 'package:flutter/material.dart';
 
