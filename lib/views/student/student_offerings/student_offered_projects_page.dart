@@ -1,27 +1,28 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/search_text_field.dart';
+import 'package:casper/data_tables/shared/offered_projects_data_table.dart';
+import 'package:casper/models/models.dart';
+import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'data_tables/faculty/faculty_offered_projects_data_table.dart';
-import 'components/search_text_field.dart';
-import 'models/models.dart';
-
-class StudentOfferings extends StatefulWidget {
-  const StudentOfferings({Key? key}) : super(key: key);
+class StudentOfferedProjectsPage extends StatefulWidget {
+  const StudentOfferedProjectsPage({Key? key}) : super(key: key);
 
   @override
-  State<StudentOfferings> createState() => _StudentOfferingsState();
+  State<StudentOfferedProjectsPage> createState() =>
+      _StudentOfferedProjectsPageState();
 }
 
-class _StudentOfferingsState extends State<StudentOfferings> {
+class _StudentOfferedProjectsPageState
+    extends State<StudentOfferedProjectsPage> {
+  bool loading = true, searching = false;
+  String? supervisorName, projectTitle, semester, year;
+  List<Offering> offerings = [];
   final supervisorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
-      semesterController = TextEditingController(),
-      yearController = TextEditingController();
-  var db = FirebaseFirestore.instance;
-
-  String? supervisorName, projectTitle, semester, year;
+      yearSemesterController = TextEditingController(text: '2023-1');
 
   void confirmAction() {
     showDialog(
@@ -38,11 +39,8 @@ class _StudentOfferingsState extends State<StudentOfferings> {
     );
   }
 
-  FacultyOfferedProjectsDataTable? offeringsDataTable;
-
-  List<Offering> offerings = [];
-
-  void fill() {
+  // TODO: check if student has already applied for this project
+  void getOfferings() {
     offerings.clear();
     FirebaseFirestore.instance
         .collection('offerings')
@@ -73,8 +71,9 @@ class _StudentOfferingsState extends State<StudentOfferings> {
 
           if (projectTitle != null) {
             String name = projectTitle.toString().toLowerCase();
-            if (!project.title.toLowerCase().contains(name.toLowerCase()))
+            if (!project.title.toLowerCase().contains(name.toLowerCase())) {
               flag = 0;
+            }
           }
 
           if (semester != null) {
@@ -96,25 +95,29 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                 course: doc['type']);
             offerings.add(offering);
           }
-          offeringsDataTable = FacultyOfferedProjectsDataTable(
-            offerings: offerings,
-          );
         });
       }
+      setState(() {
+        loading = false;
+        searching = false;
+      });
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fill();
+    getOfferings();
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double fem = (MediaQuery.of(context).size.width / baseWidth);
+
+    if (loading) {
+      return const LoadingPage();
+    }
 
     return Expanded(
       child: Container(
@@ -122,17 +125,17 @@ class _StudentOfferingsState extends State<StudentOfferings> {
         child: ListView(
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(60, 30, 100 * fem, 0),
+              margin: const EdgeInsets.fromLTRB(60, 30, 0, 0),
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const CustomisedText(
-                    text: 'Available Projects',
+                    text: 'Offered Projects',
                     fontSize: 50,
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 25,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -140,37 +143,38 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                       SizedBox(
                         width: 33 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: supervisorNameController,
-                        hintText: 'Supervisor Name',
-                        width: 180 * fem,
+                      Tooltip(
+                        message: 'Title Of The Project',
+                        child: SearchTextField(
+                          textEditingController: projectTitleController,
+                          hintText: 'Project',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
-                        width: 30 * fem,
+                        width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: projectTitleController,
-                        hintText: 'Project Title',
-                        width: 180 * fem,
-                      ),
-                      SizedBox(
-                        width: 30 * fem,
-                      ),
-                      SearchTextField(
-                        textEditingController: semesterController,
-                        hintText: 'Semester',
-                        width: 180 * fem,
+                      Tooltip(
+                        message: 'Name Of The Supervisor',
+                        child: SearchTextField(
+                          textEditingController: supervisorNameController,
+                          hintText: 'Supervisor\'s Name',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
-                        width: 30 * fem,
+                        width: 20 * fem,
                       ),
-                      SearchTextField(
-                        textEditingController: yearController,
-                        hintText: 'Year',
-                        width: 180 * fem,
+                      Tooltip(
+                        message: 'Session (Year-Semester)',
+                        child: SearchTextField(
+                          textEditingController: yearSemesterController,
+                          hintText: 'Session',
+                          width: 170 * fem,
+                        ),
                       ),
                       SizedBox(
-                        width: 50 * fem,
+                        width: 25 * fem,
                       ),
                       SizedBox(
                         height: 47,
@@ -190,31 +194,34 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                           ),
                           onPressed: () {
                             setState(() {
-                              supervisorName =
-                                  supervisorNameController.text.trim() == ''
-                                      ? null
-                                      : supervisorNameController.text.trim();
-                              projectTitle =
-                                  projectTitleController.text.trim() == ''
-                                      ? null
-                                      : projectTitleController.text.trim();
-                              semester = semesterController.text.trim() == ''
-                                  ? null
-                                  : semesterController.text.trim();
-                              year = yearController.text.trim() == ''
-                                  ? null
-                                  : yearController.text.trim();
+                              // supervisorName =
+                              //     supervisorNameController.text.trim() == ''
+                              //         ? null
+                              //         : supervisorNameController.text.trim();
+                              // projectTitle =
+                              //     projectTitleController.text.trim() == ''
+                              //         ? null
+                              //         : projectTitleController.text.trim();
+                              // semester = semesterController.text.trim() == ''
+                              //     ? null
+                              //     : semesterController.text.trim();
+                              // year = yearController.text.trim() == ''
+                              //     ? null
+                              //     : yearController.text.trim();
                             });
-                            fill();
+                            setState(() {
+                              searching = true;
+                            });
+                            getOfferings();
                           },
                         ),
                       ),
                     ],
                   ),
                   Container(
-                    height: 720,
                     width: 1200 * fem,
-                    margin: const EdgeInsets.fromLTRB(0, 20, 0, 75),
+                    height: 525 * fem,
+                    margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: const [
@@ -228,16 +235,25 @@ class _StudentOfferingsState extends State<StudentOfferings> {
                         ),
                       ],
                     ),
-                    child: SingleChildScrollView(
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: SingleChildScrollView(
-                            child: offeringsDataTable,
-                          ),
-                        ),
-                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: (searching
+                          ? SizedBox(
+                              width: double.infinity,
+                              height: 500 * fem,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
+                                ),
+                              ),
+                            )
+                          : SingleChildScrollView(
+                              child: OfferedProjectsDataTable(
+                                offerings: offerings,
+                                isStudent: true,
+                              ),
+                            )),
                     ),
                   ),
                 ],

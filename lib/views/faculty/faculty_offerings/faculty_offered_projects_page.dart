@@ -1,7 +1,7 @@
 import 'package:casper/components/add_project_form.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/data_tables/faculty/faculty_offered_projects_data_table.dart';
+import 'package:casper/data_tables/shared/offered_projects_data_table.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -293,8 +293,9 @@ class _FacultyOfferedProjectsPageState
                                     ),
                                   )
                                 : SingleChildScrollView(
-                                    child: FacultyOfferedProjectsDataTable(
+                                    child: OfferedProjectsDataTable(
                                       offerings: offerings,
+                                      isStudent: false,
                                     ),
                                   )),
                           ),

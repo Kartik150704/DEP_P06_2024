@@ -1,12 +1,12 @@
 import 'package:casper/components/add_event_form.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/views/faculty/coordinator/coordinator_criteria_management_page.dart';
-import 'package:casper/views/faculty/faculty_enrollments_page.dart';
-import 'package:casper/views/faculty/coordinator/coordinator_panel_management_page.dart';
-import 'package:casper/views/faculty/faculty_panel_teams_page.dart';
-import 'package:casper/views/faculty/faculty_panels_page.dart';
-import 'package:casper/views/shared/project_page.dart';
+import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_criteria_management_page.dart';
+import 'package:casper/views/faculty/faculty_home/faculty_enrollments_page.dart';
+import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_panel_management_page.dart';
+import 'package:casper/views/faculty/faculty_home/faculty_panel_teams_page.dart';
+import 'package:casper/views/faculty/faculty_home/faculty_panels_page.dart';
+import 'package:casper/views/shared/project_page/project_page.dart';
 import 'package:flutter/material.dart';
 
 class FacultyHomePage extends StatefulWidget {

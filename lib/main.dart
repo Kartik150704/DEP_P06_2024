@@ -1,5 +1,5 @@
-import 'package:casper/controllers/auth_page.dart';
-import 'package:casper/firebase_options.dart';
+import 'package:casper/controllers/auth.dart';
+import 'package:casper/utilities/firebase_options.dart';
 import 'package:flutter/material.dart';
 
 // ignore: depend_on_referenced_packages
@@ -21,7 +21,7 @@ class Casper extends StatelessWidget {
     return MaterialApp(
       title: 'Casper',
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
+      home: Auth(),
     );
   }
 }

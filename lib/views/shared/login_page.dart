@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_text_field.dart';
 import 'package:casper/components/customised_button.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/utilities/utilites.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

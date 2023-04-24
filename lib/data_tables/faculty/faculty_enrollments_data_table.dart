@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/seeds.dart';
+import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -110,17 +110,17 @@ class _FacultyEnrollmentsDataTableState
           StudentData(
             weekly: (weekCount == 0
                 ? '-1'
-                : (bestWeekly / weekCount).toStringAsFixed(2)),
+                : (bestWeekly / weekCount).toStringAsFixed(1)),
             weekCount: weekCount.toString(),
             midterm: midterm.toString(),
             midtermPanel: (midtermPanelCount == 0
                 ? '-1'
-                : (midtermPanel / midtermPanelCount).toStringAsFixed(2)),
+                : (midtermPanel / midtermPanelCount).toStringAsFixed(1)),
             midtermPanelCount: midtermPanelCount.toString(),
             endterm: endterm.toString(),
             endtermPanel: (endtermPanelCount == 0
                 ? '-1'
-                : (endtermPanel / endtermPanelCount).toStringAsFixed(2)),
+                : (endtermPanel / endtermPanelCount).toStringAsFixed(1)),
             endtermPanelCount: endtermPanelCount.toString(),
             report: report.toString(),
             grade: grade,
@@ -329,10 +329,10 @@ class _FacultyEnrollmentsDataTableState
       'Project',
       'Team',
       'Student',
-      'W (${totalWeekly.toString()})',
-      'M (${totalMidterm.toString()} + ${totalMidtermPanel.toString()})',
-      'E (${totalEndterm.toString()} + ${totalEndtermPanel.toString()})',
-      'R (${totalReport.toString()})',
+      'W(${totalWeekly.toString()})',
+      'M(${totalMidterm.toString()}+${totalMidtermPanel.toString()})',
+      'E(${totalEndterm.toString()}+${totalEndtermPanel.toString()})',
+      'R(${totalReport.toString()})',
     ];
 
     return Theme(

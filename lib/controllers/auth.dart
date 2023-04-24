@@ -1,14 +1,14 @@
 import 'package:casper/scaffolds/faculty_scaffold.dart';
+import 'package:casper/scaffolds/student_scaffold.dart';
 import 'package:casper/views/shared/login_page.dart';
 import 'package:casper/scaffolds/login_scaffold.dart';
-import 'package:casper/views/student/student_home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // ignore: must_be_immutable
-class AuthPage extends StatelessWidget {
-  AuthPage({Key? key}) : super(key: key);
+class Auth extends StatelessWidget {
+  Auth({Key? key}) : super(key: key);
 
   var db = FirebaseFirestore.instance;
 
@@ -40,7 +40,7 @@ class AuthPage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data == 'student') {
-                    return const StudentHomePage();
+                    return const StudentScaffold();
                   } else if (snapshot.data == 'supervisor') {
                     return const FacultyScaffold(
                       userRole: 'su',

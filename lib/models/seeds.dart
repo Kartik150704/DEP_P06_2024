@@ -143,7 +143,7 @@ final evaluationsGLOBAL = [
   ),
   Evaluation(
     id: '2',
-    marks: 4,
+    marks: 15.5,
     remarks: 'Average work',
     type: 'midterm-panel',
     student: studentsGLOBAL[1],
@@ -191,7 +191,7 @@ final evaluationsGLOBAL = [
   ),
   Evaluation(
     id: '8',
-    marks: 16,
+    marks: 16.5,
     remarks: 'Excellent work',
     type: 'week-2',
     student: studentsGLOBAL[0],
@@ -199,7 +199,7 @@ final evaluationsGLOBAL = [
   ),
   Evaluation(
     id: '9',
-    marks: 9,
+    marks: 9.5,
     remarks: 'Excellent work',
     type: 'midterm-supervisor',
     student: studentsGLOBAL[0],
@@ -293,15 +293,48 @@ final enrollmentsGLOBAL = [
     id: '1',
     offering: offeringsGLOBAL[0],
     team: teamsGLOBAL[0],
-    supervisorEvaluations: [],
+    supervisorEvaluations: [
+      evaluationsGLOBAL[6],
+      evaluationsGLOBAL[7],
+      evaluationsGLOBAL[8],
+    ],
   ),
   Enrollment(
-    id: '1',
+    id: '2',
     offering: offeringsGLOBAL[1],
     team: teamsGLOBAL[1],
     supervisorEvaluations: [
       evaluationsGLOBAL[6],
       evaluationsGLOBAL[7],
+    ],
+  ),
+];
+
+final releasedEventsGLOBAL = [
+  ReleasedEvents(
+    id: '1',
+    course: 'CP302',
+    semester: '2',
+    year: '2023',
+    events: [
+      Event(
+        id: '1',
+        type: 'week-1',
+        start: '01/04',
+        end: '08/04',
+      ),
+      Event(
+        id: '2',
+        type: 'week-2',
+        start: '08/04',
+        end: '15/04',
+      ),
+      Event(
+        id: '3',
+        type: 'midterm',
+        start: '15/04',
+        end: '22/04',
+      ),
     ],
   ),
 ];

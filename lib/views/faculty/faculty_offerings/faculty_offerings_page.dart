@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/views/faculty/offerings_page/faculty_enrollment_requests_page.dart';
-import 'package:casper/views/faculty/offerings_page/faculty_offered_projects_page.dart';
+import 'package:casper/views/faculty/faculty_offerings/faculty_enrollment_requests_page.dart';
+import 'package:casper/views/faculty/faculty_offerings/faculty_offered_projects_page.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

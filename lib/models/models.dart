@@ -166,3 +166,27 @@ class EnrollmentRequest {
     required this.offering,
   });
 }
+
+class Event {
+  String id, type, start, end;
+
+  Event({
+    required this.id,
+    required this.type,
+    required this.start,
+    required this.end,
+  });
+}
+
+class ReleasedEvents {
+  String id, course, year, semester;
+  List<Event> events;
+
+  ReleasedEvents({
+    required this.id,
+    required this.course,
+    required this.year,
+    required this.semester,
+    required this.events,
+  });
+}

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/utilities/utilites.dart';
 
 class SearchTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables

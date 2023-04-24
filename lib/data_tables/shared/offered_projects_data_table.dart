@@ -1,24 +1,26 @@
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class FacultyOfferedProjectsDataTable extends StatefulWidget {
+class OfferedProjectsDataTable extends StatefulWidget {
+  bool isStudent;
   List<Offering> offerings;
 
-  FacultyOfferedProjectsDataTable({
+  OfferedProjectsDataTable({
     super.key,
+    required this.isStudent,
     required this.offerings,
   });
 
   @override
-  State<FacultyOfferedProjectsDataTable> createState() =>
-      _FacultyOfferedProjectsDataTableState();
+  State<OfferedProjectsDataTable> createState() =>
+      _OfferedProjectsDataTableState();
 }
 
-class _FacultyOfferedProjectsDataTableState
-    extends State<FacultyOfferedProjectsDataTable> {
+class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -35,6 +37,10 @@ class _FacultyOfferedProjectsDataTableState
       'Instructor',
       'Course',
     ];
+
+    if (widget.isStudent) {
+      columns.add('Action');
+    }
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -84,6 +90,13 @@ class _FacultyOfferedProjectsDataTableState
         ),
         onSort: onSort,
       ),
+      if (widget.isStudent) ...[
+        DataColumn(
+          label: CustomisedText(
+            text: columns[4],
+          ),
+        ),
+      ]
     ];
 
     return headings;
@@ -103,6 +116,7 @@ class _FacultyOfferedProjectsDataTableState
             DataCell(
               SizedBox(
                 child: SizedBox(
+                  width: 300,
                   child: CustomisedOverflowText(
                     text: offerings.project.title,
                     color: Colors.black,
@@ -125,6 +139,17 @@ class _FacultyOfferedProjectsDataTableState
                 color: Colors.black,
               ),
             ),
+            if (widget.isStudent) ...[
+              DataCell(
+                CustomisedButton(
+                  text: 'Request',
+                  height: 37,
+                  width: double.infinity,
+                  onPressed: () {},
+                  elevation: 0,
+                ),
+              ),
+            ],
           ];
 
           return DataRow(

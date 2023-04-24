@@ -1,9 +1,14 @@
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/views/student/student_offerings_page.dart';
 import 'package:flutter/material.dart';
 
 class NoProjectsFoundPage extends StatelessWidget {
-  const NoProjectsFoundPage({super.key});
+  // ignore: prefer_typing_uninitialized_variables
+  final selectOption;
+
+  const NoProjectsFoundPage({
+    super.key,
+    required this.selectOption,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class NoProjectsFoundPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const CustomisedText(
-              text: 'No project enrollment found for this course',
+              text: 'No enrollments found for this course',
               fontSize: 45,
             ),
             const SizedBox(
@@ -24,15 +29,7 @@ class NoProjectsFoundPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                    onPressed: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const StudentOfferingsPage(),
-                            ),
-                          )
-                        },
+                    onPressed: () => selectOption(2),
                     child: const CustomisedText(
                       text: 'Click Here',
                       fontSize: 40,

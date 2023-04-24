@@ -1,7 +1,7 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
-import 'package:casper/data_tables/faculty/coordinator_panel_management_data_table.dart';
+import 'package:casper/data_tables/faculty/coordinator/coordinator_panel_management_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
 import 'package:casper/models/models.dart';

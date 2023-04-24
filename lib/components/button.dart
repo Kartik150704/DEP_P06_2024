@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utilites.dart';
+import '../utilities/utilites.dart';
 
 class CustomButton extends StatelessWidget {
   final buttonText, onPressed;

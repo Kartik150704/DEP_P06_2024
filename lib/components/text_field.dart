@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:casper/utilites.dart';
+import 'package:casper/utilities/utilites.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {

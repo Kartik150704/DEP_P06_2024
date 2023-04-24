@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/faculty_enrollments_data_table.dart';
@@ -26,7 +24,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   dynamic displayPage;
   bool ischecked = false, loading = true, searching = false;
   final List<Enrollment> enrollments = [];
-  String? projectTitle, teamId, studentName, courseCode, year_semester;
+  String? projectTitle, teamId, studentName, courseCode, yearSemester;
   final projectTitleController = TextEditingController(),
       teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
@@ -89,11 +87,11 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   continue;
                 }
               }
-              if (year_semester != null) {
-                String year_semester = val['year'] + '-' + val['semester'];
-                if (!year_semester
+              if (yearSemester != null) {
+                String yearSemester = val['year'] + '-' + val['semester'];
+                if (!yearSemester
                     .toLowerCase()
-                    .contains(this.year_semester!.toLowerCase())) {
+                    .contains(yearSemester.toLowerCase())) {
                   continue;
                 }
               }
@@ -260,11 +258,11 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       courseCode = courseCodeController.text == ''
           ? null
           : courseCodeController.text.trim();
-      year_semester = yearSemesterController.text == ''
+      yearSemester = yearSemesterController.text == ''
           ? null
           : yearSemesterController.text.trim();
     });
-    if (courseCode == null || year_semester == null) {
+    if (courseCode == null || yearSemester == null) {
       showDialog(
         context: context,
         builder: (context) {
@@ -340,7 +338,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         width: 33 * fem,
                       ),
                       Tooltip(
-                        message: 'Project',
+                        message: 'Project Title',
                         child: SearchTextField(
                           textEditingController: projectTitleController,
                           hintText: 'Project',
@@ -351,7 +349,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         width: 20 * fem,
                       ),
                       Tooltip(
-                        message: 'Team Identification',
+                        message: 'Team Identification Number',
                         child: SearchTextField(
                           textEditingController: teamIdController,
                           hintText: 'Team Identification',
@@ -373,7 +371,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         width: 20 * fem,
                       ),
                       Tooltip(
-                        message: 'Course',
+                        message: 'Course Code',
                         child: SearchTextField(
                           textEditingController: courseCodeController,
                           hintText: 'Course',
@@ -448,14 +446,10 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                               ),
                             )
                           : SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.vertical,
-                                child: FacultyEnrollmentsDataTable(
-                                  enrollments: enrollments,
-                                  userRole: widget.userRole,
-                                  viewProject: widget.viewProject,
-                                ),
+                              child: FacultyEnrollmentsDataTable(
+                                enrollments: enrollments,
+                                userRole: widget.userRole,
+                                viewProject: widget.viewProject,
                               ),
                             )),
                     ),

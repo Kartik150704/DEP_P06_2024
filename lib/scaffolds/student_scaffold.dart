@@ -1,57 +1,71 @@
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
+import 'package:casper/utilities/utilites.dart';
 import 'package:casper/views/student/student_home_page.dart';
-import 'package:casper/views/student/student_offerings_page.dart';
+import 'package:casper/views/student/student_offerings/student_offerings.dart';
 import 'package:casper/views/student/student_profile_page.dart';
-import 'package:casper/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentScaffold extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final studentScaffoldBody;
-  final uid;
-
   const StudentScaffold({
     Key? key,
-    this.uid,
-    required this.studentScaffoldBody,
   }) : super(key: key);
 
   @override
-  State<StudentScaffold> createState() =>
-      _StudentScaffoldState();
+  State<StudentScaffold> createState() => _StudentScaffoldState();
 }
 
 class _StudentScaffoldState extends State<StudentScaffold> {
+  String userName = '';
+  dynamic displayPage;
   final appBarOptions = [
     'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
-  String username = '';
-  late final appBarFunctions = [
-    StudentProfilePage(uid: widget.uid),
-    const StudentHomePage(),
-    const StudentOfferingsPage(),
-  ];
 
   void signUserOut(context) {
     FirebaseAuth.instance.signOut();
-    Navigator.popUntil(context, ModalRoute.withName("/"));
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName("/"),
+    );
+  }
+
+  void selectOption(option) {
+    setState(() {
+      switch (option) {
+        case 0:
+          displayPage = const StudentProfilePage();
+          break;
+        case 1:
+          displayPage = StudentHomePage(
+            selectOption: selectOption,
+          );
+          break;
+        case 2:
+          displayPage = const StudentOfferings();
+          break;
+      }
+    });
   }
 
   @override
   void initState() {
     super.initState();
+    displayPage = StudentHomePage(
+      selectOption: selectOption,
+    );
+
     FirebaseFirestore.instance
         .collection('student')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then((value) {
       setState(() {
-        username = value.docs[0]['name'];
+        userName = value.docs[0]['name'];
       });
     });
   }
@@ -69,11 +83,7 @@ class _StudentScaffoldState extends State<StudentScaffold> {
             for (int i = 0; i < appBarOptions.length; i++) ...[
               CustomisedTextButton(
                 text: appBarOptions[i],
-                onPressed: () => {
-                  Navigator.of(context).push(
-                    _createRoute(i),
-                  ),
-                },
+                onPressed: () => selectOption(i),
               ),
               const SizedBox(
                 width: 15,
@@ -86,7 +96,7 @@ class _StudentScaffoldState extends State<StudentScaffold> {
           Container(
             alignment: Alignment.center,
             child: CustomisedText(
-              text: '$username (Student)',
+              text: '$userName (Student)',
             ),
           ),
           const SizedBox(
@@ -98,7 +108,7 @@ class _StudentScaffoldState extends State<StudentScaffold> {
           ),
         ],
       ),
-      body: widget.studentScaffoldBody,
+      body: displayPage,
       bottomSheet: Container(
         height: 55,
         width: double.infinity,
@@ -130,28 +140,6 @@ class _StudentScaffoldState extends State<StudentScaffold> {
           ],
         ),
       ),
-    );
-  }
-
-  Route _createRoute(i) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          appBarFunctions[i],
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.decelerate;
-
-        var tween = Tween(
-          begin: begin,
-          end: end,
-        ).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }
