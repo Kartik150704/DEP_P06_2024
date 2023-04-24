@@ -43,7 +43,7 @@ class _ConfirmActionState extends State<ConfirmAction> {
                 width: 70,
                 height: 50,
                 text: 'Yes',
-                onPressed: () => {},
+                onPressed: widget.onSubmit,
               ),
               CustomisedButton(
                 width: 70,

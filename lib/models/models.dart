@@ -160,12 +160,14 @@ class Enrollment {
 class EnrollmentRequest {
   final String id, status, teamId;
   final Offering offering;
+  String key_id;
 
   EnrollmentRequest({
     required this.id,
     required this.status,
     required this.teamId,
     required this.offering,
+    this.key_id = '',
   });
 }
 

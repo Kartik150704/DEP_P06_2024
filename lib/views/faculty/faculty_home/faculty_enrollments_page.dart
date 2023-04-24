@@ -119,6 +119,11 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                             int.tryParse(
                                 evaludationDoc['number_of_evaluations'])!;
                         week++) {
+                      if (evaludationDoc['weekly_evaluations'][week]
+                              [studentId] ==
+                          null) {
+                        continue;
+                      }
                       Evaluation evaluation = Evaluation(
                         id: '1',
                         marks: double.tryParse(
@@ -142,6 +147,10 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       supervisorEvaluations.add(evaluation);
                     }
                     for (int ii = 0; ii < 2; ii++) {
+                      if (evaludationDoc['midsem_supervisor'][studentId] ==
+                          null) {
+                        continue;
+                      }
                       Evaluation evaluation = Evaluation(
                         id: '1',
                         marks: double.tryParse(

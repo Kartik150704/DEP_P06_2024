@@ -83,12 +83,14 @@ class _FacultyEnrollmentRequestsPageState
                     instructor: faculty,
                     semester: doc1['semester'],
                     year: doc1['year'],
-                    course: doc1['type']);
+                    course: doc1['type'],
+                    key_id: doc1.id);
                 EnrollmentRequest enrollment = EnrollmentRequest(
                     id: (len + 1).toString(),
                     status: doc['status'],
                     offering: offering,
-                    teamId: doc['team_id']);
+                    teamId: doc['team_id'],
+                    key_id: doc.id);
                 requests.add(enrollment);
               });
               setState(() {
@@ -135,6 +137,11 @@ class _FacultyEnrollmentRequestsPageState
           }
         });
       }
+    });
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        loading = false;
+      });
     });
   }
 

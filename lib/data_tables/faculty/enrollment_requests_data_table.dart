@@ -4,6 +4,8 @@ import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv_settings_autodetection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EnrollmentRequestsDataTable extends StatefulWidget {
@@ -26,7 +28,8 @@ class _EnrollmentRequestDataTableState
   int? sortColumnIndex;
   bool isAscending = false;
 
-  void confirmAction(bool check, String teamId, String Title) {
+  void confirmAction(
+      bool check, String teamId, String Title, EnrollmentRequest request) {
     if (check) {
       showDialog(
         context: context,
@@ -34,7 +37,155 @@ class _EnrollmentRequestDataTableState
           return AlertDialog(
             title: Center(
               child: ConfirmAction(
-                onSubmit: () {},
+                onSubmit: () {
+                  // update enrollment request status to 1
+                  FirebaseFirestore.instance
+                      .collection('enrollment_requests')
+                      .doc(request.key_id)
+                      .update({'status': '1'});
+
+                  // create project document
+
+                  FirebaseFirestore.instance
+                      .collection('team')
+                      .where('id', isEqualTo: request.teamId)
+                      .get()
+                      .then((teamDocs) {
+                    var teamDoc = teamDocs.docs[0];
+                    List<Student> students = [];
+                    for (int i = 0; i < teamDoc['students'].length; i++) {
+                      String studentId = teamDoc['students'][i];
+                      FirebaseFirestore.instance
+                          .collection('student')
+                          .where('id', isEqualTo: studentId)
+                          .get()
+                          .then((studentDocs) {
+                        var studentDoc = studentDocs.docs[0];
+                        Student student = Student(
+                            id: studentId,
+                            name: studentDoc['name'],
+                            entryNumber: studentId,
+                            email: '$studentId@iitrpr.ac.in');
+                        students.add(student);
+                        if (i == teamDoc['students'].length - 1) {
+                          var project = {
+                            'chat': [],
+                            'description': request.offering.project.description,
+                            'instructor_name': request.offering.instructor.name,
+                            'offering_id': request.offering.key_id,
+                            'panel_ids': [],
+                            'semester': request.offering.semester,
+                            'year': request.offering.year,
+                            'student_ids': List.generate(
+                                students.length, (index) => students[index].id),
+                            'student_name': List.generate(students.length,
+                                (index) => students[index].name),
+                            'team_id': request.teamId,
+                            'title': request.offering.project.title,
+                            'type': request.offering.course,
+                          };
+                          FirebaseFirestore.instance
+                              .collection('projects')
+                              .add(project)
+                              .then((value) {
+                            // add reference to instructor document
+
+                            FirebaseFirestore.instance
+                                .collection('instructors')
+                                .where('uid',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid)
+                                .get()
+                                .then((instructorDocs) {
+                              var instructorDoc = instructorDocs.docs[0];
+                              List<String> projects = List.generate(
+                                  instructorDoc['project_as_head_ids'].length,
+                                  (index) =>
+                                      instructorDoc['project_as_head_ids']
+                                          [index]);
+                              projects.add(value.id);
+                              var updateData = {
+                                'project_as_head_ids': projects,
+                                'num_projects_as_head':
+                                    projects.length.toString(),
+                              };
+                              FirebaseFirestore.instance
+                                  .collection('instructors')
+                                  .doc(instructorDoc.id)
+                                  .update(updateData);
+                            });
+
+                            // create evaluation document
+                            EvaluationCriteria evaluationCriteria;
+                            FirebaseFirestore.instance
+                                .collection('evaluation_criteria')
+                                .where('course',
+                                    isEqualTo: request.offering.course)
+                                .where('semester',
+                                    isEqualTo: request.offering.semester)
+                                .where('year', isEqualTo: request.offering.year)
+                                .get()
+                                .then((evaluationCriteriaDocs) {
+                              var evaluationCriteriaDoc =
+                                  evaluationCriteriaDocs.docs[0];
+                              evaluationCriteria = EvaluationCriteria(
+                                id: evaluationCriteriaDoc.id,
+                                weeksToConsider: int.parse(
+                                    evaluationCriteriaDoc['weeksToConsider']),
+                                course: evaluationCriteriaDoc['course'],
+                                semester: evaluationCriteriaDoc['semester'],
+                                year: evaluationCriteriaDoc['year'],
+                                numberOfWeeks: int.parse(
+                                    evaluationCriteriaDoc['numberOfWeeks']),
+                                regular:
+                                    int.parse(evaluationCriteriaDoc['regular']),
+                                midtermSupervisor: int.parse(
+                                    evaluationCriteriaDoc['midtermSupervisor']),
+                                midtermPanel: int.parse(
+                                    evaluationCriteriaDoc['midtermPanel']),
+                                endtermSupervisor: int.parse(
+                                    evaluationCriteriaDoc['endtermSupervisor']),
+                                endtermPanel: int.parse(
+                                    evaluationCriteriaDoc['endtermPanel']),
+                                report:
+                                    int.parse(evaluationCriteriaDoc['report']),
+                              );
+                              var evaluation = {
+                                'assigned_panels': [],
+                                'endsem_evaluation': [],
+                                'endsem_panel_comments': [],
+                                'endsem_supervisor': {},
+                                'midsem_evaluation': [],
+                                'midsem_panel_comments': [],
+                                'midsem_supervisor': {},
+                                'number_of_evaluations':
+                                    evaluationCriteria.numberOfWeeks.toString(),
+                                'project_id': value.id,
+                                'student_ids': List.generate(students.length,
+                                    (index) => students[index].id),
+                                'student_names': List.generate(students.length,
+                                    (index) => students[index].name),
+                                'supervisor_id': request.offering.instructor.id,
+                                'weekly_comments': List.generate(
+                                    evaluationCriteria.numberOfWeeks,
+                                    (index) =>
+                                        {for (var e in students) e.id: null}),
+                                'weekly_evaluations': List.generate(
+                                    evaluationCriteria.numberOfWeeks,
+                                    (index) =>
+                                        {for (var e in students) e.id: null}),
+                              };
+                              FirebaseFirestore.instance
+                                  .collection('evaluations')
+                                  .add(evaluation);
+                            });
+                          });
+                        }
+                      });
+                    }
+                  });
+                  Navigator.pop(context);
+                },
                 text: "You want to accept 'team $teamId' for '$Title'.",
               ),
             ),
@@ -172,8 +323,8 @@ class _EnrollmentRequestDataTableState
                     ),
                     height: 30,
                     width: 30,
-                    onPressed: () => confirmAction(
-                        true, request.teamId, request.offering.project.title),
+                    onPressed: () => confirmAction(true, request.teamId,
+                        request.offering.project.title, request),
                     elevation: 0,
                   ),
                   const SizedBox(
@@ -186,8 +337,8 @@ class _EnrollmentRequestDataTableState
                     ),
                     height: 30,
                     width: 30,
-                    onPressed: () => confirmAction(
-                        false, request.teamId, request.offering.project.title),
+                    onPressed: () => confirmAction(false, request.teamId,
+                        request.offering.project.title, request),
                     elevation: 0,
                   ),
                 ],
