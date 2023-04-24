@@ -23,7 +23,7 @@ class _FacultyOfferedProjectsPageState
   String? supervisorName, projectTitle, course, year_semester;
   final instructorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
-      courseController = TextEditingController(text: 'CP302'),
+      courseController = TextEditingController(),
       yearSemesterController = TextEditingController(text: '2023-1');
 
   void addProject() {
@@ -177,7 +177,7 @@ class _FacultyOfferedProjectsPageState
                     Row(
                       children: const [
                         CustomisedText(
-                          text: 'Projects',
+                          text: 'Offered Projects',
                           fontSize: 50,
                         ),
                       ],

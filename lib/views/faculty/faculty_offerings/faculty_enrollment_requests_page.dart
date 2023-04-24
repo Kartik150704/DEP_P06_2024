@@ -168,7 +168,7 @@ class _FacultyEnrollmentRequestsPageState
                     Row(
                       children: const [
                         CustomisedText(
-                          text: 'Enrollment Requests',
+                          text: 'Requests',
                           fontSize: 50,
                         ),
                       ],

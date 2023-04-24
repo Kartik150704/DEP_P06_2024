@@ -24,6 +24,7 @@ class _StudentEnrollmentRequestsPageState
   List<EnrollmentRequest> requests = [];
   final supervisorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
+      courseCodeController = TextEditingController(),
       yearSemesterController = TextEditingController(text: '2023-1');
 
   void confirmAction() {
@@ -173,6 +174,17 @@ class _StudentEnrollmentRequestsPageState
                         child: SearchTextField(
                           textEditingController: supervisorNameController,
                           hintText: 'Supervisor\'s Name',
+                          width: 170 * fem,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20 * fem,
+                      ),
+                      Tooltip(
+                        message: 'Code Of The Course',
+                        child: SearchTextField(
+                          textEditingController: courseCodeController,
+                          hintText: 'Course',
                           width: 170 * fem,
                         ),
                       ),

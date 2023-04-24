@@ -55,7 +55,7 @@ class _StudentEnrollmentRequestsDataTableState
       'ID',
       'Project',
       'Instructor',
-      'Type',
+      'Course',
       'Status',
       'Action',
     ];
@@ -154,8 +154,7 @@ class _StudentEnrollmentRequestsDataTableState
             ),
             DataCell(
               CustomisedOverflowText(
-                text:
-                    '${request.offering.course}-${request.offering.year}-${request.offering.semester}',
+                text: request.offering.course,
                 color: Colors.black,
               ),
             ),
@@ -236,8 +235,8 @@ class _StudentEnrollmentRequestsDataTableState
       widget.requests.sort(
         (request1, request2) => compareString(
           ascending,
-          '${request1.offering.course}-${request1.offering.year}-${request1.offering.semester}',
-          '${request2.offering.course}-${request2.offering.year}-${request2.offering.semester}',
+          request1.offering.course,
+          request2.offering.course,
         ),
       );
     } else if (columnIndex == 4) {
