@@ -130,6 +130,7 @@ class Offering {
   final String id, course, semester, year;
   final Faculty instructor;
   final Project project;
+  final key_id;
 
   Offering({
     required this.id,
@@ -138,6 +139,7 @@ class Offering {
     required this.semester,
     required this.year,
     required this.project,
+    this.key_id,
   });
 }
 

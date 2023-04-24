@@ -2,6 +2,8 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -145,7 +147,49 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
                   text: 'Request',
                   height: 37,
                   width: double.infinity,
-                  onPressed: () {},
+                  onPressed: () {
+                    // ensure not already requested
+                    FirebaseFirestore.instance
+                        .collection('student')
+                        .where('uid',
+                            isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                        .get()
+                        .then((value) {
+                      var doc = value.docs[0];
+                      String studendId = doc['id'];
+                      FirebaseFirestore.instance
+                          .collection('team')
+                          .get()
+                          .then((teamdocs) {
+                        String? teamId;
+                        for (var teamdoc in teamdocs.docs) {
+                          if (teamdoc['students'].contains(studendId)) {
+                            teamId = teamdoc['id'];
+                            break;
+                          }
+                        }
+                        if (teamId != null) {
+                          FirebaseFirestore.instance
+                              .collection('enrollment_requests')
+                              .where('team_id', isEqualTo: teamId)
+                              .where('offering_id', isEqualTo: offerings.key_id)
+                              .get()
+                              .then((requestDocs) {
+                            if (requestDocs.docs.length == 0) {
+                              FirebaseFirestore.instance
+                                  .collection('enrollment_requests')
+                                  .add({
+                                'team_id': teamId,
+                                'offering_id': offerings.key_id,
+                                'status': '2',
+                              });
+                            }
+                          });
+                        }
+                      });
+                    });
+                    // if not, request
+                  },
                   elevation: 0,
                 ),
               ),

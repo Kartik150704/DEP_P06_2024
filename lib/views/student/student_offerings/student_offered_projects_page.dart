@@ -5,6 +5,7 @@ import 'package:casper/data_tables/shared/offered_projects_data_table.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class StudentOfferedProjectsPage extends StatefulWidget {
@@ -40,7 +41,6 @@ class _StudentOfferedProjectsPageState
     );
   }
 
-  // TODO: check if student has already applied for this project
   void getOfferings() {
     offerings.clear();
     FirebaseFirestore.instance
@@ -86,16 +86,50 @@ class _StudentOfferedProjectsPageState
             String year = this.year.toString().toLowerCase();
             if (!doc['year'].toLowerCase().contains(year)) flag = 0;
           }
-          if (flag == 1) {
-            Offering offering = Offering(
-                id: (len + 1).toString(),
-                project: project,
-                instructor: faculty,
-                semester: doc['semester'],
-                year: doc['year'],
-                course: doc['type']);
-            offerings.add(offering);
-          }
+
+          FirebaseFirestore.instance
+              .collection('student')
+              .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .get()
+              .then((value) {
+            var doc = value.docs[0];
+            String studendId = doc['id'];
+            FirebaseFirestore.instance
+                .collection('team')
+                .get()
+                .then((teamdocs) {
+              String? teamId;
+              for (var teamdoc in teamdocs.docs) {
+                if (teamdoc['students'].contains(studendId)) {
+                  teamId = teamdoc['id'];
+                  break;
+                }
+              }
+              if (teamId != null) {
+                FirebaseFirestore.instance
+                    .collection('enrollment_requests')
+                    .where('team_id', isEqualTo: teamId)
+                    .where('offering_id', isEqualTo: doc.id)
+                    .get()
+                    .then((requestDocs) {
+                  if (requestDocs.docs.length != 0) {
+                    flag = 0;
+                  }
+                  if (flag == 1) {
+                    Offering offering = Offering(
+                        id: (len + 1).toString(),
+                        project: project,
+                        instructor: faculty,
+                        semester: doc['semester'],
+                        year: doc['year'],
+                        course: doc['type'],
+                        key_id: doc.id);
+                    offerings.add(offering);
+                  }
+                });
+              }
+            });
+          });
         });
       }
       setState(() {
