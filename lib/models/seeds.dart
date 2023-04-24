@@ -330,11 +330,18 @@ final releasedEventsGLOBAL = [
         end: '15/04',
       ),
       Event(
+        id: '4',
+        type: 'week-3',
+        start: '22/04',
+        end: '29/04',
+      ),
+      Event(
         id: '3',
         type: 'midterm',
         start: '15/04',
         end: '22/04',
       ),
+
     ],
   ),
 ];

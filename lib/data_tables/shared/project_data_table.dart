@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ProjectDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final enrollment, assignedPanel, releasedEvents, isFaculty;
+  final enrollment, assignedPanels, releasedEvents, isFaculty;
 
   const ProjectDataTable({
     super.key,
     required this.enrollment,
-    required this.assignedPanel,
+    required this.assignedPanels,
     required this.releasedEvents,
     this.isFaculty = false,
   });
@@ -34,14 +34,18 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
           if (eval.type.contains(evnt.type) && stdnt.id == eval.student.id) {
             isEvaluated = true;
             if (evnt.type == 'midterm' || evnt.type == 'endterm') {
-              double marks = 0, count = 0;
-              for (var panelEval in widget.assignedPanel.evaluations) {
-                if (panelEval.type.contains(evnt.type) &&
-                    stdnt.id == panelEval.student.id) {
-                  marks += panelEval.marks;
-                  count++;
+              double marks = 0,
+                  count = 0;
+              for (var panel in widget.assignedPanels) {
+                for (var panelEval in panel.evaluations) {
+                  if (panelEval.type.contains(evnt.type) &&
+                      stdnt.id == panelEval.student.id) {
+                    marks += panelEval.marks;
+                    count++;
+                  }
                 }
               }
+
 
               enrollmentData.add(
                 EnrollmentData(
@@ -50,7 +54,8 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
                   studentEntryNumber: stdnt.entryNumber,
                   duration: '${evnt.start} - ${evnt.end}',
                   marks:
-                      '${eval.marks} + ${count == 0 ? 'NA' : '${(marks / count).toStringAsFixed(1)} ($count)'}',
+                  '${eval.marks} + ${count == 0 ? 'NA' : '${(marks / count)
+                      .toStringAsFixed(1)} ($count)'}',
                   count: count.toString(),
                 ),
               );
@@ -74,12 +79,15 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
           String eventType = 'Week-${evnt.type.substring(5, 6)}';
           if (evnt.type == 'midterm' || evnt.type == 'endterm') {
             eventType = (evnt.type == 'midterm' ? 'MidTerm' : 'EndTerm');
-            double marks = 0, count = 0;
-            for (var panelEval in widget.assignedPanel.evaluations) {
-              if (panelEval.type.contains(evnt.type) &&
-                  stdnt.id == panelEval.student.id) {
-                marks += panelEval.marks;
-                count++;
+            double marks = 0,
+                count = 0;
+            for (var panel in widget.assignedPanels) {
+              for (var panelEval in panel.evaluations) {
+                if (panelEval.type.contains(evnt.type) &&
+                    stdnt.id == panelEval.student.id) {
+                  marks += panelEval.marks;
+                  count++;
+                }
               }
             }
 
@@ -90,7 +98,8 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
                 studentEntryNumber: stdnt.entryNumber,
                 duration: '${evnt.start} - ${evnt.end}',
                 marks:
-                    'NA + ${count == 0 ? 'NA' : '${(marks / count).toStringAsFixed(1)} ($count)'}',
+                'NA + ${count == 0 ? 'NA' : '${(marks / count).toStringAsFixed(
+                    1)} ($count)'}',
                 count: count.toString(),
               ),
             );
@@ -132,7 +141,10 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-          iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
+          iconTheme: Theme
+              .of(context)
+              .iconTheme
+              .copyWith(color: Colors.white)),
       child: DataTable(
         border: TableBorder.all(
           width: 2,
@@ -144,7 +156,7 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
         columns: getColumns(columns),
         rows: getRows(enrollmentData),
         headingRowColor: MaterialStateColor.resolveWith(
-          (states) {
+              (states) {
             return const Color(0xff12141D);
           },
         ),
@@ -193,8 +205,9 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
     return headings;
   }
 
-  List<DataRow> getRows(List<EnrollmentData> rows) => rows.map(
-        (EnrollmentData data) {
+  List<DataRow> getRows(List<EnrollmentData> rows) =>
+      rows.map(
+            (EnrollmentData data) {
           final cells = [
             DataCell(
               CustomisedText(
@@ -226,7 +239,8 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
             DataCell(
               Tooltip(
                 message: (data.event == 'MidTerm' || data.event == 'EndTerm'
-                    ? 'Supervisor Marks + Average Of Panel Marks ${data.count == '0' ? '' : '(Number Of Evaluations Completed)'}'
+                    ? 'Supervisor Marks + Average Of Panel Marks ${data.count ==
+                    '0' ? '' : '(Number Of Evaluations Completed)'}'
                     : ''),
                 child: CustomisedText(
                   text: data.marks,
@@ -237,28 +251,28 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
             DataCell(
               (data.event.contains('Week')
                   ? (data.marks != 'NA'
-                      ? const CustomisedText(
-                          text: 'Completed',
-                          color: Colors.black,
-                        )
-                      : CustomisedButton(
-                          width: double.infinity,
-                          height: 35,
-                          text: 'Upload',
-                          onPressed: () {},
-                          elevation: 0,
-                        ))
+                  ? const CustomisedText(
+                text: 'Completed',
+                color: Colors.black,
+              )
+                  : CustomisedButton(
+                width: double.infinity,
+                height: 35,
+                text: 'Upload',
+                onPressed: () {},
+                elevation: 0,
+              ))
                   : const CustomisedText(
-                      text: 'Unauthorized',
-                      color: Colors.black,
-                    )),
+                text: 'Unauthorized',
+                color: Colors.black,
+              )),
             ),
           ];
 
           return DataRow(
             cells: cells,
             color: MaterialStateProperty.resolveWith(
-              (states) {
+                  (states) {
                 if (data.marks.contains('NA')) {
                   return const Color.fromARGB(255, 208, 219, 144);
                 } else {
@@ -273,27 +287,30 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       enrollmentData.sort(
-        (evaluation1, evaluation2) =>
+            (evaluation1, evaluation2) =>
             compareString(ascending, evaluation1.event, evaluation2.event),
       );
     } else if (columnIndex == 1) {
       enrollmentData.sort(
-        (evaluation1, evaluation2) => compareString(
-            ascending, evaluation1.studentName, evaluation2.studentName),
+            (evaluation1, evaluation2) =>
+            compareString(
+                ascending, evaluation1.studentName, evaluation2.studentName),
       );
     } else if (columnIndex == 2) {
       enrollmentData.sort(
-        (evaluation1, evaluation2) => compareString(ascending,
-            evaluation1.studentEntryNumber, evaluation2.studentEntryNumber),
+            (evaluation1, evaluation2) =>
+            compareString(ascending,
+                evaluation1.studentEntryNumber, evaluation2.studentEntryNumber),
       );
     } else if (columnIndex == 3) {
       enrollmentData.sort(
-        (evaluation1, evaluation2) => compareString(
-            ascending, evaluation1.duration, evaluation2.duration),
+            (evaluation1, evaluation2) =>
+            compareString(
+                ascending, evaluation1.duration, evaluation2.duration),
       );
     } else if (columnIndex == 4) {
       enrollmentData.sort(
-        (evaluation1, evaluation2) =>
+            (evaluation1, evaluation2) =>
             compareString(ascending, evaluation1.marks, evaluation2.marks),
       );
     }

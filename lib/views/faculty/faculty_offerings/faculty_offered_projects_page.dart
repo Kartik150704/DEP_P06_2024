@@ -130,7 +130,7 @@ class _FacultyOfferedProjectsPageState
           ? null
           : yearSemesterController.text.trim();
     });
-    if (course == null || year_semester == null) {
+    if (year_semester == null) {
       showDialog(
         context: context,
         builder: (context) {

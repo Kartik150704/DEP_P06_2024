@@ -5,6 +5,7 @@ import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:casper/views/shared/project_page/no_projects_found_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
@@ -23,96 +24,264 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  bool loading = true, searching = false;
+  bool loading = true,
+      searching = false;
+
   // TODO: Fetch these values from db
   Enrollment enrollment = enrollmentsGLOBAL[0];
-  AssignedPanel assignedPanel = assignedPanelsGLOBAL[0];
+  List<AssignedPanel> assignedPanels = [assignedPanelsGLOBAL[0]];
   ReleasedEvents releasedEvents = releasedEventsGLOBAL[0];
   final eventController = TextEditingController(),
       studentNameController = TextEditingController(),
       studentEntryNumberController = TextEditingController();
 
-  // void getEnrollmentDetails() {
-  //   FirebaseFirestore.instance
-  //       .collection('evaluations')
-  //       .where('project_id', isEqualTo: widget.projectId)
-  //       .get()
-  //       .then((value) {
-  //     var doc = value.docs[0];
-  //     int n = int.tryParse(doc['number_of_evaluations'])!;
-  //     List<String> studentIds = List<String>.generate(
-  //         doc['student_ids'].length, (index) => doc['student_ids'][index]);
-  //     List<String> studentNames = List<String>.generate(
-  //         doc['student_names'].length, (index) => doc['student_names'][index]);
-  //     for (int i = 0; i < n; i++) {
-  //       for (int j = 0; j < studentIds.length; j++) {
-  //         String studentId = studentIds[j], studentName = studentNames[j];
-  //         setState(() {
-  //           evaluations.add(Evaluation(
-  //             week: (i + 1).toString(),
-  //             date: '05/04 - 12/04',
-  //             marks: doc['weekly_evaluations'][i][studentId] ?? '',
-  //             remarks: doc['weekly_comments'][i][studentId] ?? '',
-  //             status:
-  //                 doc['weekly_evaluations'][i][studentId] == null ? '1' : '2',
-  //             evaluationId: doc.id,
-  //             studentId: studentId,
-  //             studentName: studentName,
-  //           ));
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
+  List<Evaluation> supervisorEvaluations = [];
 
-  // void getProjectDetails() {
-  //   if (widget.projectId == null) {
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //     return;
-  //   }
+  Team team = teamsGLOBAL[0];
 
-  //   setState(() {
-  //     projectDetails = [];
-  //     enrollments = [];
-  //   });
-  //   getEnrollmentDetails();
-  //   FirebaseFirestore.instance
-  //       .collection('projects')
-  //       .doc(widget.projectId)
-  //       .get()
-  //       .then((value) {
-  //     var doc = value.data();
-  //     setState(() {
-  //       projectDetails.add(doc!['title']);
-  //       projectDetails.add(doc['instructor_name']);
-  //       projectDetails.add(doc['year']);
-  //       projectDetails.add(doc['semester']);
-  //       projectDetails.add(doc['studentName']);
-  //       projectDetails.add(doc['description']);
-  //     });
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //   });
-  // }
+  // TODO: heavy refactoring of query, but it works as of now
+
+  void getAssignedPanels() {
+    FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('project_id', isEqualTo: widget.projectId)
+        .get()
+        .then((value) {
+      var doc = value.docs[0];
+      List<String> assignedPanelIds = List<String>.generate(
+          doc['assigned_panels'].length,
+              (index) => doc['assigned_panels'][index].toString());
+      Map assignedPanelTerm = {},
+          assignedPanelSemester = {},
+          assignedPanelYear = {},
+          assignedPanelPanelId = {},
+          assignedPanelCourse = {},
+          assignedPanelNumberOfEvaluators = {},
+          assignedPanelEvaluatorIds = {},
+          assignedPanelEvaluatorNames = {},
+          assignedPanelAssignedProjects = {};
+
+      if (assignedPanelIds.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection('assigned_panel')
+            .where(FieldPath.documentId, whereIn: assignedPanelIds)
+            .get()
+            .then((assignedPanelDocs) {
+          for (var assignedPanelDoc in assignedPanelDocs.docs) {
+            assignedPanelTerm[assignedPanelDoc.id] = assignedPanelDoc['term'];
+            assignedPanelSemester[assignedPanelDoc.id] =
+            assignedPanelDoc['semester'];
+            assignedPanelYear[assignedPanelDoc.id] = assignedPanelDoc['year'];
+            assignedPanelPanelId[assignedPanelDoc.id] =
+            assignedPanelDoc['panel_id'];
+            assignedPanelCourse[assignedPanelDoc.id] =
+            assignedPanelDoc['course'];
+            assignedPanelNumberOfEvaluators[assignedPanelDoc.id] =
+                int.tryParse(assignedPanelDoc['number_of_evaluators']);
+            assignedPanelEvaluatorIds[assignedPanelDoc.id] =
+            assignedPanelDoc['evaluator_ids'];
+            assignedPanelEvaluatorNames[assignedPanelDoc.id] =
+            assignedPanelDoc['evaluator_names'];
+            assignedPanelAssignedProjects[assignedPanelDoc.id] =
+            assignedPanelDoc['assigned_project_ids'];
+          }
+
+          for (String assignedPanelId in assignedPanelIds) {
+            List<Evaluation> panelEvaluations = [];
+            if (assignedPanelTerm[assignedPanelId].contains('Mid')) {
+              for (int i = 0; i < doc['midsem_evaluation'].length; i++) {
+                var eval = doc['midsem_evaluation'][i];
+
+                eval.forEach((key, value) {
+                  Evaluation evaluation = Evaluation(
+                    id: '1',
+                    marks: double.parse(value),
+                    remarks: doc['midsem_panel_comments'][i][key],
+                    type: 'midterm-panel',
+                    student: Student(
+                        id: key,
+                        name: 'name placeholder',
+                        entryNumber: key,
+                        email: '$key@iitrpr.ac.in'),
+                    faculty: Faculty(
+                        id: assignedPanelEvaluatorIds[assignedPanelId][i],
+                        name: assignedPanelEvaluatorNames[assignedPanelId][i],
+                        email: 'email placeholder project_data_table.dart'),
+                  );
+                  // panelEvaluations.add(evaluation);
+                });
+              }
+            }
+            AssignedPanel assignedPanel = AssignedPanel(
+              id: assignedPanelId,
+              course: assignedPanelCourse[assignedPanelId],
+              term: assignedPanelTerm[assignedPanelId],
+              semester: assignedPanelSemester[assignedPanelId],
+              year: assignedPanelYear[assignedPanelId],
+              panel: Panel(
+                  id: assignedPanelPanelId[assignedPanelId],
+                  course: assignedPanelCourse[assignedPanelId],
+                  semester: assignedPanelSemester[assignedPanelId],
+                  year: assignedPanelYear[assignedPanelId],
+                  numberOfEvaluators:
+                  assignedPanelNumberOfEvaluators[assignedPanelId],
+                  evaluators: [
+                    for (int i = 0;
+                    i < assignedPanelNumberOfEvaluators[assignedPanelId];
+                    i++)
+                      Faculty(
+                        id: assignedPanelEvaluatorIds[assignedPanelId][i],
+                        name: assignedPanelEvaluatorNames[assignedPanelId][i],
+                        email: 'email placeholder project_data_table.dart',
+                      )
+                  ]),
+              numberOfAssignedTeams: 1,
+              assignedTeams: [team],
+              evaluations: panelEvaluations,
+            );
+            setState(() {
+              assignedPanels.add(assignedPanel);
+              loading = false;
+            });
+          }
+        });
+      }
+    });
+  }
+
+  void getEnrollmentDetails() {
+    FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('project_id', isEqualTo: widget.projectId)
+        .get()
+        .then((value) {
+      var doc = value.docs[0];
+      int n = int.tryParse(doc['number_of_evaluations'])!;
+      List<String> studentIds = List<String>.generate(
+          doc['student_ids'].length, (index) => doc['student_ids'][index]);
+      List<String> studentNames = List<String>.generate(
+          doc['student_names'].length, (index) => doc['student_names'][index]);
+      FirebaseFirestore.instance
+          .collection('instructors')
+          .where('uid', isEqualTo: doc['supervisor_id'])
+          .get()
+          .then((facultyDocs) {
+        var facultyDoc = facultyDocs.docs[0];
+        Faculty faculty = Faculty(
+          id: facultyDoc['uid'],
+          name: facultyDoc['name'],
+          email: facultyDoc['email'],
+        );
+
+        for (int i = 0; i < n; i++) {
+          for (int j = 0; j < studentIds.length; j++) {
+            String studentId = studentIds[j],
+                studentName = studentNames[j];
+            setState(() {
+              print(double.parse(doc['weekly_evaluations'][i][studentId]));
+              supervisorEvaluations.add(Evaluation(
+                type: 'week-${i + 1}',
+                marks: double.parse(doc['weekly_evaluations'][i][studentId]),
+                remarks: doc['weekly_comments'][i][studentId] ?? '',
+                student: Student(
+                  id: studentId,
+                  name: studentName,
+                  entryNumber: studentId,
+                  email: '$studentId@iitrpr.ac.in',
+                ),
+                id: doc.id,
+                faculty: faculty,
+              ));
+            });
+          }
+        }
+
+        FirebaseFirestore.instance
+            .collection('projects')
+            .where(FieldPath.documentId, isEqualTo: widget.projectId)
+            .get()
+            .then((value) {
+          var doc = value.docs[0];
+          setState(() {
+            enrollment = Enrollment(
+                id: doc.id,
+                offering: Offering(
+                  id: doc['offering_id'],
+                  instructor: faculty,
+                  course: doc['type'],
+                  semester: doc['semester'],
+                  year: doc['year'],
+                  project: Project(
+                    id: doc['offering_id'],
+                    title: doc['title'],
+                    description: doc['description'],
+                  ),
+                ),
+                team: Team(
+                  id: doc['team_id'],
+                  numberOfMembers: doc['student_ids'].length,
+                  students: [
+                    for (int i = 0; i < doc['student_ids'].length; i++)
+                      Student(
+                        id: doc['student_ids'][i],
+                        name: doc['student_name'][i],
+                        entryNumber: doc['student_ids'][i],
+                        email: '${doc['student_ids'][i]}@iitrpr.ac.in',
+                      )
+                  ],
+                ),
+                supervisorEvaluations: supervisorEvaluations);
+            setState(() {
+              team = Team(
+                id: doc['team_id'],
+                numberOfMembers: doc['student_ids'].length,
+                students: [
+                  for (int i = 0; i < doc['student_ids'].length; i++)
+                    Student(
+                      id: doc['student_ids'][i],
+                      name: doc['student_name'][i],
+                      entryNumber: doc['student_ids'][i],
+                      email: '${doc['student_ids'][i]}@iitrpr.ac.in',
+                    )
+                ],
+              );
+            });
+
+            getAssignedPanels();
+          });
+        });
+      });
+    });
+  }
+
+  void getProjectDetails() {
+    if (widget.projectId == null) {
+      setState(() {
+        loading = false;
+      });
+      return;
+    }
+    getEnrollmentDetails();
+  }
 
   @override
   void initState() {
     super.initState();
-    // getProjectDetails(); using projectId
+    getProjectDetails();
 
-    // TODO: This is temporary, do this in above function instead
-    setState(() {
-      loading = false;
-    });
+    // // TODO: This is temporary, do this in above function instead
+    // setState(() {
+    //   loading = false;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth);
+    double fem = (MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth);
 
     if (loading) {
       return const LoadingPage();
@@ -149,7 +318,8 @@ class _ProjectPageState extends State<ProjectPage> {
                     margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: CustomisedText(
                       text:
-                          '${enrollment.offering.instructor.name}, ${enrollment.offering.year}-${enrollment.offering.semester}',
+                      '${enrollment.offering.instructor.name}, ${enrollment
+                          .offering.year}-${enrollment.offering.semester}',
                       fontSize: 22,
                     ),
                   ),
@@ -203,7 +373,7 @@ class _ProjectPageState extends State<ProjectPage> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           backgroundColor:
-                              const Color.fromARGB(255, 212, 203, 216),
+                          const Color.fromARGB(255, 212, 203, 216),
                           splashColor: Colors.black,
                           hoverColor: Colors.grey,
                           child: const Icon(
@@ -237,23 +407,23 @@ class _ProjectPageState extends State<ProjectPage> {
                       padding: const EdgeInsets.all(20),
                       child: (searching
                           ? SizedBox(
-                              width: double.infinity,
-                              height: 500 * fem,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.black),
-                                ),
-                              ),
-                            )
+                        width: double.infinity,
+                        height: 500 * fem,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.black),
+                          ),
+                        ),
+                      )
                           : SingleChildScrollView(
-                              // ignore: prefer_const_constructors
-                              child: ProjectDataTable(
-                                enrollment: enrollment,
-                                assignedPanel: assignedPanel,
-                                releasedEvents: releasedEvents,
-                              ),
-                            )),
+                        // ignore: prefer_const_constructors
+                        child: ProjectDataTable(
+                          enrollment: enrollment,
+                          assignedPanels: assignedPanels,
+                          releasedEvents: releasedEvents,
+                        ),
+                      )),
                     ),
                   ),
                 ],
