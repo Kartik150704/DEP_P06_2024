@@ -20,6 +20,7 @@ class _FacultyEnrollmentRequestsPageState
     extends State<FacultyEnrollmentRequestsPage> {
   bool loading = true;
   List<EnrollmentRequest> requests = [];
+  var Team_names = {};
   final teamIDController = TextEditingController(),
       projectTitleController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
@@ -89,6 +90,43 @@ class _FacultyEnrollmentRequestsPageState
                     offering: offering,
                     teamId: doc['team_id']);
                 requests.add(enrollment);
+              });
+              setState(() {
+                for (var id in requests) {
+                  Team_names[id.teamId] = [''];
+                }
+              });
+              List<String> Team_ids = [];
+              for (int i = 0; i < requests.length; i++) {
+                Team_ids.add(requests[i].teamId);
+                // print(Team_ids);
+              }
+              await FirebaseFirestore.instance
+                  .collection('team')
+                  .where('id', whereIn: Team_ids)
+                  .get()
+                  .then((value) async {
+                for (var doc in value.docs) {
+                  List<String> temp = [];
+                  for (String stud in doc['students']) {
+                    if (!mounted) return;
+                    await FirebaseFirestore.instance
+                        .collection('student')
+                        .where('id', isEqualTo: stud)
+                        .get()
+                        .then((value) {
+                      for (var doc in value.docs) {
+                        if (!mounted) return;
+                        setState(() {
+                          temp.add(doc['name']);
+                        });
+                      }
+                    });
+                  }
+                  setState(() {
+                    Team_names[doc['id']] = (temp);
+                  });
+                }
               });
               setState(() {
                 loading = false;
@@ -222,6 +260,7 @@ class _FacultyEnrollmentRequestsPageState
                             child: SingleChildScrollView(
                               child: EnrollmentRequestsDataTable(
                                 requests: requests,
+                                Team_names: Team_names,
                               ),
                             ),
                           ),
