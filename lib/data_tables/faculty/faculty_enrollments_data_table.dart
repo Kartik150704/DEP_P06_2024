@@ -43,7 +43,7 @@ class _FacultyEnrollmentsDataTableState
       studentData = [];
     });
 
-    for (final enrollment in widget.enrollments) {
+    for (Enrollment enrollment in widget.enrollments) {
       for (final student in enrollment.team.students) {
         double weekCount = 0,
             midterm = -1,
@@ -57,7 +57,11 @@ class _FacultyEnrollmentsDataTableState
         String grade = 'NA';
         for (final panel in assignedPanels) {
           for (final team in panel.assignedTeams) {
-            if (team.id == enrollment.team.id) {
+            if (team.id == enrollment.team.id &&
+                // TODO: added conditions here check semantics
+                panel.course == enrollment.offering.course &&
+                panel.semester == enrollment.offering.semester &&
+                panel.year == enrollment.offering.year) {
               for (final evaluation in panel.evaluations) {
                 if (evaluation.student.id == student.id) {
                   if (evaluation.type == 'midterm-panel') {
@@ -185,26 +189,26 @@ class _FacultyEnrollmentsDataTableState
               evals.add(evaluation);
             }
           }
-          for (Student student in students) {
-            for (int week = 0;
-                week < int.tryParse(doc['number_of_evaluations'])!;
-                week++) {
-              Evaluation evaluation = Evaluation(
-                id: '1',
-                marks: double.tryParse(
-                    doc['weekly_evaluations'][week][student.entryNumber])!,
-                remarks: doc['weekly_comments'][week][student.entryNumber],
-                type: 'week-${week + 1}',
-                student: student,
-                //TODO: add name and email
-                faculty: Faculty(
-                    id: doc['supervisor_id'],
-                    name: 'temp',
-                    email: 'temp@iitrpr.ac.iin'),
-              );
-              evals.add(evaluation);
-            }
-          }
+          // for (Student student in students) {
+          //   for (int week = 0;
+          //   week < int.tryParse(doc['number_of_evaluations'])!;
+          //   week++) {
+          //     Evaluation evaluation = Evaluation(
+          //       id: '1',
+          //       marks: double.tryParse(
+          //           doc['weekly_evaluations'][week][student.entryNumber])!,
+          //       remarks: doc['weekly_comments'][week][student.entryNumber],
+          //       type: 'week-${week + 1}',
+          //       student: student,
+          //       //TODO: add name and email
+          //       faculty: Faculty(
+          //           id: doc['supervisor_id'],
+          //           name: 'temp',
+          //           email: 'temp@iitrpr.ac.iin'),
+          //     );
+          //     evals.add(evaluation);
+          //   }
+          // }
         }
         assignedPanel.evaluations.addAll(evals);
       });
@@ -334,7 +338,6 @@ class _FacultyEnrollmentsDataTableState
       'E(${totalEndterm.toString()}+${totalEndtermPanel.toString()})',
       'R(${totalReport.toString()})',
     ];
-
     return Theme(
       data: Theme.of(context).copyWith(
           iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
