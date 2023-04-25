@@ -38,7 +38,9 @@ class _StudentScaffoldState extends State<StudentScaffold> {
     setState(() {
       switch (option) {
         case 0:
-          displayPage = const StudentProfilePage();
+          displayPage = StudentProfilePage(
+            uid: FirebaseAuth.instance.currentUser?.uid,
+          );
           break;
         case 1:
           displayPage = StudentHomePage(
