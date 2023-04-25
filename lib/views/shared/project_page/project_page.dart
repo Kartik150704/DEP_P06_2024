@@ -30,6 +30,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Enrollment enrollment = enrollmentsGLOBAL[0];
   List<AssignedPanel> assignedPanels = [];
   ReleasedEvents releasedEvents = releasedEventsGLOBAL[0];
+  String evaluation_doc_id = '';
   final eventController = TextEditingController(),
       studentNameController = TextEditingController(),
       studentEntryNumberController = TextEditingController();
@@ -47,10 +48,12 @@ class _ProjectPageState extends State<ProjectPage> {
         .get()
         .then((value) {
       var doc = value.docs[0];
+      setState(() {
+        evaluation_doc_id = doc.id;
+      });
       List<String> assignedPanelIds = List<String>.generate(
           doc['assigned_panels'].length,
           (index) => doc['assigned_panels'][index].toString());
-      print(assignedPanelIds.length);
       if (assignedPanels.length == 0) {
         setState(() {
           loading = false;
@@ -423,6 +426,8 @@ class _ProjectPageState extends State<ProjectPage> {
                                 enrollment: enrollment,
                                 assignedPanels: assignedPanels,
                                 releasedEvents: releasedEvents,
+                                isFaculty: widget.isFaculty,
+                                evaluation_doc_id: evaluation_doc_id,
                               ),
                             )),
                     ),
