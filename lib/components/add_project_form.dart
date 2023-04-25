@@ -174,7 +174,11 @@ class _AddProjectFormState extends State<AddProjectForm> {
                       final data = _formKey.currentState?.value.entries;
                       var alldata = <String, dynamic>{};
                       alldata.addEntries(data!);
-                      alldata.addEntries([MapEntry('open_for', vals)]);
+                      alldata.addEntries([
+                        MapEntry('open_for', vals),
+                        MapEntry('instructor_id',
+                            FirebaseAuth.instance.currentUser!.uid),
+                      ]);
                       FirebaseFirestore.instance
                           .collection('instructors')
                           .where('uid',
@@ -189,7 +193,7 @@ class _AddProjectFormState extends State<AddProjectForm> {
                         ];
                         alldata.addEntries(
                             entries.map((e) => MapEntry(e[0], e[1])));
-                        // print(alldata);
+                        print(alldata);
                         FirebaseFirestore.instance
                             .collection('offerings')
                             .add(alldata);
