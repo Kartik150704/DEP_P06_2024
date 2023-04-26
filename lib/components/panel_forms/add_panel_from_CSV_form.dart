@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 import 'dart:convert';
 import 'package:casper/components/customised_text.dart';
@@ -12,6 +13,9 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:csv/csv.dart';
+import 'dart:io';
+
+import 'package:mutex/mutex.dart';
 
 class CreatePanelFromCSVForm extends StatefulWidget {
   const CreatePanelFromCSVForm({
@@ -24,51 +28,126 @@ class CreatePanelFromCSVForm extends StatefulWidget {
 
 class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  List<String> csvData = [];
 
-  Future<void> _onFormSubmitted() async {
+  void _onFormSubmitted() {
     _formKey.currentState?.save();
     if (_formKey.currentState!.validate()) {
       final filePickerState = _formKey.currentState?.fields['file']
           as FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>;
+      final formdata = _formKey.currentState?.value;
       final fileValue = filePickerState.value;
       if (fileValue != null && fileValue.isNotEmpty) {
         final file = fileValue.first as PlatformFile;
-        final bytes = await file.bytes;
+        final bytes = file.bytes;
         final csvString = utf8.decode(bytes!);
-        final csvTable = csvString.split(',');
-        setState(() {
-          csvData = csvTable;
-        });
+        final csvData = csvString.split('\n');
+        print(csvData);
+        for (var item in csvData) print(item);
         // Do something with the CSV data
         // ...
-        for (int i = 0; i < csvData.length; i++) {
-          var csvData1 = csvData.sublist(i, i + 1 + int.parse(csvData[i]));
-          i += int.parse(csvData[i]);
-          // print(csvData1);
-          var alldata = <String, dynamic>{};
-          var names = csvData1.sublist(1);
-          alldata.addEntries([MapEntry('evaluator_names', names)]);
-          int newpanelid = 0;
-          await FirebaseFirestore.instance
-              .collection('panels')
-              .get()
-              .then((value) async {
-            //TODO change to len + 1
-            newpanelid = value.docs.length + 2;
-            alldata.addEntries([
-              MapEntry('number_of_evaluators', csvData1[0]),
-              MapEntry('panel_id', newpanelid.toString()),
-              MapEntry(
-                  'evaluator_ids',
-                  List<String>.generate(
-                      names.length, (index) => index.toString())),
-            ]);
-            FirebaseFirestore.instance.collection('panels').add(alldata);
-          });
-        }
+        int newpanelid = 0;
+        FirebaseFirestore.instance.collection('panels').get().then((value) {
+          for (var doc in value.docs) {
+            if (int.parse(doc['panel_id']) > newpanelid) {
+              newpanelid = int.parse(doc['panel_id']);
+            }
+          }
+          newpanelid++;
+          bool flag = true;
+          for (int i = 0; i < csvData.length; i++) {
+            if (!flag) {
+              break;
+            }
+            List<String> emails = csvData[i].split(',');
+            FirebaseFirestore.instance
+                .collection('instructors')
+                .where('email', whereIn: emails)
+                .get()
+                .then((value) {
+              if (value.docs.length != emails.length) {
+                print('Multiple instructors with same email, unexpected error');
+                flag = false;
+                return;
+              } else {
+                List<String> names = [], ids = [];
+                for (String email in emails) {
+                  for (var doc in value.docs) {
+                    if (doc['email'] == email) {
+                      names.add(doc['name']);
+                      ids.add(doc['uid']);
+                      break;
+                    }
+                  }
+                }
+
+                if (names.length != ids.length ||
+                    names.length != emails.length) {
+                  flag = false;
+                  return;
+                }
+
+                var alldata = <String, dynamic>{};
+                alldata.addEntries([
+                  MapEntry('evaluator_names', names),
+                  //TODO: validation of ids and names
+                  MapEntry('evaluator_ids', ids)
+                ]);
+
+                // TODO: change                newpanelid = value.docs.length + 1;;
+                print(newpanelid + i);
+                alldata.addEntries([
+                  MapEntry('number_of_evaluators', emails.length.toString()),
+                  MapEntry('panel_id', (newpanelid + i).toString()),
+                  const MapEntry('number_of_assigned_projects', '0'),
+                  const MapEntry('assigned_project_ids', [])
+                ]);
+                FirebaseFirestore.instance.collection('panels').add(alldata);
+                alldata.addEntries([
+                  MapEntry('semester', formdata!['semester']),
+                  MapEntry('year', formdata['year']),
+                  MapEntry('term', formdata['term']),
+                  MapEntry('course', formdata['course']),
+                ]);
+                FirebaseFirestore.instance
+                    .collection('assigned_panel')
+                    .add(alldata);
+              }
+            });
+          }
+
+          if (!flag) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Please verify inputted data'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK'))
+                    ],
+                  );
+                });
+          }
+        });
       }
     }
+  }
+
+  String? integerValidator(
+      String? value, String fieldName, int lowerLimit, int higherLimit) {
+    if (value == null) {
+      return 'enter a valid $fieldName';
+    }
+    int? val = int.tryParse(value);
+    if (val == null) {
+      return 'enter a valid $fieldName';
+    } else if (val > higherLimit || val < lowerLimit) {
+      return 'enter a valid $fieldName';
+    }
+    return null;
   }
 
   @override
@@ -83,22 +162,88 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
       key: _formKey,
       child: Column(
         children: [
+          Text(
+            'Enter the semester',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'semester',
+            validator: (value) => integerValidator(value, 'semester', 1, 2),
+          ),
           const SizedBox(
             height: 10,
           ),
-          // Text(
-          //   'Upload file',
-          //   style: SafeGoogleFont(
-          //     'Ubuntu',
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.w500,
-          //     color: const Color(0xff000000),
-          //   ),
-          // ),
+          Text(
+            'Enter the year',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'year',
+            validator: (value) => integerValidator(value, 'year', 2000, 2100),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the term',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'term',
+            validator: (value) {
+              if (['MidTerm', 'EndTerm'].contains(value)) {
+                return null;
+              }
+              return 'enter a valid term. [MidTerm or EndTerm]';
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Enter the course',
+            style: SafeGoogleFont(
+              'Ubuntu',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff000000),
+            ),
+          ),
+          FormBuilderTextField(
+            name: 'course',
+            validator: (value) {
+              if (['CP301', 'CP302', 'CP303'].contains(value)) {
+                return null;
+              }
+              return 'enter a valid course. [CP301, CP302, CP303]';
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           const SizedBox(
             width: 500,
             child: CustomisedText(
-              text: 'Format: Panelsize,Name1,Name2...',
+              text:
+                  'Format: \n panel1 email1, panel1 email2 ...\n panel2 email1, panel2 email2 ...\n ',
               color: Colors.black,
               fontSize: 23,
             ),
@@ -109,6 +254,7 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
             child: FormBuilderFilePicker(
               name: 'file',
               maxFiles: 1,
+              validator: FormBuilderValidators.required(errorText: 'Reuuired'),
               allowedExtensions: const ['csv'],
               typeSelectors: [
                 TypeSelector(

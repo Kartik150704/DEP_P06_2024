@@ -162,7 +162,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
               children: [
                 for (int i = 0; i < number_of_evaluators; i++) ...[
                   Text(
-                    'Evaluator ${i + 1} name: ',
+                    'Evaluator ${i + 1} email: ',
                     style: SafeGoogleFont(
                       'Ubuntu',
                       fontSize: 20,
@@ -171,9 +171,9 @@ class _AddPanelFormState extends State<AddPanelForm> {
                     ),
                   ),
                   FormBuilderTextField(
-                    name: 'evaluator$i',
+                    name: 'evaluator${i}id',
                     validator: FormBuilderValidators.required(
-                        errorText: 'Name cannot be empty'),
+                        errorText: 'email cannot be empty'),
                   ),
                   const SizedBox(
                     height: 10,
@@ -193,45 +193,103 @@ class _AddPanelFormState extends State<AddPanelForm> {
                 onPressed: () {
                   _formKey.currentState?.save();
                   if (_formKey.currentState!.validate()) {
-                    var names = List<String>.generate(
+                    var emails = List<String>.generate(
                         number_of_evaluators,
-                        (index) =>
-                            _formKey.currentState?.value['evaluator$index']);
-                    var alldata = <String, dynamic>{};
-                    alldata.addEntries([MapEntry('evaluator_names', names)]);
-                    int newpanelid = 0;
+                        (index) => _formKey
+                            .currentState?.value['evaluator${index}id']);
+                    var formdata = _formKey.currentState?.value;
                     FirebaseFirestore.instance
-                        .collection('panels')
+                        .collection('instructors')
+                        .where('email', whereIn: emails)
                         .get()
                         .then((value) {
-                      // TODO: change                newpanelid = value.docs.length + 1;
-                      newpanelid = value.docs.length + 2;
-                      alldata.addEntries([
-                        MapEntry('number_of_evaluators',
-                            number_of_evaluators.toString()),
-                        MapEntry('panel_id', newpanelid.toString()),
-                        MapEntry(
-                            'evaluator_ids',
-                            List<String>.generate(number_of_evaluators,
-                                (index) => index.toString())),
-                        const MapEntry('number_of_assigned_projects', '0'),
-                        const MapEntry('assigned_project_ids', [])
-                      ]);
-                      FirebaseFirestore.instance
-                          .collection('panels')
-                          .add(alldata);
-                      var temp = alldata;
-                      var formdata = _formKey.currentState?.value;
-                      alldata.addEntries([
-                        MapEntry('semester', formdata!['semester']),
-                        MapEntry('year', formdata['year']),
-                        MapEntry('term', formdata['term']),
-                        MapEntry('course', formdata['course']),
-                      ]);
-                      FirebaseFirestore.instance
-                          .collection('assigned_panel')
-                          .add(temp);
-                      widget.refresh();
+                      if (value.docs.length != number_of_evaluators) {
+                        print(
+                            'Multiple instructors with same email, unexpected error');
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Please verify inputted data'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'))
+                                ],
+                              );
+                            });
+                      } else {
+                        List<String> names = [], ids = [];
+                        for (String email in emails) {
+                          for (var doc in value.docs) {
+                            if (doc['email'] == email) {
+                              names.add(doc['name']);
+                              ids.add(doc['uid']);
+                              break;
+                            }
+                          }
+                        }
+
+                        if (names.length != ids.length ||
+                            names.length != number_of_evaluators) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Please verify inputted data'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'))
+                                  ],
+                                );
+                              });
+                          return;
+                        }
+
+                        var alldata = <String, dynamic>{};
+                        alldata.addEntries([
+                          MapEntry('evaluator_names', names),
+                          //TODO: validation of ids and names
+                          MapEntry('evaluator_ids', ids)
+                        ]);
+                        int newpanelid = 0;
+                        FirebaseFirestore.instance
+                            .collection('panels')
+                            .get()
+                            .then((value) {
+                          for (var doc in value.docs) {
+                            if (int.parse(doc['panel_id']) > newpanelid) {
+                              newpanelid = int.parse(doc['panel_id']);
+                            }
+                          }
+                          newpanelid++;
+                          alldata.addEntries([
+                            MapEntry('number_of_evaluators',
+                                number_of_evaluators.toString()),
+                            MapEntry('panel_id', newpanelid.toString()),
+                            const MapEntry('number_of_assigned_projects', '0'),
+                            const MapEntry('assigned_project_ids', [])
+                          ]);
+                          FirebaseFirestore.instance
+                              .collection('panels')
+                              .add(alldata);
+                          alldata.addEntries([
+                            MapEntry('semester', formdata!['semester']),
+                            MapEntry('year', formdata['year']),
+                            MapEntry('term', formdata['term']),
+                            MapEntry('course', formdata['course']),
+                          ]);
+                          FirebaseFirestore.instance
+                              .collection('assigned_panel')
+                              .add(alldata);
+                          widget.refresh();
+                        });
+                      }
                     });
 
                     Navigator.pop(context);

@@ -45,6 +45,7 @@ dependencies:
   form_builder_validators: ^8.4.0
   form_builder_file_picker: ^2.3.0
   csv: ^5.0.1
+  mutex: ^3.0.1
 
 
 dev_dependencies:
