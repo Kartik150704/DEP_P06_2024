@@ -126,6 +126,7 @@ class _AssignTeamsToPanelsFromCSVFormState
               }
             }
           });
+          print(panel_sz);
           print('eval_ids: $entry');
           for (var inst in eval_ids) {
             await FirebaseFirestore.instance
@@ -158,24 +159,29 @@ class _AssignTeamsToPanelsFromCSVFormState
               .then((value) async {
             for (var doc in value.docs) {
               if (doc['project_id'] == proj_id) {
-                for (int i = 0; i < panel_sz; i++) {
-                  Map<String, dynamic> marks = {};
-                  for (var entry_no in entry) {
-                    marks[entry_no] = 'NA';
-                  }
-                  for (int i = 0; i < panel_sz; i++) {
-                    FirebaseFirestore.instance
-                        .collection('evaluations')
-                        .doc(doc.id)
-                        .update({
-                      'endsem_evaluation': FieldValue.arrayUnion([marks]),
-                      'midsem_evaluation': FieldValue.arrayUnion([marks]),
-                      'endsem_panel_comments': FieldValue.arrayUnion([marks]),
-                      'endsem_panel_comments': FieldValue.arrayUnion([marks]),
-                      'assigned_panels': FieldValue.arrayUnion([panel_id]),
-                    });
-                  }
+                List<Map<String, dynamic>> arr = [];
+                Map<String, dynamic> marks = {};
+                for (var entry_no in entry) {
+                  marks[entry_no] = 'NA';
                 }
+                for (int i = 0; i < panel_sz; i++) {
+                  arr.add(marks);
+                }
+                await FirebaseFirestore.instance
+                    .collection('evaluations')
+                    .doc(doc.id)
+                    .update({
+                  'endsem_evaluation': arr,
+                  'midsem_evaluation': arr,
+                  'endsem_panel_comments': arr,
+                  'midsem_panel_comments': arr,
+                });
+                await FirebaseFirestore.instance
+                    .collection('evaluations')
+                    .doc(doc.id)
+                    .update({
+                  'assigned_panels': FieldValue.arrayUnion([panel_id]),
+                });
               }
             }
           });
