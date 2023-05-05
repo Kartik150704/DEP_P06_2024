@@ -341,7 +341,6 @@ final releasedEventsGLOBAL = [
         start: '15/04',
         end: '22/04',
       ),
-
     ],
   ),
 ];

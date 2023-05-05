@@ -4,7 +4,10 @@ import 'package:casper/data_tables/faculty/coordinator/coordinator_criteria_mana
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../components/add_criteria_form.dart';
 
 class CoordinatorCriteriaManagementPage extends StatefulWidget {
   final String userRole;
@@ -31,10 +34,40 @@ class _CoordinatorCriteriaManagementPageState
       yearSmesterController = TextEditingController(text: '2023-1');
 
   // TODO: Implement this method
+
+  void getCriteria() {
+    setState(() {
+      evaluationCriterias.clear();
+    });
+    FirebaseFirestore.instance
+        .collection('evaluation_criteria')
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        setState(() {
+          evaluationCriterias.add(EvaluationCriteria(
+              id: doc.id,
+              weeksToConsider: int.parse(doc['weeksToConsider']),
+              course: doc['course'],
+              semester: doc['semester'],
+              year: doc['year'],
+              numberOfWeeks: int.parse(doc['numberOfWeeks']),
+              regular: int.parse(doc['regular']),
+              midtermSupervisor: int.parse(doc['midtermSupervisor']),
+              midtermPanel: int.parse(doc['midtermPanel']),
+              endtermSupervisor: int.parse(doc['endtermSupervisor']),
+              endtermPanel: int.parse(doc['endtermPanel']),
+              report: int.parse(doc['report'])));
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    evaluationCriterias = evaluationCriteriasGLOBAL;
+    evaluationCriterias = [];
+    getCriteria();
   }
 
   @override
@@ -165,7 +198,20 @@ class _CoordinatorCriteriaManagementPageState
                     size: 35,
                   ),
                   // TODO: Implement this method
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Center(
+                            child: AddCriteriaForm(
+                              refresh: getCriteria,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),

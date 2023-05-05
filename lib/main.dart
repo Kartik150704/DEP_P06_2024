@@ -1,6 +1,7 @@
 import 'package:casper/utilities/auth.dart';
 import 'package:casper/utilities/firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
