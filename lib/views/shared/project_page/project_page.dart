@@ -27,7 +27,7 @@ class _ProjectPageState extends State<ProjectPage> {
   bool loading = true, searching = false;
 
   // TODO: Fetch these values from db
-  Enrollment enrollment = enrollmentsGLOBAL[0];
+  Enrollment? enrollment;
   List<AssignedPanel> assignedPanels = [];
   ReleasedEvents releasedEvents = releasedEventsGLOBAL[0];
   String evaluation_doc_id = '';
@@ -54,7 +54,7 @@ class _ProjectPageState extends State<ProjectPage> {
       List<String> assignedPanelIds = List<String>.generate(
           doc['assigned_panels'].length,
           (index) => doc['assigned_panels'][index].toString());
-      if (assignedPanels.length == 0) {
+      if (assignedPanelIds.length == 0) {
         setState(() {
           loading = false;
         });
@@ -164,6 +164,12 @@ class _ProjectPageState extends State<ProjectPage> {
         .where('project_id', isEqualTo: widget.projectId)
         .get()
         .then((value) {
+      if (value.docs.length == 0) {
+        setState(() {
+          loading = false;
+        });
+        return;
+      }
       var doc = value.docs[0];
       int n = int.tryParse(doc['number_of_evaluations'])!;
       List<String> studentIds = List<String>.generate(
@@ -291,7 +297,7 @@ class _ProjectPageState extends State<ProjectPage> {
     if (loading) {
       return const LoadingPage();
     }
-
+    print(widget.projectId);
     if (widget.projectId == null) {
       return NoProjectsFoundPage(
         selectOption: widget.selectOption,
@@ -313,7 +319,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomisedText(
-                        text: enrollment.offering.project.title,
+                        text: enrollment?.offering.project.title,
                         fontSize: 50,
                       ),
                       Container(),
@@ -323,7 +329,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: CustomisedText(
                       text:
-                          '${enrollment.offering.instructor.name}, ${enrollment.offering.year}-${enrollment.offering.semester}',
+                          '${enrollment?.offering.instructor.name}, ${enrollment?.offering.year}-${enrollment?.offering.semester}',
                       fontSize: 22,
                     ),
                   ),

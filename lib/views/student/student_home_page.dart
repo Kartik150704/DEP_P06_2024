@@ -38,6 +38,15 @@ class _StudentHomePageState extends State<StudentHomePage> {
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then((value) {
+      if (value.docs.isEmpty) {
+        setState(() {
+          projectPage = ProjectPage(
+            projectId: null,
+            selectOption: widget.selectOption,
+          );
+        });
+        return;
+      }
       setState(() {
         projectPage = ProjectPage(
           projectId: value.docs[0]['proj_id'][option - 1],
