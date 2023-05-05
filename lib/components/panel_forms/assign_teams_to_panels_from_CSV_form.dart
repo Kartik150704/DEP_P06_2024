@@ -68,7 +68,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                     }
                   }
                 });
-
                 break;
               }
             }
@@ -79,7 +78,7 @@ class _AssignTeamsToPanelsFromCSVFormState
               .then((value) async {
             for (var doc in value.docs) {
               if (doc['panel_id'] == csvData[i]) {
-                //get number_of_assigned_projects String and increase by 1
+                //get number_of_assigned_projects String and increase by 1 and add prj_id to assigned_project_ids
                 var num = int.parse(doc['number_of_assigned_projects']) + 1;
                 String num_str = num.toString();
                 FirebaseFirestore.instance
@@ -87,12 +86,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                     .doc(doc.id)
                     .update({
                   'number_of_assigned_projects': num_str,
-                });
-                //add project_id to assigned_projects
-                FirebaseFirestore.instance
-                    .collection('assigned_panel')
-                    .doc(doc.id)
-                    .update({
                   'assigned_project_ids': FieldValue.arrayUnion([proj_id]),
                 });
               }
@@ -107,7 +100,7 @@ class _AssignTeamsToPanelsFromCSVFormState
                 panel_id = doc.id;
                 eval_ids = doc['evaluator_ids'];
                 panel_sz = int.parse(doc['number_of_evaluators']);
-                //get number_of_assigned_projects String and increase by 1
+                //get number_of_assigned_projects String and increase by 1 and add prj_id to assigned_project_ids
                 var num = int.parse(doc['number_of_assigned_projects']) + 1;
                 String num_str = num.toString();
                 FirebaseFirestore.instance
@@ -115,12 +108,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                     .doc(doc.id)
                     .update({
                   'number_of_assigned_projects': num_str,
-                });
-                //add project_id to assigned_projects
-                FirebaseFirestore.instance
-                    .collection('panels')
-                    .doc(doc.id)
-                    .update({
                   'assigned_project_ids': FieldValue.arrayUnion([proj_id]),
                 });
               }
@@ -140,12 +127,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                       .doc(doc.id)
                       .update({
                     'number_of_projects_panel': FieldValue.increment(1),
-                  });
-                  //add project_id to assigned_projects
-                  FirebaseFirestore.instance
-                      .collection('instructors')
-                      .doc(doc.id)
-                      .update({
                     'project_as_panel_ids': FieldValue.arrayUnion([proj_id]),
                   });
                 }
@@ -155,6 +136,7 @@ class _AssignTeamsToPanelsFromCSVFormState
 
           await FirebaseFirestore.instance
               .collection('evaluations')
+              .where('project_id', isEqualTo: proj_id)
               .get()
               .then((value) async {
             for (var doc in value.docs) {
@@ -175,11 +157,7 @@ class _AssignTeamsToPanelsFromCSVFormState
                   'midsem_evaluation': arr,
                   'endsem_panel_comments': arr,
                   'midsem_panel_comments': arr,
-                });
-                await FirebaseFirestore.instance
-                    .collection('evaluations')
-                    .doc(doc.id)
-                    .update({
+                  // TODO: not used may need to remove
                   'assigned_panels': FieldValue.arrayUnion([panel_id]),
                 });
               }
