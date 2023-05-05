@@ -47,6 +47,12 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         List<String> panelids = List<String>.from(
           doc['panel_ids'],
         );
+        if (panelids.isEmpty) {
+          setState(() {
+            loading = false;
+          });
+          return;
+        }
         FirebaseFirestore.instance
             .collection('panels')
             .where('panel_id', whereIn: panelids)

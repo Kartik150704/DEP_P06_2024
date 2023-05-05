@@ -42,6 +42,13 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
         .get()
         .then(
       (snapshot) {
+        if (snapshot.docs.isEmpty ||
+            snapshot.docs[0]['project_as_head_ids'].length == 0) {
+          setState(() {
+            loading = false;
+          });
+          return;
+        }
         FirebaseFirestore.instance
             .collection('projects')
             .where(

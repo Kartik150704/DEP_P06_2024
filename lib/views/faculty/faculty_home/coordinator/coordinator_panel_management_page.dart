@@ -77,23 +77,24 @@ class _CoordinatorPanelManagementPageState
                   numberOfEvaluators: int.parse(doc['number_of_evaluators']),
                   evaluators: List<Faculty>.generate(
                       int.parse(doc['number_of_evaluators']),
-                      (index) => Faculty(
-                          id: doc['evaluator_ids'][index],
-                          name: doc['evaluator_names'][index],
-                          email: ''))),
+                          (index) =>
+                          Faculty(
+                              id: doc['evaluator_ids'][index],
+                              name: doc['evaluator_names'][index],
+                              email: ''))),
               assignedTeams: [],
               evaluations: [],
               assignedProjectIds:
-                  List<String>.from(doc['assigned_project_ids']),
+              List<String>.from(doc['assigned_project_ids']),
               numberOfAssignedProjects:
-                  int.tryParse(doc['number_of_assigned_projects']),
+              int.tryParse(doc['number_of_assigned_projects']),
             ),
           );
         });
-        setState(() {
-          loading = false;
-        });
       }
+      setState(() {
+        loading = false;
+      });
     });
   }
 
@@ -106,7 +107,10 @@ class _CoordinatorPanelManagementPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double fem = MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth;
 
     if (loading) {
       return const LoadingPage();
@@ -192,7 +196,7 @@ class _CoordinatorPanelManagementPageState
                               borderRadius: BorderRadius.circular(2),
                             ),
                             backgroundColor:
-                                const Color.fromARGB(255, 212, 203, 216),
+                            const Color.fromARGB(255, 212, 203, 216),
                             splashColor: Colors.black,
                             hoverColor: Colors.grey,
                             child: const Icon(
