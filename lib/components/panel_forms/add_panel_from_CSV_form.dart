@@ -59,12 +59,16 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
               break;
             }
             List<String> emails = csvData[i].split(',');
+            for (int j = 0; j < emails.length; j++) {
+              emails[j] = emails[j].trim();
+            }
             FirebaseFirestore.instance
                 .collection('instructors')
                 .where('email', whereIn: emails)
                 .get()
                 .then((value) {
               if (value.docs.length != emails.length) {
+                print(emails);
                 print('Multiple instructors with same email, unexpected error');
                 flag = false;
                 return;
