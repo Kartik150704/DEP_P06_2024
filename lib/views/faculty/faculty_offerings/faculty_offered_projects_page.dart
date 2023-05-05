@@ -17,7 +17,8 @@ class FacultyOfferedProjectsPage extends StatefulWidget {
 
 class _FacultyOfferedProjectsPageState
     extends State<FacultyOfferedProjectsPage> {
-  bool loading = true, searcing = false;
+  bool loading = true,
+      searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
   String? supervisorName, projectTitle, course, year_semester;
@@ -46,7 +47,7 @@ class _FacultyOfferedProjectsPageState
         .where('status', isEqualTo: 'open')
         .get()
         .then(
-      (value) async {
+          (value) async {
         for (var doc in value.docs) {
           var len = offerings.length;
           Project project = Project(
@@ -115,6 +116,14 @@ class _FacultyOfferedProjectsPageState
     getOfferings();
   }
 
+  void refresh() {
+    setState(() {
+      loading = true;
+    });
+    updateSearchParameters();
+    getOfferings();
+  }
+
   bool updateSearchParameters() {
     setState(() {
       supervisorName = instructorNameController.text.trim() == ''
@@ -157,7 +166,10 @@ class _FacultyOfferedProjectsPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double fem = MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth;
     if (loading) {
       return const LoadingPage();
     }
@@ -243,7 +255,7 @@ class _FacultyOfferedProjectsPageState
                               borderRadius: BorderRadius.circular(2),
                             ),
                             backgroundColor:
-                                const Color.fromARGB(255, 212, 203, 216),
+                            const Color.fromARGB(255, 212, 203, 216),
                             splashColor: Colors.black,
                             hoverColor: Colors.grey,
                             child: const Icon(
@@ -282,22 +294,23 @@ class _FacultyOfferedProjectsPageState
                             padding: const EdgeInsets.all(20),
                             child: (searcing
                                 ? SizedBox(
-                                    width: double.infinity,
-                                    height: 500 * fem,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.black),
-                                      ),
-                                    ),
-                                  )
+                              width: double.infinity,
+                              height: 500 * fem,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor:
+                                  AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
+                                ),
+                              ),
+                            )
                                 : SingleChildScrollView(
-                                    child: OfferedProjectsDataTable(
-                                      offerings: offerings,
-                                      isStudent: false,
-                                    ),
-                                  )),
+                              child: OfferedProjectsDataTable(
+                                offerings: offerings,
+                                isStudent: false,
+                                refresh: refresh,
+                              ),
+                            )),
                           ),
                         ),
                       ),

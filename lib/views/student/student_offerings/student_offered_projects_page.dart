@@ -150,6 +150,13 @@ class _StudentOfferedProjectsPageState
     getOfferings();
   }
 
+  void refresh() {
+    setState(() {
+      loading = true;
+      getOfferings();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
@@ -317,6 +324,7 @@ class _StudentOfferedProjectsPageState
                               child: OfferedProjectsDataTable(
                                 offerings: offerings,
                                 isStudent: true,
+                                refresh: refresh,
                               ),
                             )),
                     ),

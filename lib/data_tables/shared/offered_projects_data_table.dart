@@ -10,11 +10,13 @@ import 'package:flutter/material.dart';
 class OfferedProjectsDataTable extends StatefulWidget {
   bool isStudent;
   List<Offering> offerings;
+  var refresh;
 
   OfferedProjectsDataTable({
     super.key,
     required this.isStudent,
     required this.offerings,
+    required this.refresh,
   });
 
   @override
@@ -182,7 +184,7 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
                                 'team_id': teamId,
                                 'offering_id': offerings.key_id,
                                 'status': '2',
-                              });
+                              }).then((value) => widget.refresh());
                             }
                           });
                         }
