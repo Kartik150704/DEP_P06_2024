@@ -18,7 +18,7 @@ class _StudentOfferingsState extends State<StudentOfferings> {
   var selectedOption, displayPage;
   var options = [
     'Offered Projects',
-    'Requests\' Status',
+    'Request(s) Status',
   ];
 
   void selectOption(option) {

@@ -4,15 +4,18 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class StudentEnrollmentRequestsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final List<EnrollmentRequest> requests;
+  var refresh;
 
-  const StudentEnrollmentRequestsDataTable({
+  StudentEnrollmentRequestsDataTable({
     super.key,
     required this.requests,
+    required this.refresh,
   });
 
   @override
@@ -164,31 +167,56 @@ class _StudentEnrollmentRequestsDataTableState
                     ? 'Rejected'
                     : (request.status == '1')
                         ? 'Accepted'
-                        : 'Pending',
+                        : (request.status == '3')
+                            ? 'Withdrawn'
+                            : 'Pending',
                 color: Colors.black,
               ),
             ),
-            DataCell(
-              (request.status != '0'
-                  ? (request.status == '1'
-                      ? const CustomisedText(
-                          text: 'Accepted',
-                          color: Colors.black,
-                        )
-                      : CustomisedButton(
-                          width: double.infinity,
-                          height: 35,
-                          text: 'Withdraw',
-                          onPressed: () {},
-                          elevation: 0,
-                        ))
-                  : const CustomisedText(
-                      text: 'Rejected',
-                      color: Colors.black,
-                    )),
-            ),
+            DataCell((request.status != '0' && request.status != '3'
+                ? (request.status == '1'
+                    ? const CustomisedText(
+                        text: 'Accepted',
+                        color: Colors.black,
+                      )
+                    : CustomisedButton(
+                        width: double.infinity,
+                        height: 35,
+                        text: 'Withdraw',
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: ConfirmAction(
+                                      onSubmit: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('enrollment_requests')
+                                            .doc(request.key_id)
+                                            .update({
+                                          'status': '3',
+                                        });
+                                        widget.refresh();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                        elevation: 0,
+                      ))
+                : ((request.status == '3')
+                    ? const CustomisedText(
+                        text: 'Unavailable',
+                        color: Colors.black,
+                      )
+                    : const CustomisedText(
+                        text: 'Rejected',
+                        color: Colors.black,
+                      )))),
           ];
-
           return DataRow(
             cells: cells,
             color: MaterialStateProperty.resolveWith(
@@ -197,6 +225,8 @@ class _StudentEnrollmentRequestsDataTableState
                   return const Color.fromARGB(255, 223, 104, 104);
                 } else if (request.status == '1') {
                   return const Color(0xff7ae37b);
+                } else if (request.status == '3') {
+                  return const Color.fromARGB(255, 223, 104, 104);
                 } else {
                   return const Color.fromARGB(255, 208, 219, 144);
                 }

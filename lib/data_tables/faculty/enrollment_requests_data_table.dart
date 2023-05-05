@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 class EnrollmentRequestsDataTable extends StatefulWidget {
   final List<EnrollmentRequest> requests;
   final Map Team_names;
+  var refresh;
 
-  const EnrollmentRequestsDataTable({
+  EnrollmentRequestsDataTable({
     super.key,
     required this.requests,
     required this.Team_names,
+    required this.refresh,
   });
 
   @override
@@ -37,16 +39,16 @@ class _EnrollmentRequestDataTableState
           return AlertDialog(
             title: Center(
               child: ConfirmAction(
-                onSubmit: () {
+                onSubmit: () async {
                   // update enrollment request status to 1
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection('enrollment_requests')
                       .doc(request.key_id)
                       .update({'status': '1'});
 
                   // create project document
 
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection('team')
                       .where('id', isEqualTo: request.teamId)
                       .get()
@@ -184,6 +186,7 @@ class _EnrollmentRequestDataTableState
                       });
                     }
                   });
+                  widget.refresh();
                   Navigator.pop(context);
                 },
                 text: "You want to accept 'team $teamId' for '$Title'.",
@@ -199,7 +202,14 @@ class _EnrollmentRequestDataTableState
           return AlertDialog(
             title: Center(
               child: ConfirmAction(
-                onSubmit: () {},
+                onSubmit: () async {
+                  await FirebaseFirestore.instance
+                      .collection('enrollment_requests')
+                      .doc(request.key_id)
+                      .update({'status': '0'});
+                  widget.refresh();
+                  Navigator.pop(context);
+                },
                 text: "You want to reject 'team $teamId' for '$Title'.",
               ),
             ),

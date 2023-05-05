@@ -1,6 +1,7 @@
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
+import 'package:casper/components/panel_forms/add_teams_form.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_panel_management_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/panel_forms/add_panel_from_CSV_form.dart';
@@ -9,6 +10,8 @@ import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
+
+import '../../../../components/add_teams_form.dart';
 
 class CoordinatorPanelManagementPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -326,6 +329,37 @@ class _CoordinatorPanelManagementPageState
                             child: AddPanelForm(
                               refresh: getPanels,
                             ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+              child: Tooltip(
+                message: 'Add Teams',
+                child: FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
+                  splashColor: Colors.black,
+                  hoverColor: Colors.grey,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Center(
+                            child: CreateTeamsForm(),
                           ),
                         );
                       },

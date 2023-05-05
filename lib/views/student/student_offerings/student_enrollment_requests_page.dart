@@ -103,10 +103,12 @@ class _StudentEnrollmentRequestsPageState
                   course: doc1['type']);
 
               EnrollmentRequest request = EnrollmentRequest(
-                  id: (len + 1).toString(),
-                  status: doc['status'],
-                  offering: offering,
-                  teamId: doc['team_id']);
+                id: (len + 1).toString(),
+                status: doc['status'],
+                offering: offering,
+                teamId: doc['team_id'],
+                key_id: doc.id,
+              );
               requests.add(request);
             });
           }
@@ -122,6 +124,14 @@ class _StudentEnrollmentRequestsPageState
   @override
   void initState() {
     super.initState();
+    getEnrollmentRequests();
+  }
+
+  void refresh() {
+    setState(() {
+      loading = true;
+      requests = [];
+    });
     getEnrollmentRequests();
   }
 
@@ -146,7 +156,7 @@ class _StudentEnrollmentRequestsPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const CustomisedText(
-                    text: 'Requests\'s Status',
+                    text: 'Request(s) Status',
                     fontSize: 50,
                   ),
                   const SizedBox(
@@ -261,6 +271,7 @@ class _StudentEnrollmentRequestsPageState
                           : SingleChildScrollView(
                               child: StudentEnrollmentRequestsDataTable(
                                 requests: requests,
+                                refresh: refresh,
                               ),
                             )),
                     ),

@@ -151,6 +151,15 @@ class _FacultyEnrollmentRequestsPageState
     getEnrollmentRequests();
   }
 
+  void refresh() {
+    setState(() {
+      loading = true;
+      requests = [];
+      Team_names = {};
+    });
+    getEnrollmentRequests();
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
@@ -268,6 +277,7 @@ class _FacultyEnrollmentRequestsPageState
                               child: EnrollmentRequestsDataTable(
                                 requests: requests,
                                 Team_names: Team_names,
+                                refresh: refresh,
                               ),
                             ),
                           ),
