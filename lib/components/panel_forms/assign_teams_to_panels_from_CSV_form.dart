@@ -38,9 +38,18 @@ class _AssignTeamsToPanelsFromCSVFormState
         final file = fileValue.first as PlatformFile;
         final bytes = await file.bytes;
         final csvString = utf8.decode(bytes!);
-        final csvTable = csvString.split(',');
+        final csvTable = csvString.split('\n');
         setState(() {
           csvData = csvTable;
+          var x;
+          var temp;
+          for (int i = 0; i < csvData.length; i++) {
+            temp = csvData[i].split(',');
+            for (int j = 0; j < temp.length; j++) {
+              x.add(temp[j]);
+            }
+          }
+          csvData = x;
         });
         // Do something with the CSV data
         // ...
