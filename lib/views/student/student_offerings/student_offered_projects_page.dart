@@ -48,6 +48,7 @@ class _StudentOfferedProjectsPageState
         .where('status', isEqualTo: 'open')
         .get()
         .then((value) async {
+      int idnum = 1;
       for (var doc in value.docs) {
         var len = offerings.length;
         Project project = Project(
@@ -117,7 +118,7 @@ class _StudentOfferedProjectsPageState
                   }
                   if (flag == 1) {
                     Offering offering = Offering(
-                        id: (len + 1).toString(),
+                        id: (idnum++).toString(),
                         project: project,
                         instructor: faculty,
                         semester: doc['semester'],
