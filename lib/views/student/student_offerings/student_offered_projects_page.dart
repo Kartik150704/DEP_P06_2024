@@ -92,8 +92,8 @@ class _StudentOfferedProjectsPageState
               .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
               .get()
               .then((value) {
-            var doc = value.docs[0];
-            String studendId = doc['id'];
+            var docx = value.docs[0];
+            String studendId = docx['id'];
             FirebaseFirestore.instance
                 .collection('team')
                 .get()
@@ -124,7 +124,9 @@ class _StudentOfferedProjectsPageState
                         year: doc['year'],
                         course: doc['type'],
                         key_id: doc.id);
-                    offerings.add(offering);
+                    setState(() {
+                      offerings.add(offering);
+                    });
                   }
                 });
               }

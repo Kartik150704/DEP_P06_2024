@@ -75,7 +75,11 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             student[2] = (doc['id']);
             student[3] = (doc['cgpa']);
             student[4] = (doc['contact']);
-            student[5] = (doc['proj_id'][0]);
+            if (doc['proj_id'][0] != null) {
+              student[5] = (doc['proj_id'][0]);
+            } else {
+              student[5] = 'NA';
+            }
 
             FirebaseFirestore.instance
                 .collection('projects')
