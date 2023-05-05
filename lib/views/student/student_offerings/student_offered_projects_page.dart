@@ -19,7 +19,7 @@ class StudentOfferedProjectsPage extends StatefulWidget {
 class _StudentOfferedProjectsPageState
     extends State<StudentOfferedProjectsPage> {
   bool loading = true, searching = false;
-  String? supervisorName, projectTitle, semester, year;
+  String? supervisorName, projectTitle, course, yearSemester;
   List<Offering> offerings = [];
   final supervisorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
@@ -78,13 +78,15 @@ class _StudentOfferedProjectsPageState
             }
           }
 
-          if (semester != null) {
-            String semester = this.semester.toString().toLowerCase();
+          String semestersearch = yearSemesterController.text.split('-')[1];
+          String yearsearch = yearSemesterController.text.split('-')[0];
+          if (semestersearch != null) {
+            String semester = semestersearch.toString().toLowerCase();
             if (!doc['semester'].toLowerCase().contains(semester)) flag = 0;
           }
 
-          if (year != null) {
-            String year = this.year.toString().toLowerCase();
+          if (yearsearch != null) {
+            String year = yearsearch.toString().toLowerCase();
             if (!doc['year'].toLowerCase().contains(year)) flag = 0;
           }
 
@@ -243,21 +245,35 @@ class _StudentOfferedProjectsPageState
                           ),
                           onPressed: () {
                             setState(() {
-                              // supervisorName =
-                              //     supervisorNameController.text.trim() == ''
-                              //         ? null
-                              //         : supervisorNameController.text.trim();
-                              // projectTitle =
-                              //     projectTitleController.text.trim() == ''
-                              //         ? null
-                              //         : projectTitleController.text.trim();
-                              // semester = semesterController.text.trim() == ''
-                              //     ? null
-                              //     : semesterController.text.trim();
-                              // year = yearController.text.trim() == ''
-                              //     ? null
-                              //     : yearController.text.trim();
+                              projectTitle =
+                                  projectTitleController.text.trim() == ''
+                                      ? null
+                                      : projectTitleController.text.trim();
+                              supervisorName =
+                                  supervisorNameController.text.trim() == ''
+                                      ? null
+                                      : supervisorNameController.text.trim();
+                              course = courseCodeController.text.trim() == ''
+                                  ? null
+                                  : courseCodeController.text.trim();
+                              yearSemester =
+                                  yearSemesterController.text.trim() == ''
+                                      ? null
+                                      : yearSemesterController.text.trim();
                             });
+                            if (yearSemester == null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const AlertDialog(
+                                      title: CustomisedText(
+                                        text: 'year-semester cannot be empty',
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  });
+                              return;
+                            }
                             setState(() {
                               searching = true;
                             });
