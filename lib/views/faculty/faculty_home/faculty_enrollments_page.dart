@@ -308,7 +308,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     if (loading) {
       return Expanded(
@@ -352,62 +354,62 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 33 * fem,
+                        width: 33 * wfem,
                       ),
                       Tooltip(
                         message: 'Project Title',
                         child: SearchTextField(
                           textEditingController: projectTitleController,
                           hintText: 'Project',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Team Identification Number',
                         child: SearchTextField(
                           textEditingController: teamIdController,
                           hintText: 'Team Identification',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Student\'s Name',
                         child: SearchTextField(
                           textEditingController: studentNameController,
                           hintText: 'Student\'s Name',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Course Code',
                         child: SearchTextField(
                           textEditingController: courseCodeController,
                           hintText: 'Course',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Session',
                         child: SearchTextField(
                           textEditingController: yearSemesterController,
                           hintText: 'Session',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 25 * fem,
+                        width: 25 * wfem,
                       ),
                       SizedBox(
                         height: 47,
@@ -433,9 +435,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     ],
                   ),
                   Container(
-                    width: 1200 * fem,
-                    height: 525 * fem,
-                    margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
+                    width: 1200 * wfem,
+                    height: 525 * wfem,
+                    margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: const [
@@ -454,7 +456,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       child: (searching
                           ? SizedBox(
                               width: double.infinity,
-                              height: 500 * fem,
+                              height: 500 * wfem,
                               child: const Center(
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(

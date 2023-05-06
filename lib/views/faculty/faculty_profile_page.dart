@@ -49,12 +49,12 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth * 0.97;
-    double ffem = fem * 0.97;
+    double wfem = MediaQuery.of(context).size.width / baseWidth * 0.97;
+    double fwfem = wfem * 0.97;
     return Row(
       children: [
         Container(
-          width: 300 * ffem,
+          width: 300 * fwfem,
           color: const Color(0xff545161),
           child: ListView(
             children: [
@@ -111,42 +111,43 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
         ),
         Expanded(
           child: Container(
-            padding: EdgeInsets.fromLTRB(34 * fem, 40 * fem, 0 * fem, 40 * fem),
+            padding:
+                EdgeInsets.fromLTRB(34 * wfem, 40 * wfem, 0 * wfem, 40 * wfem),
             height: double.infinity,
             color: const Color(0xff302c42),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin:
-                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 289 * fem, 0 * fem),
+                  margin: EdgeInsets.fromLTRB(
+                      0 * wfem, 0 * wfem, 289 * wfem, 0 * wfem),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         margin: EdgeInsets.fromLTRB(
-                            66 * fem, 0 * fem, 0 * fem, 70 * fem),
+                            66 * wfem, 0 * wfem, 0 * wfem, 70 * wfem),
                         child: Text(
                           '${name[0]} ${name[1]}\'s Profile',
                           style: SafeGoogleFont(
                             'Ubuntu',
-                            fontSize: 50 * ffem,
+                            fontSize: 50 * fwfem,
                             fontWeight: FontWeight.w700,
-                            height: 1.2175 * ffem / fem,
+                            height: 1.2175 * fwfem / wfem,
                             color: const Color(0xffffffff),
                           ),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(
-                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * wfem, 0 * wfem, 0 * wfem, 9 * wfem),
                         child: Text(
                           'Name - ${faculty[0]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
-                            fontSize: 25 * ffem,
+                            fontSize: 25 * fwfem,
                             fontWeight: FontWeight.w700,
-                            height: 1.2175 * ffem / fem,
+                            height: 1.2175 * fwfem / wfem,
                             color: const Color(0xffffffff),
                           ),
                         ),
@@ -154,28 +155,28 @@ class _FacultyProfilePageState extends State<FacultyProfilePage> {
                       Container(
                         // programprogram5jG (225:254)
                         margin: EdgeInsets.fromLTRB(
-                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * wfem, 0 * wfem, 0 * wfem, 9 * wfem),
                         child: Text(
                           'Department - ${faculty[1]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
-                            fontSize: 25 * ffem,
+                            fontSize: 25 * fwfem,
                             fontWeight: FontWeight.w700,
-                            height: 1.2175 * ffem / fem,
+                            height: 1.2175 * fwfem / wfem,
                             color: const Color(0xffffffff),
                           ),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(
-                            66 * fem, 0 * fem, 0 * fem, 9 * fem),
+                            66 * wfem, 0 * wfem, 0 * wfem, 9 * wfem),
                         child: Text(
                           'Contact - ${faculty[2]}',
                           style: SafeGoogleFont(
                             'Ubuntu',
-                            fontSize: 25 * ffem,
+                            fontSize: 25 * fwfem,
                             fontWeight: FontWeight.w700,
-                            height: 1.2175 * ffem / fem,
+                            height: 1.2175 * fwfem / wfem,
                             color: const Color(0xffffffff),
                           ),
                         ),

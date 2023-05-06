@@ -13,10 +13,10 @@ class DataNotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth);
+    double wfem = (MediaQuery.of(context).size.width / baseWidth);
 
     return SizedBox(
-      height: 470 * fem,
+      height: 470 * wfem,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

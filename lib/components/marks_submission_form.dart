@@ -32,7 +32,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormBuilderState>();
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double wfem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     if (widget.status || widget.isFaculty) {
       return FormBuilder(
@@ -93,7 +93,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //     decoration: const BoxDecoration(
     //       color: Color.fromARGB(255, 198, 189, 207),
     //     ),
-    //     width: 350 * fem,
+    //     width: 350 * wfem,
     //     child: Column(
     //       crossAxisAlignment: CrossAxisAlignment.start,
     //       children: [
@@ -101,7 +101,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 15,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(20 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(20 * wfem, 0, 0, 0),
     //           child: CustomisedText(
     //             text: widget.evaluation.week,
     //             color: Colors.black,
@@ -112,7 +112,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 30,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(45 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(45 * wfem, 0, 0, 0),
     //           child: const CustomisedText(
     //             text: 'Enter Obtained Marks',
     //             color: Colors.black,
@@ -130,7 +130,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 30,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(45 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(45 * wfem, 0, 0, 0),
     //           child: const CustomisedText(
     //             text: 'Enter Remarks',
     //             color: Colors.black,
@@ -177,7 +177,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //     decoration: const BoxDecoration(
     //       color: Color.fromARGB(255, 198, 189, 207),
     //     ),
-    //     width: 350 * fem,
+    //     width: 350 * wfem,
     //     child: Column(
     //       crossAxisAlignment: CrossAxisAlignment.start,
     //       children: [
@@ -185,7 +185,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 15,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(20 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(20 * wfem, 0, 0, 0),
     //           child: CustomisedText(
     //             text: widget.evaluation.week,
     //             color: Colors.black,
@@ -196,7 +196,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 30,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(35 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(35 * wfem, 0, 0, 0),
     //           child: const CustomisedText(
     //             text: 'Marks Obtained',
     //             color: Colors.black,
@@ -206,7 +206,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 5,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(37 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(37 * wfem, 0, 0, 0),
     //           child: SelectionArea(
     //             child: Text(
     //               widget.evaluation.marks,
@@ -225,7 +225,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 30,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(35 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(35 * wfem, 0, 0, 0),
     //           child: const CustomisedText(
     //             text: 'Remarks',
     //             color: Colors.black,
@@ -235,7 +235,7 @@ class _MarksSubmissionFormState extends State<MarksSubmissionForm> {
     //           height: 5,
     //         ),
     //         Container(
-    //           margin: EdgeInsets.fromLTRB(37 * fem, 0, 0, 0),
+    //           margin: EdgeInsets.fromLTRB(37 * wfem, 0, 0, 0),
     //           child: SelectionArea(
     //             child: Text(
     //               widget.evaluation.remarks,

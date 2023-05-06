@@ -65,12 +65,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth);
+    double wfem = (MediaQuery.of(context).size.width / baseWidth);
 
     return Row(
       children: [
         Container(
-          width: 300 * fem,
+          width: 300 * wfem,
           color: const Color(0xff545161),
           child: ListView(
             children: [

@@ -17,8 +17,7 @@ class FacultyOfferedProjectsPage extends StatefulWidget {
 
 class _FacultyOfferedProjectsPageState
     extends State<FacultyOfferedProjectsPage> {
-  bool loading = true,
-      searcing = false;
+  bool loading = true, searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
   String? supervisorName, projectTitle, course, year_semester;
@@ -47,7 +46,7 @@ class _FacultyOfferedProjectsPageState
         .where('status', isEqualTo: 'open')
         .get()
         .then(
-          (value) async {
+      (value) async {
         for (var doc in value.docs) {
           var len = offerings.length;
           Project project = Project(
@@ -166,10 +165,7 @@ class _FacultyOfferedProjectsPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery
-        .of(context)
-        .size
-        .width / baseWidth;
+    double wfem = MediaQuery.of(context).size.width / baseWidth;
     if (loading) {
       return const LoadingPage();
     }
@@ -201,51 +197,51 @@ class _FacultyOfferedProjectsPageState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 33 * fem,
+                          width: 33 * wfem,
                         ),
                         Tooltip(
                           message: 'Project Title',
                           child: SearchTextField(
                             textEditingController: projectTitleController,
                             hintText: 'Project',
-                            width: 170 * fem,
+                            width: 170 * wfem,
                           ),
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         Tooltip(
                           message: 'Instuctor\'s Name',
                           child: SearchTextField(
                             textEditingController: instructorNameController,
                             hintText: 'Instructor\'s Name',
-                            width: 170 * fem,
+                            width: 170 * wfem,
                           ),
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         Tooltip(
                           message: 'Course',
                           child: SearchTextField(
                             textEditingController: courseController,
                             hintText: 'Course',
-                            width: 170 * fem,
+                            width: 170 * wfem,
                           ),
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         Tooltip(
                           message: 'Year',
                           child: SearchTextField(
                             textEditingController: yearSemesterController,
                             hintText: 'Year',
-                            width: 170 * fem,
+                            width: 170 * wfem,
                           ),
                         ),
                         SizedBox(
-                          width: 25 * fem,
+                          width: 25 * wfem,
                         ),
                         SizedBox(
                           height: 47,
@@ -255,7 +251,7 @@ class _FacultyOfferedProjectsPageState
                               borderRadius: BorderRadius.circular(2),
                             ),
                             backgroundColor:
-                            const Color.fromARGB(255, 212, 203, 216),
+                                const Color.fromARGB(255, 212, 203, 216),
                             splashColor: Colors.black,
                             hoverColor: Colors.grey,
                             child: const Icon(
@@ -271,9 +267,9 @@ class _FacultyOfferedProjectsPageState
                       ],
                     ),
                     Container(
-                      width: 1200 * fem,
-                      height: 525 * fem,
-                      margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
+                      width: 1200 * wfem,
+                      height: 525 * wfem,
+                      margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
@@ -294,23 +290,23 @@ class _FacultyOfferedProjectsPageState
                             padding: const EdgeInsets.all(20),
                             child: (searcing
                                 ? SizedBox(
-                              width: double.infinity,
-                              height: 500 * fem,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  valueColor:
-                                  AlwaysStoppedAnimation<Color>(
-                                      Colors.black),
-                                ),
-                              ),
-                            )
+                                    width: double.infinity,
+                                    height: 500 * wfem,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.black),
+                                      ),
+                                    ),
+                                  )
                                 : SingleChildScrollView(
-                              child: OfferedProjectsDataTable(
-                                offerings: offerings,
-                                isStudent: false,
-                                refresh: refresh,
-                              ),
-                            )),
+                                    child: OfferedProjectsDataTable(
+                                      offerings: offerings,
+                                      isStudent: false,
+                                      refresh: refresh,
+                                    ),
+                                  )),
                           ),
                         ),
                       ),

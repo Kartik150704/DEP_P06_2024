@@ -160,7 +160,9 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     if (loading) {
       return const LoadingPage();
@@ -213,31 +215,31 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 33 * fem,
+                          width: 33 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: teamIdController,
                           hintText: 'Team Identification',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: studentNameController,
                           hintText: 'Student Name',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: studentEntryNumberController,
                           hintText: 'Student Entry Number',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 25 * fem,
+                          width: 25 * wfem,
                         ),
                         SizedBox(
                           height: 47,
@@ -261,9 +263,9 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                       ],
                     ),
                     Container(
-                      width: 1200 * fem,
-                      height: 525 * fem,
-                      margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
+                      width: 1200 * wfem,
+                      height: 525 * wfem,
+                      margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [

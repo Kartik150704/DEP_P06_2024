@@ -109,13 +109,13 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double wfem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return SelectionArea(
       child: Row(
         children: [
           Container(
-            width: 300 * fem,
+            width: 300 * wfem,
             color: const Color(0xff545161),
             child: ListView(
               children: [
@@ -170,7 +170,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(60, 30, 200 * fem, 0),
+                    margin: EdgeInsets.fromLTRB(60, 30, 200 * wfem, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -230,7 +230,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     ),
                   ),
                   Container(
-                    width: 500 * fem,
+                    width: 500 * wfem,
                     margin: const EdgeInsets.fromLTRB(0, 30, 0, 85),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),

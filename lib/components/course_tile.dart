@@ -21,10 +21,10 @@ class CourseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double wfem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return Container(
-      width: 350 * fem,
+      width: 350 * wfem,
       height: 250,
       decoration: BoxDecoration(
         color: (status == '0'
@@ -47,7 +47,7 @@ class CourseTile extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(5),
-            width: 350 * fem,
+            width: 350 * wfem,
             height: 80,
             decoration: BoxDecoration(
               color: (status == '0'

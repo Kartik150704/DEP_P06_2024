@@ -48,11 +48,11 @@ class _OfferingTileState extends State<OfferingTile> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
+    double wfem = (MediaQuery.of(context).size.width / baseWidth) * 0.97;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-      width: 850 * fem,
+      width: 850 * wfem,
       // height: 250,
       decoration: BoxDecoration(
         color: (widget.status == '0'
@@ -77,7 +77,7 @@ class _OfferingTileState extends State<OfferingTile> {
         children: [
           Container(
             margin: const EdgeInsets.all(5),
-            width: 850 * fem,
+            width: 850 * wfem,
             height: 80,
             decoration: BoxDecoration(
               color: (widget.status == '0'

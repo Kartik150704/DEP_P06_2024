@@ -160,7 +160,7 @@ class _StudentOfferedProjectsPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth);
+    double wfem = (MediaQuery.of(context).size.width / baseWidth);
 
     if (loading) {
       return const LoadingPage();
@@ -188,51 +188,51 @@ class _StudentOfferedProjectsPageState
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 33 * fem,
+                        width: 33 * wfem,
                       ),
                       Tooltip(
                         message: 'Title Of The Project',
                         child: SearchTextField(
                           textEditingController: projectTitleController,
                           hintText: 'Project',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Name Of The Supervisor',
                         child: SearchTextField(
                           textEditingController: supervisorNameController,
                           hintText: 'Supervisor\'s Name',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Code Of The Course',
                         child: SearchTextField(
                           textEditingController: courseCodeController,
                           hintText: 'Course',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 20 * fem,
+                        width: 20 * wfem,
                       ),
                       Tooltip(
                         message: 'Session (Year-Semester)',
                         child: SearchTextField(
                           textEditingController: yearSemesterController,
                           hintText: 'Session',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                       ),
                       SizedBox(
-                        width: 25 * fem,
+                        width: 25 * wfem,
                       ),
                       SizedBox(
                         height: 47,
@@ -291,9 +291,9 @@ class _StudentOfferedProjectsPageState
                     ],
                   ),
                   Container(
-                    width: 1200 * fem,
-                    height: 525 * fem,
-                    margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
+                    width: 1200 * wfem,
+                    height: 525 * wfem,
+                    margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: const [
@@ -312,7 +312,7 @@ class _StudentOfferedProjectsPageState
                       child: (searching
                           ? SizedBox(
                               width: double.infinity,
-                              height: 500 * fem,
+                              height: 500 * wfem,
                               child: const Center(
                                 child: CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(

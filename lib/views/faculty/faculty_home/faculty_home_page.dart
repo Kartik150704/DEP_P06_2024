@@ -122,12 +122,14 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     return Row(
       children: [
-        Container(
-          width: 300 * fem,
+        SizedBox(
+          width: 300 * wfem,
           child: Scaffold(
             body: Container(
               color: const Color(0xff545161),
@@ -161,7 +163,7 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
                         onPressed: addEvent,
                       ),
                       SizedBox(
-                        height: 50 * fem,
+                        height: 50 * wfem,
                       ),
                     ],
                   )

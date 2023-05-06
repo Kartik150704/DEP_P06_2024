@@ -14,8 +14,10 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double fwfem = wfem * 0.97;
     const buttonColor = Color(0xff1a1d2d);
 
     return TextButton(
@@ -24,15 +26,15 @@ class CustomButton extends StatelessWidget {
         padding: EdgeInsets.zero,
       ),
       child: Container(
-        width: 127 * fem,
-        height: 43 * fem,
+        width: 127 * wfem,
+        height: 43 * wfem,
         decoration: BoxDecoration(
           color: buttonColor,
-          borderRadius: BorderRadius.circular(10 * fem),
+          borderRadius: BorderRadius.circular(10 * wfem),
           boxShadow: [
             BoxShadow(
               color: buttonColor,
-              offset: Offset(0 * fem, 4 * fem),
+              offset: Offset(0 * wfem, 4 * wfem),
             ),
           ],
         ),
@@ -41,9 +43,9 @@ class CustomButton extends StatelessWidget {
             buttonText,
             style: SafeGoogleFont(
               'Ubuntu',
-              fontSize: 13 * ffem,
+              fontSize: 13 * fwfem,
               fontWeight: FontWeight.w700,
-              height: 1.2175 * ffem / fem,
+              height: 1.2175 * fwfem / wfem,
               color: Color(0xffe1e3e8),
             ),
           ),

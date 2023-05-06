@@ -77,17 +77,16 @@ class _CoordinatorPanelManagementPageState
                   numberOfEvaluators: int.parse(doc['number_of_evaluators']),
                   evaluators: List<Faculty>.generate(
                       int.parse(doc['number_of_evaluators']),
-                          (index) =>
-                          Faculty(
-                              id: doc['evaluator_ids'][index],
-                              name: doc['evaluator_names'][index],
-                              email: ''))),
+                      (index) => Faculty(
+                          id: doc['evaluator_ids'][index],
+                          name: doc['evaluator_names'][index],
+                          email: ''))),
               assignedTeams: [],
               evaluations: [],
               assignedProjectIds:
-              List<String>.from(doc['assigned_project_ids']),
+                  List<String>.from(doc['assigned_project_ids']),
               numberOfAssignedProjects:
-              int.tryParse(doc['number_of_assigned_projects']),
+                  int.tryParse(doc['number_of_assigned_projects']),
             ),
           );
         });
@@ -107,10 +106,7 @@ class _CoordinatorPanelManagementPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = MediaQuery
-        .of(context)
-        .size
-        .width / baseWidth;
+    double wfem = MediaQuery.of(context).size.width / baseWidth;
 
     if (loading) {
       return const LoadingPage();
@@ -146,47 +142,47 @@ class _CoordinatorPanelManagementPageState
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 33 * fem,
+                          width: 33 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: panelIdController,
                           hintText: 'Panel Identification',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: evaluatorNameController,
                           hintText: 'Evaluator\'s Name',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: termController,
                           hintText: 'Term',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: courseController,
                           hintText: 'Course',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 20 * fem,
+                          width: 20 * wfem,
                         ),
                         SearchTextField(
                           textEditingController: yearSemesterController,
                           hintText: 'Year-Semester',
-                          width: 170 * fem,
+                          width: 170 * wfem,
                         ),
                         SizedBox(
-                          width: 25 * fem,
+                          width: 25 * wfem,
                         ),
                         SizedBox(
                           height: 47,
@@ -196,7 +192,7 @@ class _CoordinatorPanelManagementPageState
                               borderRadius: BorderRadius.circular(2),
                             ),
                             backgroundColor:
-                            const Color.fromARGB(255, 212, 203, 216),
+                                const Color.fromARGB(255, 212, 203, 216),
                             splashColor: Colors.black,
                             hoverColor: Colors.grey,
                             child: const Icon(
@@ -210,9 +206,9 @@ class _CoordinatorPanelManagementPageState
                       ],
                     ),
                     Container(
-                      width: 1200 * fem,
-                      height: 525 * fem,
-                      margin: EdgeInsets.fromLTRB(40, 15, 80 * fem, 0),
+                      width: 1200 * wfem,
+                      height: 525 * wfem,
+                      margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
