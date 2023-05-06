@@ -11,9 +11,6 @@ class LoginScaffold extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  void onPressed() {}
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

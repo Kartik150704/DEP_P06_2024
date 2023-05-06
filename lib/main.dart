@@ -1,7 +1,7 @@
 import 'package:casper/utilities/auth.dart';
+import 'package:casper/utilities/fake_device_pixel_ratio.dart';
 import 'package:casper/utilities/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +22,10 @@ class Casper extends StatelessWidget {
     return MaterialApp(
       title: 'Casper',
       debugShowCheckedModeBanner: false,
-      home: Auth(),
+      home: FakeDevicePixelRatio(
+        fakeDevicePixelRatio: 1,
+        child: Auth(),
+      ),
     );
   }
 }

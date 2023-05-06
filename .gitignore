@@ -39,3 +39,7 @@ app.*.symbols
 app.*.map.json
 /test/
 /macos/
+
+# Firebase related
+.firebase
+.firebaserc
