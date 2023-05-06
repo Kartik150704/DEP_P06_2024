@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:casper/components/customised_overflow_text.dart';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_overflow_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +27,7 @@ class _FacultyEnrollmentsDataTableState
   int? sortColumnIndex;
   bool isAscending = false;
 
+  // TODO: Fetch these values
   final int totalWeekly = evaluationCriteriasGLOBAL[0].regular,
       totalMidterm = evaluationCriteriasGLOBAL[0].midtermSupervisor,
       totalMidtermPanel = evaluationCriteriasGLOBAL[0].midtermPanel,
@@ -449,11 +450,14 @@ class _FacultyEnrollmentsDataTableState
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 140,
-                child: CustomisedOverflowText(
-                  text: data.student.name,
-                  color: Colors.black,
+              Tooltip(
+                message: '${data.student.name} (${data.student.entryNumber})',
+                child: SizedBox(
+                  width: 140,
+                  child: CustomisedOverflowText(
+                    text: data.student.name,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

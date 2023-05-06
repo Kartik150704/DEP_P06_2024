@@ -157,13 +157,13 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CustomisedButton(
-                        width: 250,
+                        width: 200 * wfem,
                         height: 60,
                         text: 'Add Event',
                         onPressed: addEvent,
                       ),
-                      SizedBox(
-                        height: 50 * wfem,
+                      const SizedBox(
+                        height: 55,
                       ),
                     ],
                   )

@@ -5,12 +5,13 @@ class CustomisedText extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final text, fontSize, color, selectable;
 
-  const CustomisedText(
-      {super.key,
-      required this.text,
-      this.fontSize = 20,
-      this.color = Colors.white,
-      this.selectable = true});
+  const CustomisedText({
+    super.key,
+    required this.text,
+    this.fontSize = 20,
+    this.color = Colors.white,
+    this.selectable = true,
+  });
 
   @override
   Widget build(BuildContext context) {

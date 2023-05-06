@@ -1,5 +1,5 @@
 import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

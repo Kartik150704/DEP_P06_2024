@@ -1,5 +1,5 @@
 import 'package:casper/components/confirm_action.dart';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/student/student_enrollment_requests_data_table.dart';
 import 'package:casper/models/models.dart';

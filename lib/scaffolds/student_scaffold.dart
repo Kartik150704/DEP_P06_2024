@@ -1,4 +1,4 @@
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:casper/views/student/student_home_page.dart';

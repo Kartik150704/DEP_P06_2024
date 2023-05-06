@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'dart:convert';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

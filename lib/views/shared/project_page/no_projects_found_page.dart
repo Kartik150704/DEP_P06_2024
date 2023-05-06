@@ -1,4 +1,4 @@
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:flutter/material.dart';
 
 class NoProjectsFoundPage extends StatelessWidget {

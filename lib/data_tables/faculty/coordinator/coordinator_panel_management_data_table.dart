@@ -1,6 +1,6 @@
 import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/customised_overflow_text.dart';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_overflow_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 

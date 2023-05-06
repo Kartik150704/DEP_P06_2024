@@ -1,5 +1,5 @@
 import 'package:casper/components/confirm_action.dart';
-import 'package:casper/components/customised_text.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
 import 'package:casper/components/panel_forms/add_teams_form.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_panel_management_data_table.dart';

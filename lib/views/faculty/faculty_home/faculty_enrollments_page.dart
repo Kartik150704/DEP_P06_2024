@@ -1,8 +1,9 @@
-import 'package:casper/components/customised_text.dart';
+import 'dart:math';
+
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/faculty_enrollments_data_table.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       studentNameController = TextEditingController(),
       courseCodeController = TextEditingController(text: 'CP302'),
       yearSemesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   void getSupervisorEnrollments() {
     setState(() {
@@ -311,6 +314,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
     double wfem = (MediaQuery.of(context).size.width *
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     if (loading) {
       return Expanded(
@@ -436,7 +442,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   ),
                   Container(
                     width: 1200 * wfem,
-                    height: 525 * wfem,
+                    height: 1000 * hfem,
                     margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -464,15 +470,42 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                                 ),
                               ),
                             )
-                          : SingleChildScrollView(
-                              child: FacultyEnrollmentsDataTable(
-                                enrollments: enrollments,
-                                userRole: widget.userRole,
-                                viewProject: widget.viewProject,
+                          : SizedBox(
+                              height: 500,
+                              width: 400,
+                              child: Scrollbar(
+                                controller: verticalScrollController,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                child: Scrollbar(
+                                  controller: horizontalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  notificationPredicate: (notif) =>
+                                      notif.depth == 1,
+                                  child: SingleChildScrollView(
+                                    controller: verticalScrollController,
+                                    child: SingleChildScrollView(
+                                      controller: horizontalScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: SizedBox(
+                                        width: max(1217, 950 * wfem),
+                                        child: FacultyEnrollmentsDataTable(
+                                          enrollments: enrollments,
+                                          userRole: widget.userRole,
+                                          viewProject: widget.viewProject,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             )),
                     ),
                   ),
+                  const SizedBox(
+                    height: 65,
+                  )
                 ],
               ),
             )
