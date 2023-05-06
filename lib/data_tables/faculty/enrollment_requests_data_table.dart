@@ -41,10 +41,10 @@ class _EnrollmentRequestDataTableState
               child: ConfirmAction(
                 onSubmit: () async {
                   // update enrollment request status to 1
-                  await FirebaseFirestore.instance
-                      .collection('enrollment_requests')
-                      .doc(request.key_id)
-                      .update({'status': '1'});
+                  // await FirebaseFirestore.instance
+                  //     .collection('enrollment_requests')
+                  //     .doc(request.key_id)
+                  //     .update({'status': '1'});
 
                   // create project document
 
@@ -57,6 +57,32 @@ class _EnrollmentRequestDataTableState
                     List<Student> students = [];
                     for (int i = 0; i < teamDoc['students'].length; i++) {
                       String studentId = teamDoc['students'][i];
+                      print(studentId);
+                      //update proj_id[0] to project_id and proj_id[1] to null
+                      FirebaseFirestore.instance
+                          .collection('student')
+                          .where('id', isEqualTo: studentId)
+                          .get()
+                          .then((studentDocs) {
+                        print(studentDocs.docs[0]);
+                        var studentDoc = studentDocs.docs[0];
+                        var proj_id = studentDoc['proj_id'];
+                        if (request.offering.course == 'CP301') {
+                          proj_id[0] = request.offering.project.id;
+                        } else if (request.offering.course == 'CP302') {
+                          proj_id[1] = request.offering.project.id;
+                        } else if (request.offering.course == 'CP303') {
+                          proj_id[2] = request.offering.project.id;
+                        }
+                        var updateData = {
+                          'proj_id': proj_id,
+                        };
+                        print(proj_id);
+                        FirebaseFirestore.instance
+                            .collection('student')
+                            .doc(studentDoc.id)
+                            .update(updateData);
+                      });
                       FirebaseFirestore.instance
                           .collection('student')
                           .where('id', isEqualTo: studentId)
