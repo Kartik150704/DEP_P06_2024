@@ -51,12 +51,17 @@ class _FacultyEnrollmentRequestsPageState
         var len = requests.length;
         await FirebaseFirestore.instance
             .collection('offerings')
+            // .where(FieldPath.documentId,
+            //     isEqualTo: doc['offering_id'].toString().trim())
             .get()
             .then((value) async {
           for (var doc1 in value.docs) {
             if (doc1.id != doc['offering_id']) {
               continue;
             }
+            print(doc1['instructor_name']);
+
+            print(doc1['description']);
             if (doc1['instructor_id'] ==
                 FirebaseAuth.instance.currentUser!.uid) {
               Project project = Project(
@@ -138,6 +143,7 @@ class _FacultyEnrollmentRequestsPageState
         });
       }
     });
+    print(Team_names);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         loading = false;

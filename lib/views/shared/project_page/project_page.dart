@@ -24,12 +24,13 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  bool loading = true, searching = false;
+  bool loading = true,
+      searching = false;
 
   // TODO: Fetch these values from db
   Enrollment? enrollment;
   List<AssignedPanel> assignedPanels = [];
-  ReleasedEvents releasedEvents = releasedEventsGLOBAL[0];
+  late ReleasedEvents releasedEvents;
   String evaluation_doc_id = '';
   final eventController = TextEditingController(),
       studentNameController = TextEditingController(),
@@ -40,6 +41,56 @@ class _ProjectPageState extends State<ProjectPage> {
   Team team = teamsGLOBAL[0];
 
   // TODO: heavy refactoring of query, but it works as of now
+
+  void getReleasedEvents() {
+    FirebaseFirestore.instance
+        .collection('projects')
+        .doc(widget.projectId)
+        .get()
+        .then((value) {
+      if (value.exists) {
+        String semester = value['semester'];
+        String year = value['year'];
+        String course = value['type'];
+        FirebaseFirestore.instance
+            .collection('released_events')
+            .where('semester', isEqualTo: semester)
+            .where('year', isEqualTo: year)
+            .where('course', isEqualTo: course)
+            .get()
+            .then((value) {
+          if (value.docs.isNotEmpty) {
+            var doc = value.docs[0];
+            Map events = doc['events'];
+            List<Event> eventList = [];
+            for (var event in events.keys) {
+              String eventName = event.toString();
+              if (event.toString().contains('week')) {
+                eventName = 'week-' + event.toString().split('week')[1];
+              }
+              eventList.add(Event(
+                  id: '1',
+                  type: eventName,
+                  start: events[event]['start'],
+                  end: events[event]['end']));
+            }
+            setState(() {
+              releasedEvents = ReleasedEvents(
+                id: '0',
+                semester: semester,
+                year: year,
+                course: course,
+                events: eventList,
+              );
+            });
+          }
+        });
+      } else {
+        print(widget.projectId +
+            ' not found in projects collection function get released events');
+      }
+    });
+  }
 
   void getAssignedPanels() {
     FirebaseFirestore.instance
@@ -53,7 +104,7 @@ class _ProjectPageState extends State<ProjectPage> {
       });
       List<String> assignedPanelIds = List<String>.generate(
           doc['assigned_panels'].length,
-          (index) => doc['assigned_panels'][index].toString());
+              (index) => doc['assigned_panels'][index].toString());
       if (assignedPanelIds.length == 0) {
         setState(() {
           loading = false;
@@ -79,20 +130,20 @@ class _ProjectPageState extends State<ProjectPage> {
           for (var assignedPanelDoc in assignedPanelDocs.docs) {
             assignedPanelTerm[assignedPanelDoc.id] = assignedPanelDoc['term'];
             assignedPanelSemester[assignedPanelDoc.id] =
-                assignedPanelDoc['semester'];
+            assignedPanelDoc['semester'];
             assignedPanelYear[assignedPanelDoc.id] = assignedPanelDoc['year'];
             assignedPanelPanelId[assignedPanelDoc.id] =
-                assignedPanelDoc['panel_id'];
+            assignedPanelDoc['panel_id'];
             assignedPanelCourse[assignedPanelDoc.id] =
-                assignedPanelDoc['course'];
+            assignedPanelDoc['course'];
             assignedPanelNumberOfEvaluators[assignedPanelDoc.id] =
                 int.tryParse(assignedPanelDoc['number_of_evaluators']);
             assignedPanelEvaluatorIds[assignedPanelDoc.id] =
-                assignedPanelDoc['evaluator_ids'];
+            assignedPanelDoc['evaluator_ids'];
             assignedPanelEvaluatorNames[assignedPanelDoc.id] =
-                assignedPanelDoc['evaluator_names'];
+            assignedPanelDoc['evaluator_names'];
             assignedPanelAssignedProjects[assignedPanelDoc.id] =
-                assignedPanelDoc['assigned_project_ids'];
+            assignedPanelDoc['assigned_project_ids'];
           }
 
           for (String assignedPanelId in assignedPanelIds) {
@@ -133,11 +184,11 @@ class _ProjectPageState extends State<ProjectPage> {
                   semester: assignedPanelSemester[assignedPanelId],
                   year: assignedPanelYear[assignedPanelId],
                   numberOfEvaluators:
-                      assignedPanelNumberOfEvaluators[assignedPanelId],
+                  assignedPanelNumberOfEvaluators[assignedPanelId],
                   evaluators: [
                     for (int i = 0;
-                        i < assignedPanelNumberOfEvaluators[assignedPanelId];
-                        i++)
+                    i < assignedPanelNumberOfEvaluators[assignedPanelId];
+                    i++)
                       Faculty(
                         id: assignedPanelEvaluatorIds[assignedPanelId][i],
                         name: assignedPanelEvaluatorNames[assignedPanelId][i],
@@ -190,7 +241,8 @@ class _ProjectPageState extends State<ProjectPage> {
 
         for (int i = 0; i < n; i++) {
           for (int j = 0; j < studentIds.length; j++) {
-            String studentId = studentIds[j], studentName = studentNames[j];
+            String studentId = studentIds[j],
+                studentName = studentNames[j];
             setState(() {
               if (doc['weekly_evaluations'][i][studentId] == null) return;
               supervisorEvaluations.add(Evaluation(
@@ -282,22 +334,35 @@ class _ProjectPageState extends State<ProjectPage> {
   void initState() {
     super.initState();
     getProjectDetails();
-
+    getReleasedEvents();
     // // TODO: This is temporary, do this in above function instead
     // setState(() {
     //   loading = false;
     // });
   }
 
+  void refresh() {
+    setState(() {
+      enrollment = null;
+      assignedPanels = [];
+      loading = true;
+    });
+    getProjectDetails();
+    getReleasedEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double fem = (MediaQuery.of(context).size.width / baseWidth);
+    double fem = (MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth);
 
     if (loading) {
       return const LoadingPage();
     }
-    print(widget.projectId);
+
     if (widget.projectId == null) {
       return NoProjectsFoundPage(
         selectOption: widget.selectOption,
@@ -329,7 +394,8 @@ class _ProjectPageState extends State<ProjectPage> {
                     margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: CustomisedText(
                       text:
-                          '${enrollment?.offering.instructor.name}, ${enrollment?.offering.year}-${enrollment?.offering.semester}',
+                      '${enrollment?.offering.instructor.name}, ${enrollment
+                          ?.offering.year}-${enrollment?.offering.semester}',
                       fontSize: 22,
                     ),
                   ),
@@ -383,7 +449,7 @@ class _ProjectPageState extends State<ProjectPage> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           backgroundColor:
-                              const Color.fromARGB(255, 212, 203, 216),
+                          const Color.fromARGB(255, 212, 203, 216),
                           splashColor: Colors.black,
                           hoverColor: Colors.grey,
                           child: const Icon(
@@ -417,25 +483,26 @@ class _ProjectPageState extends State<ProjectPage> {
                       padding: const EdgeInsets.all(20),
                       child: (searching
                           ? SizedBox(
-                              width: double.infinity,
-                              height: 500 * fem,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.black),
-                                ),
-                              ),
-                            )
+                        width: double.infinity,
+                        height: 500 * fem,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.black),
+                          ),
+                        ),
+                      )
                           : SingleChildScrollView(
-                              // ignore: prefer_const_constructors
-                              child: ProjectDataTable(
-                                enrollment: enrollment,
-                                assignedPanels: assignedPanels,
-                                releasedEvents: releasedEvents,
-                                isFaculty: widget.isFaculty,
-                                evaluation_doc_id: evaluation_doc_id,
-                              ),
-                            )),
+                        // ignore: prefer_const_constructors
+                        child: ProjectDataTable(
+                          enrollment: enrollment,
+                          assignedPanels: assignedPanels,
+                          releasedEvents: releasedEvents,
+                          isFaculty: widget.isFaculty,
+                          evaluation_doc_id: evaluation_doc_id,
+                          refresh: refresh,
+                        ),
+                      )),
                     ),
                   ),
                 ],

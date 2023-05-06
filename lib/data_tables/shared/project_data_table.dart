@@ -15,13 +15,15 @@ class ProjectDataTable extends StatefulWidget {
       releasedEvents,
       isFaculty,
       evaluation_doc_id;
+  var refresh;
 
-  const ProjectDataTable({
+  ProjectDataTable({
     super.key,
     required this.enrollment,
     required this.assignedPanels,
     required this.releasedEvents,
     required this.evaluation_doc_id,
+    required this.refresh,
     this.isFaculty = false,
   });
 
@@ -35,6 +37,9 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
   List<EnrollmentData> enrollmentData = [];
 
   void getEnrollmentData() {
+    setState(() {
+      enrollmentData.clear();
+    });
     for (var evnt in widget.releasedEvents.events) {
       for (var stdnt in widget.enrollment.team.students) {
         bool isEvaluated = false;
@@ -314,10 +319,16 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
                                                     newWeeklyEvaluations,
                                                 'weekly_comments':
                                                     newWeeklyComments,
+                                              }).then((value) {
+                                                // widget.refresh();
+                                                // setState(() {
+                                                //   enrollmentData = [];
+                                                // });
+                                                // getEnrollmentData();
                                               });
                                             } else {
                                               debugPrint(
-                                                  'evaluation key_id doesn\'t exist in database or is qrongly initialised');
+                                                  'evaluation key_id doesn\'t exist in database or is wrongly initialised');
                                             }
                                           });
                                           Navigator.pop(context);

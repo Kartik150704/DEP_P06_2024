@@ -2,6 +2,7 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/faculty_enrollments_data_table.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
