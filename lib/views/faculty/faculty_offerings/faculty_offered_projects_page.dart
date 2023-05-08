@@ -292,57 +292,50 @@ class _FacultyOfferedProjectsPageState
                           ),
                         ],
                       ),
-                      child: SingleChildScrollView(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: (searcing
-                                ? SizedBox(
-                                    width: double.infinity,
-                                    height: 500 * wfem,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.black),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(
-                                    height: 500,
-                                    width: 400,
-                                    child: Scrollbar(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: (searcing
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 500 * wfem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 500,
+                                width: 400,
+                                child: Scrollbar(
+                                  controller: verticalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  child: Scrollbar(
+                                    controller: horizontalScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    notificationPredicate: (notif) =>
+                                        notif.depth == 1,
+                                    child: SingleChildScrollView(
                                       controller: verticalScrollController,
-                                      thumbVisibility: true,
-                                      trackVisibility: true,
-                                      child: Scrollbar(
+                                      child: SingleChildScrollView(
                                         controller: horizontalScrollController,
-                                        thumbVisibility: true,
-                                        trackVisibility: true,
-                                        notificationPredicate: (notif) =>
-                                            notif.depth == 1,
-                                        child: SingleChildScrollView(
-                                          controller: verticalScrollController,
-                                          child: SingleChildScrollView(
-                                            controller:
-                                                horizontalScrollController,
-                                            scrollDirection: Axis.horizontal,
-                                            child: SizedBox(
-                                              width: max(1217, 950 * wfem),
-                                              child: OfferedProjectsDataTable(
-                                                offerings: offerings,
-                                                isStudent: false,
-                                                refresh: refresh,
-                                              ),
-                                            ),
+                                        scrollDirection: Axis.horizontal,
+                                        child: SizedBox(
+                                          width: max(1217, 950 * wfem),
+                                          child: OfferedProjectsDataTable(
+                                            offerings: offerings,
+                                            isStudent: false,
+                                            refresh: refresh,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  )),
-                          ),
-                        ),
+                                  ),
+                                ),
+                              )),
                       ),
                     ),
                     const SizedBox(
