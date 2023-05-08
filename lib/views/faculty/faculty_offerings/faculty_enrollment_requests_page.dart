@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/enrollment_requests_data_table.dart';
@@ -18,13 +20,15 @@ class FacultyEnrollmentRequestsPage extends StatefulWidget {
 
 class _FacultyEnrollmentRequestsPageState
     extends State<FacultyEnrollmentRequestsPage> {
-  bool loading = true;
+  bool loading = true, searching = false;
   List<EnrollmentRequest> requests = [];
   var Team_names = {};
   final teamIDController = TextEditingController(),
       projectTitleController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
       yearSemesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   void confirmAction() {
     showDialog(
@@ -172,7 +176,9 @@ class _FacultyEnrollmentRequestsPageState
     double wfem = (MediaQuery.of(context).size.width *
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
-
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
     if (loading) {
       return const LoadingPage();
     }
@@ -261,7 +267,7 @@ class _FacultyEnrollmentRequestsPageState
                     ),
                     Container(
                       width: 1200 * wfem,
-                      height: 525 * wfem,
+                      height: 1000 * hfem,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -276,21 +282,54 @@ class _FacultyEnrollmentRequestsPageState
                           ),
                         ],
                       ),
-                      child: SingleChildScrollView(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: SingleChildScrollView(
-                              child: EnrollmentRequestsDataTable(
-                                requests: requests,
-                                Team_names: Team_names,
-                                refresh: refresh,
-                              ),
-                            ),
-                          ),
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: (searching
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 500 * wfem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 500,
+                                width: 400,
+                                child: Scrollbar(
+                                  controller: verticalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  child: Scrollbar(
+                                    controller: horizontalScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    notificationPredicate: (notif) =>
+                                        notif.depth == 1,
+                                    child: SingleChildScrollView(
+                                      controller: verticalScrollController,
+                                      child: SingleChildScrollView(
+                                        controller: horizontalScrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: SizedBox(
+                                          width: max(1217, 950 * wfem),
+                                          child: EnrollmentRequestsDataTable(
+                                            requests: requests,
+                                            Team_names: Team_names,
+                                            refresh: refresh,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 65,
                     ),
                   ],
                 ),

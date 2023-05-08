@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
@@ -26,6 +28,8 @@ class _StudentEnrollmentRequestsPageState
       projectTitleController = TextEditingController(),
       courseCodeController = TextEditingController(),
       yearSemesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   void confirmAction() {
     showDialog(
@@ -138,7 +142,12 @@ class _StudentEnrollmentRequestsPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double wfem = (MediaQuery.of(context).size.width / baseWidth);
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     if (loading) {
       return const LoadingPage();
@@ -240,7 +249,7 @@ class _StudentEnrollmentRequestsPageState
                   ),
                   Container(
                     width: 1200 * wfem,
-                    height: 525 * wfem,
+                    height: 1000 * hfem,
                     margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -268,14 +277,42 @@ class _StudentEnrollmentRequestsPageState
                                 ),
                               ),
                             )
-                          : SingleChildScrollView(
-                              child: StudentEnrollmentRequestsDataTable(
-                                requests: requests,
-                                refresh: refresh,
+                          : SizedBox(
+                              height: 500,
+                              width: 400,
+                              child: Scrollbar(
+                                controller: verticalScrollController,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                child: Scrollbar(
+                                  controller: horizontalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  notificationPredicate: (notif) =>
+                                      notif.depth == 1,
+                                  child: SingleChildScrollView(
+                                    controller: verticalScrollController,
+                                    child: SingleChildScrollView(
+                                      controller: horizontalScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: SizedBox(
+                                        width: max(1217, 950 * wfem),
+                                        child:
+                                            StudentEnrollmentRequestsDataTable(
+                                          requests: requests,
+                                          refresh: refresh,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             )),
                     ),
                   ),
+                  const SizedBox(
+                    height: 65,
+                  )
                 ],
               ),
             )
