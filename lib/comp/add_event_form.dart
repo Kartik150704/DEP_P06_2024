@@ -1,12 +1,9 @@
-import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-
-import '../utilities/utilites.dart';
-import 'form_custom_text.dart';
 
 class AddEventForm extends StatefulWidget {
   final List<String> events;
@@ -24,11 +21,12 @@ class _AddEventFormState extends State<AddEventForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
 
-  String? integerValidator(String? value, String fieldName, int lowerLimit,
-      int higherLimit) {
+  String? integerValidator(
+      String? value, String fieldName, int lowerLimit, int higherLimit) {
     if (value == null) {
       return 'enter a valid $fieldName';
     }
+
     int? val = int.tryParse(value);
     if (val == null) {
       return 'enter a valid $fieldName';
@@ -49,74 +47,64 @@ class _AddEventFormState extends State<AddEventForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Enter the semester',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
-          ),
-          FormBuilderTextField(
-            name: 'semester',
-            validator: (value) => integerValidator(value, 'semester', 1, 2),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Enter the year',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
-          ),
-          FormBuilderTextField(
-            name: 'year',
-            validator: (value) => integerValidator(value, 'year', 2000, 2100),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Enter the course',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
-          ),
+          // const CustomisedText(
+          //   text: 'Enter the semester',
+          //   color: Colors.black,
+          // ),
+          // FormBuilderTextField(
+          //   name: 'semester',
+          //   validator: (value) => integerValidator(value, 'semester', 1, 2),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // const CustomisedText(text: 'Enter the year', color: Colors.black),
+          // FormBuilderTextField(
+          //   name: 'year',
+          //   validator: (value) => integerValidator(value, 'year', 2000, 2100),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          const CustomisedText(
+              text: 'Enter the course code', color: Colors.black),
           FormBuilderTextField(
             name: 'course',
+            cursorColor: Colors.black,
+            decoration: const InputDecoration(
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+              ),
+              hintText: 'Course Code',
+              hintStyle: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
             validator: (value) {
+              // TODO: This is not specific to these only
               if (['CP301', 'CP302', 'CP303'].contains(value)) {
                 return null;
               }
-              return 'enter a valid course. [CP301, CP302, CP303]';
+              return 'Please enter a valid course code';
             },
           ),
           const SizedBox(
-            height: 10,
+            height: 30,
           ),
-          Text(
-            'Select the type of event',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Select the type of event',
+            color: Colors.black,
           ),
           const SizedBox(
             height: 10,
           ),
           FormBuilderRadioGroup(
             name: 'option',
+            activeColor: Colors.black,
             options: const [
+              // TODO: These are not static
               FormBuilderFieldOption(
                   value: 'week', child: FormCustomText(text: 'Week')),
               FormBuilderFieldOption(
@@ -135,23 +123,16 @@ class _AddEventFormState extends State<AddEventForm> {
           ),
           ((selectedEvent == 'week')
               ? Column(
-            children: [
-              Text(
-                'Enter the week number',
-                style: SafeGoogleFont(
-                  'Ubuntu',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff000000),
-                ),
-              ),
-              FormBuilderTextField(
-                name: 'week',
-                validator: (value) =>
-                    integerValidator(value, 'week', 1, 50),
-              ),
-            ],
-          )
+                  children: [
+                    const CustomisedText(
+                        text: 'Enter the week number', color: Colors.black),
+                    FormBuilderTextField(
+                      name: 'week',
+                      validator: (value) =>
+                          integerValidator(value, 'week', 1, 50),
+                    ),
+                  ],
+                )
               : Container()),
           const SizedBox(
             height: 30,
@@ -170,7 +151,7 @@ class _AddEventFormState extends State<AddEventForm> {
                         .toString()
                         .trim();
                     String year =
-                    _formKey.currentState!.value['year'].toString().trim();
+                        _formKey.currentState!.value['year'].toString().trim();
                     String course = _formKey.currentState!.value['course']
                         .toString()
                         .trim();
@@ -178,7 +159,7 @@ class _AddEventFormState extends State<AddEventForm> {
                         .toString()
                         .trim();
                     String week =
-                    _formKey.currentState!.value['week'].toString().trim();
+                        _formKey.currentState!.value['week'].toString().trim();
                     await FirebaseFirestore.instance
                         .collection('academic_calendar')
                         .where('semester', isEqualTo: semester)
@@ -186,7 +167,6 @@ class _AddEventFormState extends State<AddEventForm> {
                         .get()
                         .then((value) async {
                       if (value.docs.isEmpty) {
-                        print("No entry found in academic calendar");
                       } else {
                         var doc = value.docs[0];
                         String eventName = '';
@@ -196,7 +176,7 @@ class _AddEventFormState extends State<AddEventForm> {
                           eventName = option;
                         }
                         Timestamp eventStart =
-                        doc['events'][eventName]['start'],
+                                doc['events'][eventName]['start'],
                             eventEnd = doc['events'][eventName]['end'];
 
                         await FirebaseFirestore.instance
@@ -207,7 +187,6 @@ class _AddEventFormState extends State<AddEventForm> {
                             .get()
                             .then((value) async {
                           if (value.docs.isEmpty) {
-                            print("No entry found in released events");
                           } else {
                             QueryDocumentSnapshot doc = value.docs[0];
                             List events;
@@ -218,7 +197,6 @@ class _AddEventFormState extends State<AddEventForm> {
                               events = doc['events'].keys.toList();
                             }
                             if (events.contains(eventName)) {
-                              print("Event already exists");
                             } else {
                               Map eventMap;
                               if (doc['events'] == null) {
@@ -245,7 +223,6 @@ class _AddEventFormState extends State<AddEventForm> {
                                     .trim(),
                               };
 
-
                               await FirebaseFirestore.instance
                                   .collection('released_events')
                                   .doc(doc.id)
@@ -257,6 +234,7 @@ class _AddEventFormState extends State<AddEventForm> {
                         });
                       }
                     });
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, vals);
                   }
                 },
@@ -265,8 +243,7 @@ class _AddEventFormState extends State<AddEventForm> {
                 width: 70,
                 height: 50,
                 text: 'Cancel',
-                onPressed: () =>
-                {
+                onPressed: () => {
                   Navigator.pop(context),
                 },
               )
