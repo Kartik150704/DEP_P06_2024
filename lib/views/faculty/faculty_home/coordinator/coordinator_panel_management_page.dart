@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
@@ -30,13 +32,15 @@ class CoordinatorPanelManagementPage extends StatefulWidget {
 
 class _CoordinatorPanelManagementPageState
     extends State<CoordinatorPanelManagementPage> {
-  bool loading = true;
+  bool loading = true, searching = false;
   List<AssignedPanel> assignedPanels = [];
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
       termController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
       yearSemesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   void confirmAction() {
     showDialog(
@@ -106,7 +110,12 @@ class _CoordinatorPanelManagementPageState
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double wfem = MediaQuery.of(context).size.width / baseWidth;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
 
     if (loading) {
       return const LoadingPage();
@@ -207,7 +216,7 @@ class _CoordinatorPanelManagementPageState
                     ),
                     Container(
                       width: 1200 * wfem,
-                      height: 525 * wfem,
+                      height: 1000 * hfem,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -224,20 +233,55 @@ class _CoordinatorPanelManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: CoordinatorPanelManagementDataTable(
-                              assignedPanels: assignedPanels,
-                              viewPanel: widget.viewPanel,
-                            ),
-                          ),
-                        ),
+                        child: (searching
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 500 * wfem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 500,
+                                width: 400,
+                                child: Scrollbar(
+                                  controller: verticalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  child: Scrollbar(
+                                    controller: horizontalScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    notificationPredicate: (notif) =>
+                                        notif.depth == 1,
+                                    child: SingleChildScrollView(
+                                      controller: verticalScrollController,
+                                      child: SingleChildScrollView(
+                                        controller: horizontalScrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: SizedBox(
+                                          width: max(1217, 950 * wfem),
+                                          child:
+                                              CoordinatorPanelManagementDataTable(
+                                            assignedPanels: assignedPanels,
+                                            viewPanel: widget.viewPanel,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                       ),
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(
+                height: 65,
               )
             ],
           ),
@@ -308,6 +352,8 @@ class _CoordinatorPanelManagementPageState
               height: 15,
             ),
             Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
                 message: 'Add Panel',

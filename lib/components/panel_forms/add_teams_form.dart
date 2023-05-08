@@ -60,7 +60,7 @@ class _CreateTeamsFormState extends State<CreateTeamsForm> {
         for (int i = 0; i < csvData.length; i++) {
           List<String> team = csvData[i].split(',');
           for (String student in team) {
-            if (allstudents.contains(student)) {
+            if (allstudents.contains(student.trim())) {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -102,6 +102,9 @@ class _CreateTeamsFormState extends State<CreateTeamsForm> {
             continue;
           }
           List<String> team = csvData[i].split(',');
+          for (int j = 0; j < team.length; j++) {
+            team[j] = team[j].trim();
+          }
           var alldata = <String, dynamic>{};
           alldata.addEntries([
             MapEntry('id', newTeamID.toString()),

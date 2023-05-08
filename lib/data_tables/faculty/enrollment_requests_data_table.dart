@@ -41,10 +41,10 @@ class _EnrollmentRequestDataTableState
               child: ConfirmAction(
                 onSubmit: () async {
                   // update enrollment request status to 1
-                  // await FirebaseFirestore.instance
-                  //     .collection('enrollment_requests')
-                  //     .doc(request.key_id)
-                  //     .update({'status': '1'});
+                  await FirebaseFirestore.instance
+                      .collection('enrollment_requests')
+                      .doc(request.key_id)
+                      .update({'status': '1'});
 
                   // create project document
 
