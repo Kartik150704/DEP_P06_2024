@@ -1,5 +1,6 @@
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/models/models.dart';
 import 'package:flutter/material.dart';
 
@@ -32,29 +33,7 @@ class _CoordinatorCriteriaManagementDataTableState
   @override
   Widget build(BuildContext context) {
     if (widget.evaluationCriterias.isEmpty) {
-      return SizedBox(
-        height: 560,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.grey[300],
-                size: 50,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CustomisedText(
-                text: 'No evaluation criterias found',
-                color: Colors.grey[300],
-                fontSize: 30,
-              ),
-            ],
-          ),
-        ),
-      );
+      return DataNotFound(message: 'No criterias found');
     }
 
     final columns = [

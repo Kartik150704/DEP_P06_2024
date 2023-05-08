@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({
+    super.key,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -18,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    const double spacerHeightBig = 25;
+    // TODO: Get more images
     final List<String> imageList = [
       'assets/images/carousel_image_1.jpeg',
       'assets/images/carousel_image_2.jpg',
@@ -77,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               margin: const EdgeInsets.fromLTRB(0, 80, 0, 140),
               width: 550,
-              height: 710,
+              height: 700,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -205,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                   ),
                   const SizedBox(
-                    height: 2 * spacerHeightBig,
+                    height: 40,
                   ),
                   CustomisedButton(
                     width: 250,

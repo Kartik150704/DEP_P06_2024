@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
-import 'package:casper/data_tables/faculty/enrollment_requests_data_table.dart';
+import 'package:casper/data_tables/faculty/faculty_enrollment_requests_data_table.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,10 +22,10 @@ class _FacultyEnrollmentRequestsPageState
     extends State<FacultyEnrollmentRequestsPage> {
   bool loading = true, searching = false;
   List<EnrollmentRequest> requests = [];
-  var Team_names = {};
+  var teamNames = {};
   final teamIDController = TextEditingController(),
       projectTitleController = TextEditingController(),
-      courseController = TextEditingController(text: 'CP302'),
+      courseController = TextEditingController(),
       yearSemesterController = TextEditingController(text: '2023-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
@@ -104,7 +104,7 @@ class _FacultyEnrollmentRequestsPageState
               });
               setState(() {
                 for (var id in requests) {
-                  Team_names[id.teamId] = [''];
+                  teamNames[id.teamId] = [''];
                 }
               });
               List<String> Team_ids = [];
@@ -135,7 +135,7 @@ class _FacultyEnrollmentRequestsPageState
                     });
                   }
                   setState(() {
-                    Team_names[doc['id']] = (temp);
+                    teamNames[doc['id']] = (temp);
                   });
                 }
               });
@@ -147,7 +147,6 @@ class _FacultyEnrollmentRequestsPageState
         });
       }
     });
-    print(Team_names);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         loading = false;
@@ -165,7 +164,7 @@ class _FacultyEnrollmentRequestsPageState
     setState(() {
       loading = true;
       requests = [];
-      Team_names = {};
+      teamNames = {};
     });
     getEnrollmentRequests();
   }
@@ -212,34 +211,46 @@ class _FacultyEnrollmentRequestsPageState
                         SizedBox(
                           width: 33 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: projectTitleController,
-                          hintText: 'Project',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Project Title',
+                          child: SearchTextField(
+                            textEditingController: projectTitleController,
+                            hintText: 'Project',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: teamIDController,
-                          hintText: 'Team Identification',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Team Identification Number',
+                          child: SearchTextField(
+                            textEditingController: teamIDController,
+                            hintText: 'Team Identification',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: courseController,
-                          hintText: 'Course',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Course Code',
+                          child: SearchTextField(
+                            textEditingController: courseController,
+                            hintText: 'Course',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: yearSemesterController,
-                          hintText: 'Year-Semester',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Session (Year-Semester)',
+                          child: SearchTextField(
+                            textEditingController: yearSemesterController,
+                            hintText: 'Session',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 25 * wfem,
@@ -315,9 +326,10 @@ class _FacultyEnrollmentRequestsPageState
                                         scrollDirection: Axis.horizontal,
                                         child: SizedBox(
                                           width: max(1217, 950 * wfem),
-                                          child: EnrollmentRequestsDataTable(
+                                          child:
+                                              FacultyEnrollmentRequestsDataTable(
                                             requests: requests,
-                                            Team_names: Team_names,
+                                            teamNames: teamNames,
                                             refresh: refresh,
                                           ),
                                         ),

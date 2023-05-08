@@ -30,7 +30,7 @@ class CoordinatorCriteriaManagementPage extends StatefulWidget {
 
 class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
-  bool loading = false, searching = false;
+  bool loading = true, searching = false;
   List<EvaluationCriteria> evaluationCriterias = [];
   final courseController = TextEditingController(text: 'CP302'),
       yearSmesterController = TextEditingController(text: '2023-1');
@@ -62,6 +62,10 @@ class _CoordinatorCriteriaManagementPageState
               endtermSupervisor: int.parse(doc['endtermSupervisor']),
               endtermPanel: int.parse(doc['endtermPanel']),
               report: int.parse(doc['report'])));
+        });
+        setState(() {
+          loading = false;
+          searching = false;
         });
       }
     });
@@ -119,18 +123,24 @@ class _CoordinatorCriteriaManagementPageState
                         SizedBox(
                           width: 33 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: courseController,
-                          hintText: 'Course',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Course Code',
+                          child: SearchTextField(
+                            textEditingController: courseController,
+                            hintText: 'Course',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: yearSmesterController,
-                          hintText: 'Year-Semester',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Session (Year-Session)',
+                          child: SearchTextField(
+                            textEditingController: yearSmesterController,
+                            hintText: 'Session',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 25 * wfem,
@@ -175,6 +185,7 @@ class _CoordinatorCriteriaManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
+                        // TODO: Implement search
                         child: (searching
                             ? SizedBox(
                                 width: double.infinity,
@@ -238,7 +249,7 @@ class _CoordinatorCriteriaManagementPageState
               width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Add Criteria',
+                message: 'Create Criteria',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,

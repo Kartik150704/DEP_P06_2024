@@ -1,32 +1,35 @@
+import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:csv/csv_settings_autodetection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class EnrollmentRequestsDataTable extends StatefulWidget {
+// ignore: must_be_immutable
+class FacultyEnrollmentRequestsDataTable extends StatefulWidget {
   final List<EnrollmentRequest> requests;
-  final Map Team_names;
+  final Map teamNames;
+
+  // ignore: prefer_typing_uninitialized_variables
   var refresh;
 
-  EnrollmentRequestsDataTable({
+  FacultyEnrollmentRequestsDataTable({
     super.key,
     required this.requests,
-    required this.Team_names,
+    required this.teamNames,
     required this.refresh,
   });
 
   @override
-  State<EnrollmentRequestsDataTable> createState() =>
+  State<FacultyEnrollmentRequestsDataTable> createState() =>
       _EnrollmentRequestDataTableState();
 }
 
 class _EnrollmentRequestDataTableState
-    extends State<EnrollmentRequestsDataTable> {
+    extends State<FacultyEnrollmentRequestsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -40,14 +43,10 @@ class _EnrollmentRequestDataTableState
             title: Center(
               child: ConfirmAction(
                 onSubmit: () async {
-                  // update enrollment request status to 1
                   await FirebaseFirestore.instance
                       .collection('enrollment_requests')
                       .doc(request.key_id)
                       .update({'status': '1'});
-
-                  // create project document
-
                   await FirebaseFirestore.instance
                       .collection('team')
                       .where('id', isEqualTo: request.teamId)
@@ -57,14 +56,11 @@ class _EnrollmentRequestDataTableState
                     List<Student> students = [];
                     for (int i = 0; i < teamDoc['students'].length; i++) {
                       String studentId = teamDoc['students'][i];
-                      print(studentId);
-                      //update proj_id[0] to project_id and proj_id[1] to null
                       FirebaseFirestore.instance
                           .collection('student')
                           .where('id', isEqualTo: studentId)
                           .get()
                           .then((studentDocs) {
-                        print(studentDocs.docs[0]);
                         var studentDoc = studentDocs.docs[0];
                         var proj_id = studentDoc['proj_id'];
                         if (request.offering.course == 'CP301') {
@@ -77,7 +73,6 @@ class _EnrollmentRequestDataTableState
                         var updateData = {
                           'proj_id': proj_id,
                         };
-                        print(proj_id);
                         FirebaseFirestore.instance
                             .collection('student')
                             .doc(studentDoc.id)
@@ -213,6 +208,7 @@ class _EnrollmentRequestDataTableState
                     }
                   });
                   widget.refresh();
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 text: "You want to accept 'team $teamId' for '$Title'.",
@@ -234,6 +230,7 @@ class _EnrollmentRequestDataTableState
                       .doc(request.key_id)
                       .update({'status': '0'});
                   widget.refresh();
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 text: "You want to reject 'team $teamId' for '$Title'.",
@@ -252,15 +249,21 @@ class _EnrollmentRequestDataTableState
 
   String teamname(String id) {
     String temp = '';
-    for (String name in widget.Team_names[id]) {
+    for (String name in widget.teamNames[id]) {
       temp = '$temp$name, ';
     }
-    if (temp.length >= 2) temp = temp.substring(0, temp.length - 2);
+    if (temp.length >= 2) {
+      temp = temp.substring(0, temp.length - 2);
+    }
     return temp;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.requests.isEmpty) {
+      return DataNotFound(message: 'No requests found');
+    }
+
     final columns = [
       'Project',
       'Team',

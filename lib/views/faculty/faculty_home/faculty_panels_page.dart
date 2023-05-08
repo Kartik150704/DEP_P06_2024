@@ -54,7 +54,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         if (panelids.isEmpty) {
           setState(() {
             loading = false;
+            searching = false;
           });
+
           return;
         }
         FirebaseFirestore.instance
@@ -104,6 +106,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
               });
               setState(() {
                 loading = false;
+                searching = false;
               });
             }
           },
@@ -156,42 +159,57 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                       SizedBox(
                         width: 33 * wfem,
                       ),
-                      SearchTextField(
-                        textEditingController: panelIdController,
-                        hintText: 'Panel Identification',
-                        width: 170 * wfem,
+                      Tooltip(
+                        message: 'Panel Identification Number',
+                        child: SearchTextField(
+                          textEditingController: panelIdController,
+                          hintText: 'Panel Identification',
+                          width: 170 * wfem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * wfem,
                       ),
-                      SearchTextField(
-                        textEditingController: evaluatorNameController,
-                        hintText: 'Evaluator\'s Name',
-                        width: 170 * wfem,
+                      Tooltip(
+                        message: 'Evaluator\'s Name',
+                        child: SearchTextField(
+                          textEditingController: evaluatorNameController,
+                          hintText: 'Evaluator\'s Name',
+                          width: 170 * wfem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * wfem,
                       ),
-                      SearchTextField(
-                        textEditingController: termController,
-                        hintText: 'Term',
-                        width: 170 * wfem,
+                      Tooltip(
+                        message: 'Term Type',
+                        child: SearchTextField(
+                          textEditingController: termController,
+                          hintText: 'Term',
+                          width: 170 * wfem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * wfem,
                       ),
-                      SearchTextField(
-                        textEditingController: courseController,
-                        hintText: 'Course',
-                        width: 170 * wfem,
+                      Tooltip(
+                        message: 'Course Code',
+                        child: SearchTextField(
+                          textEditingController: courseController,
+                          hintText: 'Course',
+                          width: 170 * wfem,
+                        ),
                       ),
                       SizedBox(
                         width: 20 * wfem,
                       ),
-                      SearchTextField(
-                        textEditingController: yearSemesterController,
-                        hintText: 'Year-Semester',
-                        width: 170 * wfem,
+                      Tooltip(
+                        message: 'Session (Year-Semester)',
+                        child: SearchTextField(
+                          textEditingController: yearSemesterController,
+                          hintText: 'Session',
+                          width: 170 * wfem,
+                        ),
                       ),
                       SizedBox(
                         width: 25 * wfem,
@@ -236,6 +254,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
+                      // TODO: Implement search
                       child: (searching
                           ? SizedBox(
                               width: double.infinity,

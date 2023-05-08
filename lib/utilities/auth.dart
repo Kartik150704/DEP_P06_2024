@@ -8,10 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // ignore: must_be_immutable
 class Auth extends StatelessWidget {
-  Auth({Key? key}) : super(key: key);
+  Auth({
+    Key? key,
+  }) : super(key: key);
 
   var db = FirebaseFirestore.instance;
-
   late final String role;
 
   Future<String> getRole() async {
@@ -39,7 +40,12 @@ class Auth extends StatelessWidget {
               future: getRole(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data == 'student') {
+                  // TODO: Add admin page
+                  if (snapshot.data == 'admin') {
+                    return const Scaffold(
+                      backgroundColor: Colors.green,
+                    );
+                  } else if (snapshot.data == 'student') {
                     return const StudentScaffold();
                   } else if (snapshot.data == 'supervisor') {
                     return const FacultyScaffold(
@@ -51,16 +57,24 @@ class Auth extends StatelessWidget {
                     );
                   }
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                  return LoginScaffold(
+                    scaffoldbody: Container(
+                      color: const Color(0xff302c42),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
+                      ),
                     ),
                   );
                 }
               },
             );
           } else {
-            return const LoginScaffold(scaffoldbody: LoginPage());
+            return const LoginScaffold(
+              scaffoldbody: LoginPage(),
+            );
           }
         },
       ),

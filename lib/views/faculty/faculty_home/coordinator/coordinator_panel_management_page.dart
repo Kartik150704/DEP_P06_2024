@@ -97,6 +97,7 @@ class _CoordinatorPanelManagementPageState
       }
       setState(() {
         loading = false;
+        searching = false;
       });
     });
   }
@@ -153,42 +154,57 @@ class _CoordinatorPanelManagementPageState
                         SizedBox(
                           width: 33 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: panelIdController,
-                          hintText: 'Panel Identification',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Panel Identification Number',
+                          child: SearchTextField(
+                            textEditingController: panelIdController,
+                            hintText: 'Panel Identification',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: evaluatorNameController,
-                          hintText: 'Evaluator\'s Name',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Evaluator\'s Name',
+                          child: SearchTextField(
+                            textEditingController: evaluatorNameController,
+                            hintText: 'Evaluator\'s Name',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: termController,
-                          hintText: 'Term',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Term Type',
+                          child: SearchTextField(
+                            textEditingController: termController,
+                            hintText: 'Term',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: courseController,
-                          hintText: 'Course',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Course Code',
+                          child: SearchTextField(
+                            textEditingController: courseController,
+                            hintText: 'Course',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 20 * wfem,
                         ),
-                        SearchTextField(
-                          textEditingController: yearSemesterController,
-                          hintText: 'Year-Semester',
-                          width: 170 * wfem,
+                        Tooltip(
+                          message: 'Session (Year-Semester)',
+                          child: SearchTextField(
+                            textEditingController: yearSemesterController,
+                            hintText: 'Session',
+                            width: 170 * wfem,
+                          ),
                         ),
                         SizedBox(
                           width: 25 * wfem,
@@ -233,6 +249,7 @@ class _CoordinatorPanelManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
+                        // TODO: Implement search
                         child: (searching
                             ? SizedBox(
                                 width: double.infinity,
@@ -294,7 +311,74 @@ class _CoordinatorPanelManagementPageState
               width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Create Panel(s)',
+                message: 'Assign Teams From CSV',
+                child: FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
+                  splashColor: Colors.black,
+                  hoverColor: Colors.grey,
+                  child: const Icon(
+                    Icons.upload_file,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Center(
+                            child: AssignTeamsToPanelsFromCSVForm(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            // Container(
+            //   height: 45 * wfem,
+            //   width: 45 * wfem,
+            //   margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+            //   child: Tooltip(
+            //     message: 'Assign Team',
+            //     child: FloatingActionButton(
+            //       backgroundColor: const Color.fromARGB(255, 212, 203, 216),
+            //       splashColor: Colors.black,
+            //       hoverColor: Colors.grey,
+            //       child: const Icon(
+            //         Icons.add,
+            //         color: Colors.black,
+            //         size: 35,
+            //       ),
+            //       onPressed: () {
+            //         showDialog(
+            //           context: context,
+            //           builder: (context) {
+            //             return const AlertDialog(
+            //               title: Center(
+            //                   // TODO: Assign team NOT create team
+            //                   // child: CreateTeamsForm(),
+            //                   ),
+            //             );
+            //           },
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 15,
+            // ),
+            Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
+              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+              child: Tooltip(
+                message: 'Create Panels From CSV',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
@@ -327,40 +411,7 @@ class _CoordinatorPanelManagementPageState
               width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
-                message: 'Assign Teams to Panel(s)',
-                child: FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
-                  splashColor: Colors.black,
-                  hoverColor: Colors.grey,
-                  child: const Icon(
-                    Icons.upload_file,
-                    color: Colors.black,
-                    size: 35,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AlertDialog(
-                          title: Center(
-                            child: AssignTeamsToPanelsFromCSVForm(),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 45 * wfem,
-              width: 45 * wfem,
-              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
-              child: Tooltip(
-                message: 'Add Panel',
+                message: 'Create Panel',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
@@ -379,39 +430,6 @@ class _CoordinatorPanelManagementPageState
                             child: AddPanelForm(
                               refresh: getPanels,
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 45 * wfem,
-              width: 45 * wfem,
-              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
-              child: Tooltip(
-                message: 'Add Teams',
-                child: FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
-                  splashColor: Colors.black,
-                  hoverColor: Colors.grey,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                    size: 35,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AlertDialog(
-                          title: Center(
-                            child: CreateTeamsForm(),
                           ),
                         );
                       },

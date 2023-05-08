@@ -1,3 +1,4 @@
+import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
@@ -106,29 +107,7 @@ class _FacultyPanelTeamsDataTableState
   @override
   Widget build(BuildContext context) {
     if (widget.assignedTeams.isEmpty) {
-      return SizedBox(
-        height: 560,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.grey[300],
-                size: 50,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CustomisedText(
-                text: 'No students found',
-                color: Colors.grey[300],
-                fontSize: 30,
-              ),
-            ],
-          ),
-        ),
-      );
+      return DataNotFound(message: 'No teams found');
     } else if (studentData.isEmpty) {
       getStudentData();
     }

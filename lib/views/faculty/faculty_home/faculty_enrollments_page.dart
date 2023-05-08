@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:casper/comp/alert_message.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/faculty_enrollments_data_table.dart';
@@ -50,7 +51,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
             snapshot.docs[0]['project_as_head_ids'].length == 0) {
           setState(() {
             loading = false;
+            searching = false;
           });
+
           return;
         }
         FirebaseFirestore.instance
@@ -286,11 +289,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Center(
-              child: Text('Course and Session are required'),
-            ),
-          );
+          return AlertMessage(
+              message: 'Course code and session are required fields');
         },
       );
       return false;
@@ -407,7 +407,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         width: 20 * wfem,
                       ),
                       Tooltip(
-                        message: 'Session',
+                        message: 'Session (Year-Semester)',
                         child: SearchTextField(
                           textEditingController: yearSemesterController,
                           hintText: 'Session',

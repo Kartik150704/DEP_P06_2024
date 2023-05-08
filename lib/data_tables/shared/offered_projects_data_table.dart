@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 class OfferedProjectsDataTable extends StatefulWidget {
   bool isStudent;
   List<Offering> offerings;
+
+  // ignore: prefer_typing_uninitialized_variables
   var refresh;
 
   OfferedProjectsDataTable({
@@ -35,10 +37,36 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.offerings.isEmpty) {
+      return SizedBox(
+        height: 560,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Colors.grey[300],
+                size: 50,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              CustomisedText(
+                text: 'No projects found',
+                color: Colors.grey[300],
+                fontSize: 30,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final columns = [
       'ID',
       'Project',
-      'Instructor',
+      'Supervisor',
       'Course',
     ];
 

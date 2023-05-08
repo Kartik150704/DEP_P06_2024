@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:casper/comp/alert_message.dart';
 import 'package:casper/components/add_project_form.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
@@ -22,8 +23,8 @@ class _FacultyOfferedProjectsPageState
   bool loading = true, searcing = false;
   List<Offering> offerings = [];
   var db = FirebaseFirestore.instance;
-  String? supervisorName, projectTitle, course, year_semester;
-  final instructorNameController = TextEditingController(),
+  String? supervisorName, projectTitle, course, yearSemester;
+  final supervisorNameController = TextEditingController(),
       projectTitleController = TextEditingController(),
       courseController = TextEditingController(),
       yearSemesterController = TextEditingController(text: '2023-1');
@@ -85,12 +86,13 @@ class _FacultyOfferedProjectsPageState
               if (!doc['type'].toLowerCase().contains(course)) flag = 0;
             }
 
-            if (year_semester != null) {
-              String year_semester = doc['year'] + '-' + doc['semester'];
-              if (!year_semester
+            if (yearSemester != null) {
+              String yearSemester = doc['year'] + '-' + doc['semester'];
+              if (!yearSemester
                   .toLowerCase()
-                  .contains(this.year_semester.toString().toLowerCase()))
+                  .contains(this.yearSemester.toString().toLowerCase())) {
                 flag = 0;
+              }
             }
             if (flag == 1) {
               Offering offering = Offering(
@@ -129,28 +131,24 @@ class _FacultyOfferedProjectsPageState
 
   bool updateSearchParameters() {
     setState(() {
-      supervisorName = instructorNameController.text.trim() == ''
+      supervisorName = supervisorNameController.text.trim() == ''
           ? null
-          : instructorNameController.text.trim();
+          : supervisorNameController.text.trim();
       projectTitle = projectTitleController.text.trim() == ''
           ? null
           : projectTitleController.text.trim();
       course = courseController.text.trim() == ''
           ? null
           : courseController.text.trim();
-      year_semester = yearSemesterController.text.trim() == ''
+      yearSemester = yearSemesterController.text.trim() == ''
           ? null
           : yearSemesterController.text.trim();
     });
-    if (year_semester == null) {
+    if (yearSemester == null) {
       showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Center(
-              child: Text('Course and Session are required'),
-            ),
-          );
+          return AlertMessage(message: 'Session is a required field');
         },
       );
       return false;
@@ -159,7 +157,9 @@ class _FacultyOfferedProjectsPageState
   }
 
   void search() {
-    if (loading || searcing) return;
+    if (loading || searcing) {
+      return;
+    }
     setState(() {
       searcing = true;
     });
@@ -220,10 +220,10 @@ class _FacultyOfferedProjectsPageState
                           width: 20 * wfem,
                         ),
                         Tooltip(
-                          message: 'Instuctor\'s Name',
+                          message: 'Supervisor\'s Name',
                           child: SearchTextField(
-                            textEditingController: instructorNameController,
-                            hintText: 'Instructor\'s Name',
+                            textEditingController: supervisorNameController,
+                            hintText: 'Supervisor\'s Name',
                             width: 170 * wfem,
                           ),
                         ),
@@ -231,7 +231,7 @@ class _FacultyOfferedProjectsPageState
                           width: 20 * wfem,
                         ),
                         Tooltip(
-                          message: 'Course',
+                          message: 'Course Code',
                           child: SearchTextField(
                             textEditingController: courseController,
                             hintText: 'Course',
@@ -242,10 +242,10 @@ class _FacultyOfferedProjectsPageState
                           width: 20 * wfem,
                         ),
                         Tooltip(
-                          message: 'Year',
+                          message: 'Session (Year-Semester)',
                           child: SearchTextField(
                             textEditingController: yearSemesterController,
-                            hintText: 'Year',
+                            hintText: 'Session',
                             width: 170 * wfem,
                           ),
                         ),

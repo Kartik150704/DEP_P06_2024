@@ -1,3 +1,4 @@
+import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
@@ -37,29 +38,7 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
   @override
   Widget build(BuildContext context) {
     if (widget.assignedPanels.isEmpty) {
-      return SizedBox(
-        height: 560,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.grey[300],
-                size: 50,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CustomisedText(
-                text: 'No panels found',
-                color: Colors.grey[300],
-                fontSize: 30,
-              ),
-            ],
-          ),
-        ),
-      );
+      return DataNotFound(message: 'No panels found');
     }
 
     final columns = [

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -303,29 +304,7 @@ class _FacultyEnrollmentsDataTableState
   @override
   Widget build(BuildContext context) {
     if (widget.enrollments.isEmpty) {
-      return SizedBox(
-        height: 560,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: Colors.grey[300],
-                size: 50,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CustomisedText(
-                text: 'No Enrollments found',
-                color: Colors.grey[300],
-                fontSize: 30,
-              ),
-            ],
-          ),
-        ),
-      );
+      return DataNotFound(message: 'No enrollments found');
     } else if (studentData.isEmpty) {
       getStudentData();
     }
