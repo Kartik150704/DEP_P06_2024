@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/data_tables/faculty/faculty_panels_data_table.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
@@ -23,13 +25,15 @@ class FacultyPanelsPage extends StatefulWidget {
 }
 
 class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
-  bool loading = true;
+  bool loading = true, searching = false;
   late List<AssignedPanel> assignedPanels = [];
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
       termController = TextEditingController(),
       courseController = TextEditingController(text: 'CP302'),
       yearSemesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   @override
   void initState() {
@@ -112,6 +116,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
 
@@ -212,7 +219,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                   ),
                   Container(
                     width: 1200 * wfem,
-                    height: 525 * wfem,
+                    height: 1000 * hfem,
                     margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -229,14 +236,52 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: SingleChildScrollView(
-                        child: FacultyPanelsDataTable(
-                          userRole: widget.userRole,
-                          viewPanel: widget.viewPanel,
-                          assignedPanels: assignedPanels,
-                        ),
-                      ),
+                      child: (searching
+                          ? SizedBox(
+                              width: double.infinity,
+                              height: 500 * wfem,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
+                                ),
+                              ),
+                            )
+                          : SizedBox(
+                              height: 500,
+                              width: 400,
+                              child: Scrollbar(
+                                controller: verticalScrollController,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                child: Scrollbar(
+                                  controller: horizontalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  notificationPredicate: (notif) =>
+                                      notif.depth == 1,
+                                  child: SingleChildScrollView(
+                                    controller: verticalScrollController,
+                                    child: SingleChildScrollView(
+                                      controller: horizontalScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: SizedBox(
+                                        width: max(1217, 950 * wfem),
+                                        child: FacultyPanelsDataTable(
+                                          userRole: widget.userRole,
+                                          viewPanel: widget.viewPanel,
+                                          assignedPanels: assignedPanels,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 65,
                   ),
                 ],
               ),

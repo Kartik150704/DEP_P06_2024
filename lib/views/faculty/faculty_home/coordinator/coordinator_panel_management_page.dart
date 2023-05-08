@@ -290,6 +290,8 @@ class _CoordinatorPanelManagementPageState
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
                 message: 'Create Panel(s)',
@@ -321,6 +323,8 @@ class _CoordinatorPanelManagementPageState
               height: 15,
             ),
             Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
                 message: 'Assign Teams to Panel(s)',
@@ -387,6 +391,8 @@ class _CoordinatorPanelManagementPageState
               height: 15,
             ),
             Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
                 message: 'Add Teams',

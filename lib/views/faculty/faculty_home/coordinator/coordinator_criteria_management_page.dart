@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_criteria_management_data_table.dart';
@@ -28,10 +30,12 @@ class CoordinatorCriteriaManagementPage extends StatefulWidget {
 
 class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
-  bool loading = false;
+  bool loading = false, searching = false;
   List<EvaluationCriteria> evaluationCriterias = [];
   final courseController = TextEditingController(text: 'CP302'),
       yearSmesterController = TextEditingController(text: '2023-1');
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   // TODO: Implement this method
 
@@ -74,6 +78,9 @@ class _CoordinatorCriteriaManagementPageState
   Widget build(BuildContext context) {
     double baseWidth = 1440;
     double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
 
@@ -151,7 +158,7 @@ class _CoordinatorCriteriaManagementPageState
                     ),
                     Container(
                       width: 1200 * wfem,
-                      height: 525 * wfem,
+                      height: 1000 * hfem,
                       margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -168,14 +175,54 @@ class _CoordinatorCriteriaManagementPageState
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
-                          child: CoordinatorCriteriaManagementDataTable(
-                            evaluationCriterias: evaluationCriterias,
-                            userRole: widget.userRole,
-                            viewProject: widget.viewCritera,
-                          ),
-                        ),
+                        child: (searching
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 500 * wfem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 500,
+                                width: 400,
+                                child: Scrollbar(
+                                  controller: verticalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  child: Scrollbar(
+                                    controller: horizontalScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    notificationPredicate: (notif) =>
+                                        notif.depth == 1,
+                                    child: SingleChildScrollView(
+                                      controller: verticalScrollController,
+                                      child: SingleChildScrollView(
+                                        controller: horizontalScrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: SizedBox(
+                                          width: max(1217, 950 * wfem),
+                                          child:
+                                              CoordinatorCriteriaManagementDataTable(
+                                            evaluationCriterias:
+                                                evaluationCriterias,
+                                            userRole: widget.userRole,
+                                            viewProject: widget.viewCritera,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 65,
                     ),
                   ],
                 ),
@@ -187,6 +234,8 @@ class _CoordinatorCriteriaManagementPageState
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
                 message: 'Add Criteria',
