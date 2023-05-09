@@ -66,6 +66,19 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
             .then(
           (value) {
             for (var doc in value.docs) {
+              FirebaseFirestore.instance
+                  .collection('evaluations')
+                  .where('project_id', isEqualTo: doc.id)
+                  .get()
+                  .then((value) {
+                if (value.docs.length == 0) {
+                  setState(() {
+                    loading = false;
+                    searching = false;
+                  });
+                  return;
+                }
+              });
               final val = doc.data();
               if (projectTitle != null) {
                 if (!val['title']
@@ -95,6 +108,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                 }
               }
               if (courseCode != null) {
+                // print(doc.id);
                 if (!val['type']
                     .toLowerCase()
                     .contains(courseCode!.toLowerCase())) {
@@ -117,6 +131,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                 (index) => MapEntry(
                     val['student_ids'][index], val['student_name'][index]),
               );
+              // print(temp);
               studentNames.addEntries(temp);
               FirebaseFirestore.instance
                   .collection('evaluations')
@@ -124,6 +139,13 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   .get()
                   .then(
                 (value) {
+                  if (value.docs.length == 0) {
+                    setState(() {
+                      loading = false;
+                      searching = false;
+                    });
+                    return;
+                  }
                   var evaludationDoc = value.docs[0];
                   List<String> studentIds =
                       evaludationDoc['weekly_evaluations'][0].keys.toList();

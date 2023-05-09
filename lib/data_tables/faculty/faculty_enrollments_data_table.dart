@@ -251,9 +251,11 @@ class _FacultyEnrollmentsDataTableState
   }
 
   void getPanels() async {
-    setState(() {
-      assignedPanels.clear();
-    });
+    if (mounted) {
+      setState(() {
+        assignedPanels.clear();
+      });
+    }
 
     await FirebaseFirestore.instance
         .collection('assigned_panel')
