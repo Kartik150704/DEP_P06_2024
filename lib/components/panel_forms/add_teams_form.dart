@@ -59,6 +59,9 @@ class _CreateTeamsFormState extends State<CreateTeamsForm> {
         bool flag = true;
         for (int i = 0; i < csvData.length; i++) {
           List<String> team = csvData[i].split(',');
+          for (int j = 0; j < team.length; j++) {
+            team[j] = team[j].trim();
+          }
           for (String student in team) {
             if (allstudents.contains(student.trim())) {
               showDialog(
