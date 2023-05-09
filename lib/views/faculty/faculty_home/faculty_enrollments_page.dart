@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:casper/comp/alert_message.dart';
@@ -323,6 +324,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   void initState() {
     super.initState();
     updateSearchParameters();
+    searching = true;
     getSupervisorEnrollments();
     getSession();
   }

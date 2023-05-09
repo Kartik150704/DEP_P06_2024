@@ -20,6 +20,8 @@ class AddEventForm extends StatefulWidget {
 class _AddEventFormState extends State<AddEventForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
+  String semester = '', year = '';
+  late bool isLoading, validSession;
 
   String? integerValidator(
       String? value, String fieldName, int lowerLimit, int higherLimit) {
@@ -36,10 +38,59 @@ class _AddEventFormState extends State<AddEventForm> {
     return null;
   }
 
+  InputDecoration getDecoration(String hintText) {
+    return InputDecoration(
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.black,
+        ),
+      ),
+      hintText: hintText,
+      hintStyle: const TextStyle(
+        color: Colors.grey,
+      ),
+    );
+  }
+
+  void getSession() {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        setState(() {
+          semester = value.docs[0]['semester'];
+          year = value.docs[0]['year'];
+          validSession = true;
+        });
+      } else {
+        print('add_event_form -> no valid session found');
+        validSession = false;
+      }
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isLoading = true;
+    validSession = true;
+    getSession();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> vals = [];
-
+    if (isLoading) {
+      return CircularProgressIndicator();
+    }
+    if (!validSession) {
+      return FormCustomText(text: 'No valid session found');
+    }
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -47,48 +98,40 @@ class _AddEventFormState extends State<AddEventForm> {
           const SizedBox(
             height: 10,
           ),
-          // const CustomisedText(
-          //   text: 'Enter the semester',
-          //   color: Colors.black,
-          // ),
-          // FormBuilderTextField(
-          //   name: 'semester',
-          //   validator: (value) => integerValidator(value, 'semester', 1, 2),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          // const CustomisedText(text: 'Enter the year', color: Colors.black),
-          // FormBuilderTextField(
-          //   name: 'year',
-          //   validator: (value) => integerValidator(value, 'year', 2000, 2100),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
           const CustomisedText(
-              text: 'Enter the course code', color: Colors.black),
+            text: 'Semester',
+            color: Colors.black,
+          ),
           FormBuilderTextField(
+            name: 'semester',
+            validator: (value) => integerValidator(value, 'semester', 1, 2),
+            initialValue: semester,
+            enabled: false,
+            decoration: getDecoration('Semester'),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const CustomisedText(text: 'Enter the year', color: Colors.black),
+          FormBuilderTextField(
+            name: 'year',
+            validator: (value) => integerValidator(value, 'year', 2000, 2100),
+            initialValue: year,
+            enabled: false,
+            decoration: getDecoration('Year'),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const CustomisedText(text: 'Select the course', color: Colors.black),
+          FormBuilderDropdown(
             name: 'course',
-            cursorColor: Colors.black,
-            decoration: const InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              hintText: 'Course Code',
-              hintStyle: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            validator: (value) {
-              // TODO: This is not specific to these only
-              if (['CP301', 'CP302', 'CP303'].contains(value)) {
-                return null;
-              }
-              return 'Please enter a valid course code';
-            },
+            items: List<String>.generate(5, (index) => 'CP30${index + 1}')
+                .map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e),
+                    ))
+                .toList(),
           ),
           const SizedBox(
             height: 30,

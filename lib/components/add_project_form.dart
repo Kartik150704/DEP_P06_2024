@@ -128,8 +128,8 @@ class _AddProjectFormState extends State<AddProjectForm> {
             name: 'type',
             items: ['CP302', 'CP303']
                 .map((e) => DropdownMenuItem(
-                      child: Text('$e'),
                       value: e,
+                      child: Text(e),
                     ))
                 .toList(),
             validator: FormBuilderValidators.required(

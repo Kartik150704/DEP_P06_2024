@@ -31,7 +31,13 @@ class _ProjectPageState extends State<ProjectPage> {
   // TODO: Fetch these values from db
   Enrollment? enrollment;
   List<AssignedPanel> assignedPanels = [];
-  late ReleasedEvents releasedEvents;
+  ReleasedEvents releasedEvents = ReleasedEvents(
+    id: '0',
+    semester: '0',
+    year: '0',
+    course: '0',
+    events: [],
+  );
   String evaluation_doc_id = '';
   final eventController = TextEditingController(),
       studentNameController = TextEditingController(),
@@ -43,6 +49,8 @@ class _ProjectPageState extends State<ProjectPage> {
 
   Team team = teamsGLOBAL[0];
 
+  bool releasedEventsLoading = true;
+
   // TODO: heavy refactoring of query, but it works as of now
 
   void getReleasedEvents() {
@@ -50,12 +58,12 @@ class _ProjectPageState extends State<ProjectPage> {
         .collection('projects')
         .doc(widget.projectId)
         .get()
-        .then((value) {
+        .then((value) async {
       if (value.exists) {
         String semester = value['semester'];
         String year = value['year'];
         String course = value['type'];
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('released_events')
             .where('semester', isEqualTo: semester)
             .where('year', isEqualTo: year)
@@ -92,6 +100,9 @@ class _ProjectPageState extends State<ProjectPage> {
         print(widget.projectId +
             ' not found in projects collection function get released events');
       }
+      setState(() {
+        releasedEventsLoading = false;
+      });
     });
   }
 
@@ -363,7 +374,7 @@ class _ProjectPageState extends State<ProjectPage> {
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
 
-    if (loading) {
+    if (loading || releasedEventsLoading) {
       return const LoadingPage();
     }
 
