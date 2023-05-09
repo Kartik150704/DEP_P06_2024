@@ -68,36 +68,10 @@ class _AddTeamProjCSVState extends State<AddTeamProjCSV> {
                 .get()
                 .then((teamDocs) async {
               var teamDoc = teamDocs.docs[0];
+              var projid = '';
               List<Student> students = [];
               for (int i = 0; i < teamDoc['students'].length; i++) {
                 String studentId = teamDoc['students'][i];
-                await FirebaseFirestore.instance
-                    .collection('student')
-                    .where('id', isEqualTo: studentId)
-                    .get()
-                    .then((studentDocs) async {
-                  var studentDoc = studentDocs.docs[0];
-                  var proj_id = studentDoc['proj_id'];
-                  if (projdoc['type'] == 'CP301') {
-                    proj_id[0] = projdoc.id;
-                  } else if (projdoc['type'] == 'CP302') {
-                    proj_id[1] = projdoc['type'];
-                  } else if (projdoc['type'] == 'CP303') {
-                    proj_id[2] = projdoc['type'];
-                  } else if (projdoc['type'] == 'CP304') {
-                    proj_id[3] = projdoc['type'];
-                  } else if (projdoc['type'] == 'CP305') {
-                    proj_id[4] = projdoc['type'];
-                  }
-
-                  var updateData = {
-                    'proj_id': proj_id,
-                  };
-                  await FirebaseFirestore.instance
-                      .collection('student')
-                      .doc(studentDoc.id)
-                      .update(updateData);
-                });
                 var inst_name = '';
                 var inst_id = '';
                 await FirebaseFirestore.instance
@@ -107,7 +81,7 @@ class _AddTeamProjCSVState extends State<AddTeamProjCSV> {
                     .then((instructorDocs) {
                   var instructorDoc = instructorDocs.docs[0];
                   inst_name = instructorDoc['name'];
-                  inst_id = instructorDoc.id;
+                  inst_id = instructorDoc['uid'];
                 });
                 await FirebaseFirestore.instance
                     .collection('student')
@@ -142,6 +116,7 @@ class _AddTeamProjCSVState extends State<AddTeamProjCSV> {
                         .collection('projects')
                         .add(project)
                         .then((value) async {
+                      projid = value.id;
                       // add reference to instructor document
 
                       await FirebaseFirestore.instance
@@ -226,6 +201,36 @@ class _AddTeamProjCSVState extends State<AddTeamProjCSV> {
                       });
                     });
                   }
+                });
+              }
+              for (int d = 0; d < teamDoc['students'].length; d++) {
+                await FirebaseFirestore.instance
+                    .collection('student')
+                    .where('id', isEqualTo: teamDoc['students'][d])
+                    .get()
+                    .then((studentDocs) async {
+                  var studentDoc = studentDocs.docs[0];
+                  var proj_id = studentDoc['proj_id'];
+                  if (projdoc['type'] == 'CP301') {
+                    proj_id[0] = projid;
+                  } else if (projdoc['type'] == 'CP302') {
+                    proj_id[1] = projid;
+                  } else if (projdoc['type'] == 'CP303') {
+                    proj_id[2] = projid;
+                  } else if (projdoc['type'] == 'CP304') {
+                    proj_id[3] = projid;
+                  } else if (projdoc['type'] == 'CP305') {
+                    proj_id[4] = projid;
+                  }
+
+                  print(projid);
+                  var updateData = {
+                    'proj_id': proj_id,
+                  };
+                  await FirebaseFirestore.instance
+                      .collection('student')
+                      .doc(studentDoc.id)
+                      .update(updateData);
                 });
               }
             });
