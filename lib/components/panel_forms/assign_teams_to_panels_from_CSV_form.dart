@@ -41,18 +41,19 @@ class _AssignTeamsToPanelsFromCSVFormState
         final csvTable = csvString.split('\n');
         setState(() {
           csvData = csvTable;
-          var x;
-          var temp;
+          List<String> x = [];
+          List<String> temp;
           for (int i = 0; i < csvData.length; i++) {
             temp = csvData[i].split(',');
             for (int j = 0; j < temp.length; j++) {
-              x.add(temp[j]);
+              x.add(temp[j].trim());
             }
           }
           csvData = x;
         });
         // Do something with the CSV data
         // ...
+        print(csvData);
         for (int i = 0; i < csvData.length; i += 2) {
           var alldata = <String, dynamic>{};
           var eval_ids = [], entry = [];
@@ -168,6 +169,21 @@ class _AssignTeamsToPanelsFromCSVFormState
                   'midsem_panel_comments': arr,
                   // TODO: not used may need to remove
                   'assigned_panels': FieldValue.arrayUnion([panel_id]),
+                });
+              }
+            }
+          });
+          await FirebaseFirestore.instance
+              .collection('projects')
+              .get()
+              .then((value) {
+            for (var doc in value.docs) {
+              if (doc['team_id'] == csvData[i + 1]) {
+                FirebaseFirestore.instance
+                    .collection('projects')
+                    .doc(doc.id)
+                    .update({
+                  'panel_ids': FieldValue.arrayUnion([panel_id]),
                 });
               }
             }
