@@ -12,6 +12,8 @@ import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/panel_forms/assign_teams_to_panels_from_CSV_form.dart';
+import 'package:csv/csv.dart';
+import 'dart:html' as html;
 
 import '../../../../components/add_teams_form.dart';
 
@@ -322,7 +324,35 @@ class _CoordinatorPanelManagementPageState
                     size: 35,
                   ),
                   // TODO: Add this function
-                  onPressed: () {},
+                  onPressed: () {
+                    List<List<dynamic>> rows = [
+                      [
+                        'Panel Identification Number',
+                        'Evaluator\'s Name',
+                        'Term Type',
+                        'Course Code',
+                        'Session (Year-Semester)'
+                      ],
+                    ];
+                    for (var panel in assignedPanels) {
+                      rows.add([
+                        panel.panel.id.toString(),
+                        panel.panel.evaluators.map((e) => e.name).join(', '),
+                        panel.term,
+                        panel.panel.course,
+                        '${panel.panel.year}-${panel.panel.semester}'
+                      ]);
+                    }
+                    String csv = const ListToCsvConverter().convert(rows);
+                    html.AnchorElement? downloadLink =
+                        html.document.createElement('a') as html.AnchorElement?;
+                    downloadLink!.href = 'data:text/csv;charset=utf-8,' +
+                        Uri.encodeComponent(csv);
+                    downloadLink.download = 'data.csv';
+                    html.document.body!.append(downloadLink);
+                    downloadLink.click();
+                    downloadLink.remove();
+                  },
                 ),
               ),
             ),
