@@ -51,6 +51,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         List<String> panelids = List<String>.from(
           doc['panel_ids'],
         );
+        print(FirebaseAuth.instance.currentUser?.uid);
         if (panelids.isEmpty) {
           setState(() {
             loading = false;

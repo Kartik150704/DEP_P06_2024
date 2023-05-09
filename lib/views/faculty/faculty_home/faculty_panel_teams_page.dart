@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:casper/components/add_teams_form.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
@@ -25,11 +27,13 @@ class FacultyPanelTeamsPage extends StatefulWidget {
 }
 
 class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
-  bool loading = true;
+  bool loading = true, searching = false;
   List<Team> assignedTeams = [];
   final teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
       studentEntryNumberController = TextEditingController();
+  final horizontalScrollController = ScrollController(),
+      verticalScrollController = ScrollController();
 
   void getPanelData() {
     if (widget.assignedPanel.assignedProjectIds!.isEmpty) {
@@ -281,14 +285,53 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
-                          child: FacultyPanelTeamsDataTable(
-                            actionType: widget.actionType,
-                            assignedPanel: widget.assignedPanel,
-                            assignedTeams: assignedTeams,
-                          ),
-                        ),
+                        // TODO: Implement search
+                        child: (searching
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 500 * wfem,
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 500,
+                                width: 400,
+                                child: Scrollbar(
+                                  controller: verticalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  child: Scrollbar(
+                                    controller: horizontalScrollController,
+                                    thumbVisibility: true,
+                                    trackVisibility: true,
+                                    notificationPredicate: (notif) =>
+                                        notif.depth == 1,
+                                    child: SingleChildScrollView(
+                                      controller: verticalScrollController,
+                                      child: SingleChildScrollView(
+                                        controller: horizontalScrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: SizedBox(
+                                          width: max(1217, 950 * wfem),
+                                          child: FacultyPanelTeamsDataTable(
+                                            actionType: widget.actionType,
+                                            assignedPanel: widget.assignedPanel,
+                                            assignedTeams: assignedTeams,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 65,
                     ),
                   ],
                 ),

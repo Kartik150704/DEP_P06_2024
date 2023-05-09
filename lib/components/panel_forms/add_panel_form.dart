@@ -300,6 +300,24 @@ class _AddPanelFormState extends State<AddPanelForm> {
                               .add(alldata);
                           widget.refresh();
                         });
+                        FirebaseFirestore.instance
+                            .collection('instructors')
+                            .where('email', whereIn: emails)
+                            .get()
+                            .then((value) {
+                          for (var doc in value.docs) {
+                            List<String> temp = [];
+                            if (doc['panel_ids'] != null) {
+                              temp = List<String>.from(doc['panel_ids']);
+                            }
+                            temp.add((newpanelid).toString());
+                            FirebaseFirestore.instance
+                                .collection('instructors')
+                                .doc(doc.id)
+                                .update({'panel_ids': temp});
+                            widget.refresh;
+                          }
+                        });
                       }
                     });
 
