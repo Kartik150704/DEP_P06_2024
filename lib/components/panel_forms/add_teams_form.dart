@@ -62,6 +62,7 @@ class _CreateTeamsFormState extends State<CreateTeamsForm> {
           for (int j = 0; j < team.length; j++) {
             team[j] = team[j].trim();
           }
+          print(team);
           for (String student in team) {
             if (allstudents.contains(student.trim())) {
               showDialog(
