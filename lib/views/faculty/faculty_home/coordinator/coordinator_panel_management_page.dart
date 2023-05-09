@@ -311,13 +311,36 @@ class _CoordinatorPanelManagementPageState
               width: 45 * wfem,
               margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
               child: Tooltip(
+                message: 'Download Panels',
+                child: FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 212, 203, 216),
+                  splashColor: Colors.black,
+                  hoverColor: Colors.grey,
+                  child: const Icon(
+                    Icons.download_rounded,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  // TODO: Add this function
+                  onPressed: () {},
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 45 * wfem,
+              width: 45 * wfem,
+              margin: const EdgeInsets.fromLTRB(0, 0, 7, 0),
+              child: Tooltip(
                 message: 'Assign Teams From CSV',
                 child: FloatingActionButton(
                   backgroundColor: const Color.fromARGB(255, 212, 203, 216),
                   splashColor: Colors.black,
                   hoverColor: Colors.grey,
                   child: const Icon(
-                    Icons.upload_file,
+                    Icons.upload_file_rounded,
                     color: Colors.black,
                     size: 35,
                   ),

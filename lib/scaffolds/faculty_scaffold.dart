@@ -24,7 +24,7 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
   String userName = '';
   dynamic displayPage;
   final appBarOptions = [
-    'PROFILE',
+    // 'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
@@ -40,13 +40,13 @@ class _FacultyScaffoldState extends State<FacultyScaffold> {
   void selectOption(option) {
     setState(() {
       switch (option) {
+        // case 0:
+        //   displayPage = FacultyProfilePage(role: widget.userRole);
+        //   break;
         case 0:
-          displayPage = FacultyProfilePage(role: widget.userRole);
-          break;
-        case 1:
           displayPage = FacultyHomePage(userRole: widget.userRole);
           break;
-        case 2:
+        case 1:
           displayPage = FacultyOfferingsPage(userRole: widget.userRole);
           break;
       }

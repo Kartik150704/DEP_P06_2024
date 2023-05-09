@@ -21,7 +21,7 @@ class _StudentScaffoldState extends State<StudentScaffold> {
   String userName = '';
   dynamic displayPage;
   final appBarOptions = [
-    'PROFILE',
+    // 'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
@@ -37,17 +37,17 @@ class _StudentScaffoldState extends State<StudentScaffold> {
   void selectOption(option) {
     setState(() {
       switch (option) {
+        // case 0:
+        //   displayPage = StudentProfilePage(
+        //     uid: FirebaseAuth.instance.currentUser?.uid,
+        //   );
+        //   break;
         case 0:
-          displayPage = StudentProfilePage(
-            uid: FirebaseAuth.instance.currentUser?.uid,
-          );
-          break;
-        case 1:
           displayPage = StudentHomePage(
             selectOption: selectOption,
           );
           break;
-        case 2:
+        case 1:
           displayPage = const StudentOfferings();
           break;
       }
