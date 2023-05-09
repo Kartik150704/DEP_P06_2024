@@ -1,3 +1,4 @@
+import 'package:casper/scaffolds/admin_scaffold.dart';
 import 'package:casper/scaffolds/faculty_scaffold.dart';
 import 'package:casper/scaffolds/student_scaffold.dart';
 import 'package:casper/views/shared/login_page.dart';
@@ -42,9 +43,7 @@ class Auth extends StatelessWidget {
                 if (snapshot.hasData) {
                   // TODO: Add admin page
                   if (snapshot.data == 'admin') {
-                    return const Scaffold(
-                      backgroundColor: Colors.green,
-                    );
+                    return AdminScaffold();
                   } else if (snapshot.data == 'student') {
                     return const StudentScaffold();
                   } else if (snapshot.data == 'supervisor') {

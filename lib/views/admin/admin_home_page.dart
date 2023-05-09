@@ -1,0 +1,111 @@
+import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:flutter/material.dart';
+
+class AdminHomePage extends StatelessWidget {
+  AdminHomePage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
+
+    return Row(
+      children: [
+        SizedBox(
+          width: 300 * wfem,
+          child: Scaffold(
+            body: Container(
+              color: const Color(0xff545161),
+              child: ListView(
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Column(
+                    children: [
+                      CustomisedButton(
+                        width: 222 * wfem,
+                        height: 60,
+                        text: 'Create Users',
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomisedButton(
+                        width: 222 * wfem,
+                        height: 60,
+                        text: 'Mark Semester',
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: const Color(0xff302c42),
+            child: ListView(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(60, 30, 0, 0),
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomisedText(
+                            text: 'Admin Page',
+                            fontSize: 50,
+                          ),
+                          Container(),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SizedBox(
+                        width: 1000 * wfem,
+                        height: 1000 * hfem,
+                        child: const Center(
+                          child: SizedBox(
+                            width: 500,
+                            height: 500,
+                            child: Image(
+                              image: AssetImage(
+                                'assets/images/logo_iitrpr.png',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 65,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
