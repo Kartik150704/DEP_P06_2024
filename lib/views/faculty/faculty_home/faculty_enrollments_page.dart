@@ -31,22 +31,24 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   final projectTitleController = TextEditingController(),
       teamIdController = TextEditingController(),
       studentNameController = TextEditingController(),
-      courseCodeController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      courseCodeController = TextEditingController(text: 'CP303'),
+      yearSemesterController = TextEditingController(text: '1999-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
 
-  void getSupervisorEnrollments() {
+  String currentYearSemester = '';
+
+  void getSupervisorEnrollments() async {
     setState(() {
       enrollments.clear();
     });
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('instructors')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then(
-      (snapshot) {
+      (snapshot) async {
         if (snapshot.docs.isEmpty ||
             snapshot.docs[0]['project_as_head_ids'].length == 0) {
           setState(() {
@@ -56,7 +58,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
 
           return;
         }
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('projects')
             .where(
               FieldPath.documentId,
@@ -76,9 +78,12 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                     loading = false;
                     searching = false;
                   });
+                  print('evaluation not found for ${doc.id}');
                   return;
                 }
               });
+              print('here');
+
               final val = doc.data();
               if (projectTitle != null) {
                 if (!val['title']
@@ -87,6 +92,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   continue;
                 }
               }
+              print('here1');
+
               if (teamId != null) {
                 if (!val['team_id']
                     .toLowerCase()
@@ -94,6 +101,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   continue;
                 }
               }
+              print('here2');
 
               if (studentName != null) {
                 bool flag = false;
@@ -107,14 +115,15 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   continue;
                 }
               }
+
               if (courseCode != null) {
-                // print(doc.id);
                 if (!val['type']
                     .toLowerCase()
                     .contains(courseCode!.toLowerCase())) {
                   continue;
                 }
               }
+
               if (yearSemester != null) {
                 String yearSemester = val['year'] + '-' + val['semester'];
                 if (!yearSemester
@@ -281,6 +290,33 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
         );
       },
     );
+    print('called');
+    setState(() {
+      loading = false;
+      searching = false;
+    });
+    print(enrollments.length);
+  }
+
+  void getSession() {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          currentYearSemester = doc['year'] + '-' + doc['semester'];
+          yearSemesterController.text = currentYearSemester;
+        });
+      } else {
+        setState(() {
+          currentYearSemester = '2022-2';
+        });
+        print(
+            'faculty_enrollment_requests_page.dart -> no valid session found');
+      }
+    });
   }
 
   @override
@@ -288,6 +324,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
     super.initState();
     updateSearchParameters();
     getSupervisorEnrollments();
+    getSession();
   }
 
   bool updateSearchParameters() {
