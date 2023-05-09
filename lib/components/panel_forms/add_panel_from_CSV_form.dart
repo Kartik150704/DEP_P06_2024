@@ -17,9 +17,13 @@ import 'dart:io';
 
 import 'package:mutex/mutex.dart';
 
+import '../form_custom_text.dart';
+
 class CreatePanelFromCSVForm extends StatefulWidget {
+  final refresh;
   const CreatePanelFromCSVForm({
     super.key,
+    required this.refresh,
   });
 
   @override
@@ -28,6 +32,7 @@ class CreatePanelFromCSVForm extends StatefulWidget {
 
 class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  String selectedEvent = '';
 
   void _onFormSubmitted() {
     _formKey.currentState?.save();
@@ -115,6 +120,25 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
                 FirebaseFirestore.instance
                     .collection('assigned_panel')
                     .add(alldata);
+              }
+            });
+            //Update instuctor project_as_panel_ids array
+            FirebaseFirestore.instance
+                .collection('instructors')
+                .where('email', whereIn: emails)
+                .get()
+                .then((value) {
+              for (var doc in value.docs) {
+                List<String> temp = [];
+                if (doc['panel_ids'] != null) {
+                  temp = List<String>.from(doc['panel_ids']);
+                }
+                temp.add((newpanelid + i).toString());
+                FirebaseFirestore.instance
+                    .collection('instructors')
+                    .doc(doc.id)
+                    .update({'panel_ids': temp});
+                widget.refresh;
               }
             });
           }
@@ -207,14 +231,23 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
               color: const Color(0xff000000),
             ),
           ),
-          FormBuilderTextField(
+          const SizedBox(
+            height: 10,
+          ),
+          FormBuilderRadioGroup(
             name: 'term',
-            validator: (value) {
-              if (['MidTerm', 'EndTerm'].contains(value)) {
-                return null;
-              }
-              return 'enter a valid term. [MidTerm or EndTerm]';
-            },
+            activeColor: Colors.black,
+            options: const [
+              // TODO: These are not static
+              FormBuilderFieldOption(
+                  value: 'MidTerm', child: FormCustomText(text: 'MidTerm')),
+              FormBuilderFieldOption(
+                  value: 'EndTerm', child: FormCustomText(text: 'EndTerm')),
+              FormBuilderFieldOption(
+                  value: 'Report', child: FormCustomText(text: 'Report')),
+              FormBuilderFieldOption(
+                  value: 'All', child: FormCustomText(text: 'All')),
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -244,7 +277,7 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
             height: 10,
           ),
           const SizedBox(
-            width: 500,
+            width: 400,
             child: CustomisedText(
               text:
                   'Format: \n panel1 email1, panel1 email2 ...\n panel2 email1, panel2 email2 ...\n ',
@@ -258,7 +291,7 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
             child: FormBuilderFilePicker(
               name: 'file',
               maxFiles: 1,
-              validator: FormBuilderValidators.required(errorText: 'Reuuired'),
+              validator: FormBuilderValidators.required(errorText: 'Required'),
               allowedExtensions: const ['csv'],
               typeSelectors: [
                 TypeSelector(

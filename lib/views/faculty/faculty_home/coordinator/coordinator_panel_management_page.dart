@@ -445,9 +445,11 @@ class _CoordinatorPanelManagementPageState
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return const AlertDialog(
+                        return AlertDialog(
                           title: Center(
-                            child: CreatePanelFromCSVForm(),
+                            child: CreatePanelFromCSVForm(
+                              refresh: getPanels,
+                            ),
                           ),
                         );
                       },

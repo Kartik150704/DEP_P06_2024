@@ -10,6 +10,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:multiselect/multiselect.dart';
 
+import '../form_custom_text.dart';
+
 class AddPanelForm extends StatefulWidget {
   final refresh;
 
@@ -97,14 +99,23 @@ class _AddPanelFormState extends State<AddPanelForm> {
               color: const Color(0xff000000),
             ),
           ),
-          FormBuilderTextField(
+          const SizedBox(
+            height: 10,
+          ),
+          FormBuilderRadioGroup(
             name: 'term',
-            validator: (value) {
-              if (['MidTerm', 'EndTerm'].contains(value)) {
-                return null;
-              }
-              return 'enter a valid term. [MidTerm or EndTerm]';
-            },
+            activeColor: Colors.black,
+            options: const [
+              // TODO: These are not static
+              FormBuilderFieldOption(
+                  value: 'MidTerm', child: FormCustomText(text: 'MidTerm')),
+              FormBuilderFieldOption(
+                  value: 'EndTerm', child: FormCustomText(text: 'EndTerm')),
+              FormBuilderFieldOption(
+                  value: 'Report', child: FormCustomText(text: 'Report')),
+              FormBuilderFieldOption(
+                  value: 'All', child: FormCustomText(text: 'All')),
+            ],
           ),
           const SizedBox(
             height: 10,
