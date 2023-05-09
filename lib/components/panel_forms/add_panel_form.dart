@@ -27,12 +27,31 @@ class AddPanelForm extends StatefulWidget {
 class _AddPanelFormState extends State<AddPanelForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   int number_of_evaluators = 1;
+  String semester = '', year = '';
+
+  void getSession() {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          semester = doc['semester'];
+          year = doc['year'];
+        });
+      } else {
+        print('no active session found');
+      }
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     number_of_evaluators = 1;
+    getSession();
   }
 
   String? integerValidator(
@@ -51,6 +70,9 @@ class _AddPanelFormState extends State<AddPanelForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (semester == '' || year == '') {
+      return const FormCustomText(text: 'No valid session.');
+    }
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -59,7 +81,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
             height: 10,
           ),
           Text(
-            'Enter the semester',
+            'Semester',
             style: SafeGoogleFont(
               'Ubuntu',
               fontSize: 20,
@@ -70,12 +92,14 @@ class _AddPanelFormState extends State<AddPanelForm> {
           FormBuilderTextField(
             name: 'semester',
             validator: (value) => integerValidator(value, 'semester', 1, 2),
+            initialValue: semester,
+            enabled: false,
           ),
           const SizedBox(
             height: 10,
           ),
           Text(
-            'Enter the year',
+            'Year',
             style: SafeGoogleFont(
               'Ubuntu',
               fontSize: 20,
@@ -86,6 +110,8 @@ class _AddPanelFormState extends State<AddPanelForm> {
           FormBuilderTextField(
             name: 'year',
             validator: (value) => integerValidator(value, 'year', 2000, 2100),
+            initialValue: year,
+            enabled: false,
           ),
           const SizedBox(
             height: 10,
@@ -213,7 +239,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
                         .collection('instructors')
                         .where('email', whereIn: emails)
                         .get()
-                        .then((value) {
+                        .then((value) async {
                       if (value.docs.length != number_of_evaluators) {
                         print(
                             'Multiple instructors with same email, unexpected error');
@@ -268,6 +294,27 @@ class _AddPanelFormState extends State<AddPanelForm> {
                           //TODO: validation of ids and names
                           MapEntry('evaluator_ids', ids)
                         ]);
+                        String dept = '';
+                        await FirebaseFirestore.instance
+                            .collection('instructors')
+                            .where('uid',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser?.uid)
+                            .get()
+                            .then((instructorValue) async {
+                          if (instructorValue.docs.isNotEmpty) {
+                            var doc = instructorValue.docs[0];
+                            dept = doc['department'];
+                          } else {
+                            print(
+                                'add_panel_form.dart -> instructor not found in instructors table');
+                          }
+                        });
+                        if (dept == '') {
+                          print(
+                              'add_panel_form.dart -> unexpected error, invalid department');
+                          return;
+                        }
                         int newpanelid = 0;
                         FirebaseFirestore.instance
                             .collection('panels')
@@ -294,6 +341,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
                             MapEntry('year', formdata['year']),
                             MapEntry('term', formdata['term']),
                             MapEntry('course', formdata['course']),
+                            MapEntry('department', dept),
                           ]);
                           FirebaseFirestore.instance
                               .collection('assigned_panel')

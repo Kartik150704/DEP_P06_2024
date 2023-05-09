@@ -21,6 +21,7 @@ import '../form_custom_text.dart';
 
 class CreatePanelFromCSVForm extends StatefulWidget {
   final refresh;
+
   const CreatePanelFromCSVForm({
     super.key,
     required this.refresh,
@@ -33,6 +34,8 @@ class CreatePanelFromCSVForm extends StatefulWidget {
 class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
+
+  String semester = '', year = '';
 
   void _onFormSubmitted() {
     _formKey.currentState?.save();
@@ -51,13 +54,35 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
         // Do something with the CSV data
         // ...
         int newpanelid = 0;
-        FirebaseFirestore.instance.collection('panels').get().then((value) {
+        FirebaseFirestore.instance
+            .collection('panels')
+            .get()
+            .then((value) async {
           for (var doc in value.docs) {
             if (int.parse(doc['panel_id']) > newpanelid) {
               newpanelid = int.parse(doc['panel_id']);
             }
           }
           newpanelid++;
+          String dept = '';
+          await FirebaseFirestore.instance
+              .collection('instructors')
+              .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .get()
+              .then((instructorValue) {
+            if (instructorValue.docs.isNotEmpty) {
+              var doc = instructorValue.docs[0];
+              dept = doc['department'];
+            } else {
+              print(
+                  'add_panel_from_CSV.dart -> instructor not found in instructors table');
+            }
+          });
+          if (dept == '') {
+            print(
+                'add_panel_from_CSV.dart -> unexpected error, invalid department');
+            return;
+          }
           bool flag = true;
           for (int i = 0; i < csvData.length; i++) {
             if (!flag) {
@@ -108,7 +133,8 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
                   MapEntry('number_of_evaluators', emails.length.toString()),
                   MapEntry('panel_id', (newpanelid + i).toString()),
                   const MapEntry('number_of_assigned_projects', '0'),
-                  const MapEntry('assigned_project_ids', [])
+                  const MapEntry('assigned_project_ids', []),
+                  MapEntry('department', dept),
                 ]);
                 FirebaseFirestore.instance.collection('panels').add(alldata);
                 alldata.addEntries([
@@ -178,20 +204,44 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
     return null;
   }
 
+  void getSession() {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          semester = doc['semester'];
+          year = doc['year'];
+        });
+      } else {
+        setState(() {
+          semester = '';
+          year = '';
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getSession();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (semester == '' || year == '') {
+      return FormCustomText(text: 'No ongoing session');
+    }
     return FormBuilder(
       key: _formKey,
       child: Column(
         children: [
           Text(
-            'Enter the semester',
+            'Semester',
             style: SafeGoogleFont(
               'Ubuntu',
               fontSize: 20,
@@ -202,12 +252,14 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           FormBuilderTextField(
             name: 'semester',
             validator: (value) => integerValidator(value, 'semester', 1, 2),
+            initialValue: semester,
+            enabled: false,
           ),
           const SizedBox(
             height: 10,
           ),
           Text(
-            'Enter the year',
+            'Year',
             style: SafeGoogleFont(
               'Ubuntu',
               fontSize: 20,
@@ -218,6 +270,8 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           FormBuilderTextField(
             name: 'year',
             validator: (value) => integerValidator(value, 'year', 2000, 2100),
+            initialValue: year,
+            enabled: false,
           ),
           const SizedBox(
             height: 10,
