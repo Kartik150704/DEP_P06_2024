@@ -265,6 +265,36 @@ class _CoordinatorCriteriaManagementPageState
                   ),
                   // TODO: Implement this method
                   onPressed: () {
+                    // FirebaseFirestore.instance
+                    //     .collection('instructors')
+                    //     .get()
+                    //     .then((value) {
+                    //   for (var item in value.docs) {
+                    //     FirebaseFirestore.instance
+                    //         .collection('instructors')
+                    //         .doc(item.id)
+                    //         .update({
+                    //       'number_of_projects_as_head': '0',
+                    //       'project_as_head_ids': [],
+                    //     });
+                    //   }
+                    // });
+                    //
+                    // FirebaseFirestore.instance
+                    //     .collection('student')
+                    //     .get()
+                    //     .then((value) {
+                    //   for (var item in value.docs) {
+                    //     FirebaseFirestore.instance
+                    //         .collection('student')
+                    //         .doc(item.id)
+                    //         .update({
+                    //       'proj_id': [null, null, null, null, null],
+                    //     });
+                    //   }
+                    // });
+
+                    //TODO: uncomment
                     showDialog(
                       context: context,
                       builder: (context) {
