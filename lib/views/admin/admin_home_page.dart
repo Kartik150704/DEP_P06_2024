@@ -1,3 +1,5 @@
+import 'package:casper/comp/add_instructor_form.dart';
+import 'package:casper/comp/add_student_form.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +36,33 @@ class AdminHomePage extends StatelessWidget {
                       CustomisedButton(
                         width: 222 * wfem,
                         height: 60,
-                        text: 'Create Users',
-                        onPressed: () {},
+                        text: 'Add Students',
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Center(child: AddStudentForm()),
+                                );
+                              });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomisedButton(
+                        width: 222 * wfem,
+                        height: 60,
+                        text: 'Add Faculty',
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Center(child: AddInstructorForm()),
+                                );
+                              });
+                        },
                       ),
                       const SizedBox(
                         height: 20,
