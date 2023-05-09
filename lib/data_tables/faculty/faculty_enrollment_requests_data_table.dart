@@ -129,7 +129,7 @@ class _EnrollmentRequestDataTableState
                               projects.add(value.id);
                               var updateData = {
                                 'project_as_head_ids': projects,
-                                'num_projects_as_head':
+                                'number_of_projects_as_head':
                                     projects.length.toString(),
                               };
                               FirebaseFirestore.instance
