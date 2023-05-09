@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/faculty_enrollment_requests_data_table.dart';
 import 'package:casper/models/models.dart';
@@ -23,12 +24,14 @@ class _FacultyEnrollmentRequestsPageState
   bool loading = true, searching = false;
   List<EnrollmentRequest> requests = [];
   var teamNames = {};
+  String teamID = '', projectTitle = '', course = '', yearSemester = '';
   final teamIDController = TextEditingController(),
       projectTitleController = TextEditingController(),
-      courseController = TextEditingController(),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      courseController = TextEditingController(text: 'CP303'),
+      yearSemesterController = TextEditingController();
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
+  String currentYearSemester = '';
 
   void confirmAction() {
     showDialog(
@@ -45,7 +48,17 @@ class _FacultyEnrollmentRequestsPageState
     );
   }
 
+  void getSearchParameters() {
+    setState(() {
+      teamID = teamIDController.text.trim().toLowerCase();
+      projectTitle = projectTitleController.text.trim().toLowerCase();
+      course = courseController.text.trim().toLowerCase();
+      yearSemester = yearSemesterController.text.trim().toLowerCase();
+    });
+  }
+
   void getEnrollmentRequests() async {
+    print('called');
     await FirebaseFirestore.instance
         .collection('enrollment_requests')
         .where('status', isEqualTo: '2')
@@ -100,7 +113,24 @@ class _FacultyEnrollmentRequestsPageState
                     offering: offering,
                     teamId: doc['team_id'],
                     key_id: doc.id);
-                requests.add(enrollment);
+                bool flag = true;
+                if (projectTitle != '') {
+                  String title =
+                      enrollment.offering.project.title.toLowerCase();
+                  if (!title.contains(projectTitle)) flag = false;
+                }
+                if (teamID != '') {
+                  String teamid = enrollment.teamId;
+                  if (!teamid.contains(teamID)) flag = false;
+                }
+                String tempYearSem =
+                    '${enrollment.offering.year}-${enrollment.offering.semester}';
+                tempYearSem = tempYearSem.toLowerCase();
+                String tempCourse = enrollment.offering.course.toLowerCase();
+                print(tempYearSem + tempCourse);
+                if (!tempYearSem.contains(yearSemester) ||
+                    !tempCourse.contains(course)) flag = false;
+                if (flag) requests.add(enrollment);
               });
               setState(() {
                 for (var id in requests) {
@@ -112,33 +142,35 @@ class _FacultyEnrollmentRequestsPageState
                 Team_ids.add(requests[i].teamId);
                 // print(Team_ids);
               }
-              await FirebaseFirestore.instance
-                  .collection('team')
-                  .where('id', whereIn: Team_ids)
-                  .get()
-                  .then((value) async {
-                for (var doc in value.docs) {
-                  List<String> temp = [];
-                  for (String stud in doc['students']) {
-                    if (!mounted) return;
-                    await FirebaseFirestore.instance
-                        .collection('student')
-                        .where('id', isEqualTo: stud)
-                        .get()
-                        .then((value) {
-                      for (var doc in value.docs) {
-                        if (!mounted) return;
-                        setState(() {
-                          temp.add(doc['name']);
-                        });
-                      }
+              if (Team_ids.isNotEmpty) {
+                await FirebaseFirestore.instance
+                    .collection('team')
+                    .where('id', whereIn: Team_ids)
+                    .get()
+                    .then((value) async {
+                  for (var doc in value.docs) {
+                    List<String> temp = [];
+                    for (String stud in doc['students']) {
+                      if (!mounted) return;
+                      await FirebaseFirestore.instance
+                          .collection('student')
+                          .where('id', isEqualTo: stud)
+                          .get()
+                          .then((value) {
+                        for (var doc in value.docs) {
+                          if (!mounted) return;
+                          setState(() {
+                            temp.add(doc['name']);
+                          });
+                        }
+                      });
+                    }
+                    setState(() {
+                      teamNames[doc['id']] = (temp);
                     });
                   }
-                  setState(() {
-                    teamNames[doc['id']] = (temp);
-                  });
-                }
-              });
+                });
+              }
               setState(() {
                 loading = false;
               });
@@ -146,11 +178,33 @@ class _FacultyEnrollmentRequestsPageState
           }
         });
       }
-    });
-    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         loading = false;
       });
+    });
+    setState(() {
+      loading = false;
+    });
+  }
+
+  void getSession() {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          currentYearSemester = doc['year'] + '-' + doc['semester'];
+          yearSemesterController.text = currentYearSemester;
+        });
+      } else {
+        setState(() {
+          currentYearSemester = '';
+        });
+        print(
+            'faculty_enrollment_requests_page.dart -> no valid session found');
+      }
     });
   }
 
@@ -158,6 +212,7 @@ class _FacultyEnrollmentRequestsPageState
   void initState() {
     super.initState();
     getEnrollmentRequests();
+    getSession();
   }
 
   void refresh() {
@@ -271,7 +326,22 @@ class _FacultyEnrollmentRequestsPageState
                               color: Colors.black,
                               size: 29,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              getSearchParameters();
+                              if (yearSemester == '' || course == '') {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const AlertDialog(
+                                        title: FormCustomText(
+                                          text:
+                                              'Year-Semester and course is mandatory',
+                                        ),
+                                      );
+                                    });
+                              }
+                              refresh();
+                            },
                           ),
                         ),
                       ],

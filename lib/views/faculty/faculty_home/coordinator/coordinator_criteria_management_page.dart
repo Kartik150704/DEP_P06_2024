@@ -68,6 +68,10 @@ class _CoordinatorCriteriaManagementPageState
           searching = false;
         });
       }
+      setState(() {
+        loading = false;
+        searching = false;
+      });
     });
   }
 

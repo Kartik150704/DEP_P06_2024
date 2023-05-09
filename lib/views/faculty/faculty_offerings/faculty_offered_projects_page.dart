@@ -103,6 +103,10 @@ class _FacultyOfferedProjectsPageState
                   year: doc['year'],
                   course: doc['type']);
               offerings.add(offering);
+              setState(() {
+                loading = false;
+                searcing = false;
+              });
             }
           });
         }
