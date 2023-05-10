@@ -4,11 +4,13 @@ import '../utilities/utilites.dart';
 
 class CustomButton extends StatelessWidget {
   final buttonText, onPressed;
+  bool enabled;
 
-  const CustomButton({
+  CustomButton({
     Key? key,
     required this.buttonText,
     required this.onPressed,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class CustomButton extends StatelessWidget {
     const buttonColor = Color(0xff1a1d2d);
 
     return TextButton(
-      onPressed: onPressed,
+      onPressed: (enabled) ? onPressed : null,
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
       ),
