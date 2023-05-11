@@ -396,6 +396,7 @@ class _FacultyPanelTeamsDataTableState
     setState(() {
       sortColumnIndex = columnIndex;
       isAscending = ascending;
+      rows = getRows(studentData);
     });
   }
 
