@@ -25,6 +25,7 @@ class Auth extends StatelessWidget {
         .then(
       (querySnapshot) {
         currentRole = querySnapshot.docs[0]['role'];
+        print(currentRole);
       },
     );
     return currentRole;
@@ -42,6 +43,7 @@ class Auth extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   // TODO: Add admin page
+
                   if (snapshot.data == 'admin') {
                     return AdminScaffold();
                   } else if (snapshot.data == 'student') {

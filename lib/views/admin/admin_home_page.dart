@@ -18,7 +18,7 @@ class AdminHomePage extends StatelessWidget {
     double hfem = (MediaQuery.of(context).size.height *
             MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
-
+    print('im here');
     return Row(
       children: [
         SizedBox(
