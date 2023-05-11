@@ -77,7 +77,7 @@ class _ProjectPageState extends State<ProjectPage> {
             for (var event in events.keys) {
               String eventName = event.toString();
               if (event.toString().contains('week')) {
-                eventName = 'week-' + event.toString().split('week')[1];
+                eventName = 'week-${event.toString().split('week')[1]}';
               }
               eventList.add(Event(
                   id: '1',
@@ -97,8 +97,8 @@ class _ProjectPageState extends State<ProjectPage> {
           }
         });
       } else {
-        print(widget.projectId +
-            ' not found in projects collection function get released events');
+        print(
+            '${widget.projectId} not found in projects collection function get released events');
       }
       setState(() {
         releasedEventsLoading = false;
