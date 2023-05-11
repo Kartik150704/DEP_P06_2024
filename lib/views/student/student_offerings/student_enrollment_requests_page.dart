@@ -165,7 +165,7 @@ class _StudentEnrollmentRequestsPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const CustomisedText(
-                    text: 'Request(s) Status',
+                    text: 'Requests',
                     fontSize: 50,
                   ),
                   const SizedBox(

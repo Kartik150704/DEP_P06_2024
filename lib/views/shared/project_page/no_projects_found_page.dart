@@ -29,7 +29,7 @@ class NoProjectsFoundPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                    onPressed: () => selectOption(2),
+                    onPressed: () => selectOption(1),
                     child: const CustomisedText(
                       text: 'Click Here',
                       fontSize: 40,

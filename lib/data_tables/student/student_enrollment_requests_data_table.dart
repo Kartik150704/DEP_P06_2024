@@ -57,7 +57,7 @@ class _StudentEnrollmentRequestsDataTableState
     final columns = [
       'ID',
       'Project',
-      'Instructor',
+      'Supervisor',
       'Course',
       'Status',
       'Action',
@@ -140,18 +140,27 @@ class _StudentEnrollmentRequestsDataTableState
               ),
             ),
             DataCell(
-              SizedBox(
-                child: CustomisedOverflowText(
-                  text: request.offering.project.title,
-                  color: Colors.black,
+              Tooltip(
+                message:
+                    '${request.offering.project.title} - ${request.offering.project.description}',
+                child: SizedBox(
+                  width: 250,
+                  child: CustomisedOverflowText(
+                    text: request.offering.project.title,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             DataCell(
-              SizedBox(
-                child: CustomisedText(
-                  text: request.offering.instructor.name,
-                  color: Colors.black,
+              Tooltip(
+                message: request.offering.instructor.name,
+                child: SizedBox(
+                  width: 160,
+                  child: CustomisedOverflowText(
+                    text: request.offering.instructor.name,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
@@ -173,49 +182,52 @@ class _StudentEnrollmentRequestsDataTableState
                 color: Colors.black,
               ),
             ),
-            DataCell((request.status != '0' && request.status != '3'
-                ? (request.status == '1'
-                    ? const CustomisedText(
-                        text: 'Accepted',
-                        color: Colors.black,
-                      )
-                    : CustomisedButton(
-                        width: double.infinity,
-                        height: 35,
-                        text: 'Withdraw',
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Center(
-                                    child: ConfirmAction(
-                                      onSubmit: () async {
-                                        await FirebaseFirestore.instance
-                                            .collection('enrollment_requests')
-                                            .doc(request.key_id)
-                                            .update({
-                                          'status': '3',
-                                        });
-                                        widget.refresh();
-                                        Navigator.pop(context);
-                                      },
+            DataCell(
+              (request.status != '0' && request.status != '3'
+                  ? (request.status == '1'
+                      ? const CustomisedText(
+                          text: 'Accepted',
+                          color: Colors.black,
+                        )
+                      : CustomisedButton(
+                          width: double.infinity,
+                          height: 35,
+                          text: 'Withdraw',
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Center(
+                                      child: ConfirmAction(
+                                        onSubmit: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection('enrollment_requests')
+                                              .doc(request.key_id)
+                                              .update({
+                                            'status': '3',
+                                          });
+                                          widget.refresh();
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              });
-                        },
-                        elevation: 0,
-                      ))
-                : ((request.status == '3')
-                    ? const CustomisedText(
-                        text: 'Unavailable',
-                        color: Colors.black,
-                      )
-                    : const CustomisedText(
-                        text: 'Rejected',
-                        color: Colors.black,
-                      )))),
+                                  );
+                                });
+                          },
+                          elevation: 0,
+                        ))
+                  : ((request.status == '3')
+                      ? const CustomisedText(
+                          text: 'Unavailable',
+                          color: Colors.black,
+                        )
+                      : const CustomisedText(
+                          text: 'Rejected',
+                          color: Colors.black,
+                        ))),
+            ),
           ];
           return DataRow(
             cells: cells,

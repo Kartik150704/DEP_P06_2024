@@ -327,58 +327,69 @@ class _EnrollmentRequestDataTableState
         (EnrollmentRequest request) {
           final cells = [
             DataCell(
-              SizedBox(
-                child: CustomisedText(
-                  text: request.offering.project.title,
-                  color: Colors.black,
+              Tooltip(
+                message:
+                    '${request.offering.project.title} - ${request.offering.project.description}',
+                child: SizedBox(
+                  width: 300,
+                  child: CustomisedOverflowText(
+                    text: request.offering.project.title,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 50,
-                child: CustomisedOverflowText(
-                  text: request.teamId,
-                  color: Colors.black,
-                ),
+              CustomisedOverflowText(
+                text: request.teamId,
+                color: Colors.black,
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 300,
-                child: CustomisedOverflowText(
-                  text: teamname(request.teamId),
-                  color: Colors.black,
+              Tooltip(
+                message: teamname(request.teamId),
+                child: SizedBox(
+                  width: 300,
+                  child: CustomisedOverflowText(
+                    text: teamname(request.teamId),
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
             DataCell(
               Row(
                 children: [
-                  CustomisedButton(
-                    text: const Icon(
-                      Icons.check,
-                      color: Colors.white,
+                  Tooltip(
+                    message: 'Accept',
+                    child: CustomisedButton(
+                      text: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                      height: 30,
+                      width: 30,
+                      onPressed: () => confirmAction(true, request.teamId,
+                          request.offering.project.title, request),
+                      elevation: 0,
                     ),
-                    height: 30,
-                    width: 30,
-                    onPressed: () => confirmAction(true, request.teamId,
-                        request.offering.project.title, request),
-                    elevation: 0,
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  CustomisedButton(
-                    text: const Icon(
-                      Icons.close,
-                      color: Colors.white,
+                  Tooltip(
+                    message: 'Reject',
+                    child: CustomisedButton(
+                      text: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                      height: 30,
+                      width: 30,
+                      onPressed: () => confirmAction(false, request.teamId,
+                          request.offering.project.title, request),
+                      elevation: 0,
                     ),
-                    height: 30,
-                    width: 30,
-                    onPressed: () => confirmAction(false, request.teamId,
-                        request.offering.project.title, request),
-                    elevation: 0,
                   ),
                 ],
               ),

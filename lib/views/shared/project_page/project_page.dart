@@ -480,7 +480,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   ),
                   Container(
                     width: 1200 * wfem,
-                    height: 1000 * hfem,
+                    height: 960 * hfem,
                     margin: EdgeInsets.fromLTRB(40, 15, 80 * wfem, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),

@@ -221,11 +221,14 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 165,
-                child: CustomisedOverflowText(
-                  text: data.studentName,
-                  color: Colors.black,
+              Tooltip(
+                message: data.studentName,
+                child: SizedBox(
+                  width: 165,
+                  child: CustomisedOverflowText(
+                    text: data.studentName,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
