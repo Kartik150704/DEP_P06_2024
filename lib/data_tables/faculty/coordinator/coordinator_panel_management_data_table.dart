@@ -33,8 +33,8 @@ class _CoordinatorPanelManagementDataTableState
     }
 
     final columns = [
-      'ID',
-      'Number Of Evaluators',
+      'Panel',
+      '#Evaluators',
       'Evaluators',
       'Term',
       'View Details',
@@ -117,13 +117,18 @@ class _CoordinatorPanelManagementDataTableState
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 400,
-                child: CustomisedOverflowText(
-                  text: assignedPanel.panel.evaluators
-                      .map((e) => e.name)
-                      .join(', '),
-                  color: Colors.black,
+              Tooltip(
+                message: assignedPanel.panel.evaluators
+                    .map((e) => e.name)
+                    .join(', '),
+                child: SizedBox(
+                  width: 400,
+                  child: CustomisedOverflowText(
+                    text: assignedPanel.panel.evaluators
+                        .map((e) => e.name)
+                        .join(', '),
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

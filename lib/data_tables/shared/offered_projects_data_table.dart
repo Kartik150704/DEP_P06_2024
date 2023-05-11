@@ -146,7 +146,9 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
               ),
             ),
             DataCell(
-              SizedBox(
+              Tooltip(
+                message:
+                    '${offerings.project.title} - ${offerings.project.description}',
                 child: SizedBox(
                   width: 300,
                   child: CustomisedOverflowText(
@@ -157,11 +159,14 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 150,
-                child: CustomisedOverflowText(
-                  text: offerings.instructor.name,
-                  color: Colors.black,
+              Tooltip(
+                message: offerings.instructor.name,
+                child: SizedBox(
+                  width: 150,
+                  child: CustomisedOverflowText(
+                    text: offerings.instructor.name,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

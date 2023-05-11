@@ -42,7 +42,7 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
     }
 
     final columns = [
-      'ID',
+      'Panel',
       'Evaluators',
       'Assigned',
       'Evaluated',
@@ -125,13 +125,18 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
               ),
             ),
             DataCell(
-              SizedBox(
-                width: 290,
-                child: CustomisedOverflowText(
-                  text: assignedPanel.panel.evaluators
-                      .map((e) => e.name)
-                      .join(', '),
-                  color: Colors.black,
+              Tooltip(
+                message: assignedPanel.panel.evaluators
+                    .map((e) => e.name)
+                    .join(', '),
+                child: SizedBox(
+                  width: 290,
+                  child: CustomisedOverflowText(
+                    text: assignedPanel.panel.evaluators
+                        .map((e) => e.name)
+                        .join(', '),
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

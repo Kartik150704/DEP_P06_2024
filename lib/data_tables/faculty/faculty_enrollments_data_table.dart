@@ -407,17 +407,20 @@ class _FacultyEnrollmentsDataTableState
         (StudentData data) {
           final cells = [
             DataCell(
-              Container(
-                width: 170,
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () => widget.viewProject(
-                    data.projectId,
-                  ),
-                  child: CustomisedOverflowText(
-                    text: data.projectTitle,
-                    color: Colors.blue[900],
-                    selectable: false,
+              Tooltip(
+                message: data.projectTitle,
+                child: Container(
+                  width: 170,
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () => widget.viewProject(
+                      data.projectId,
+                    ),
+                    child: CustomisedOverflowText(
+                      text: data.projectTitle,
+                      color: Colors.blue[900],
+                      selectable: false,
+                    ),
                   ),
                 ),
               ),
@@ -446,7 +449,7 @@ class _FacultyEnrollmentsDataTableState
               Tooltip(
                 message: (data.weekCount.compareTo('0') == 0
                     ? 'No Evaluations Completed'
-                    : 'Average Marks Obtained Over ${data.weekCount.toString()} Weeks'),
+                    : 'Average Marks Obtained Over ${data.weekCount.toString()} Week(s)'),
                 child: CustomisedText(
                   text: (data.weekly.compareTo('-1') == 0
                       ? 'NA'
@@ -458,7 +461,7 @@ class _FacultyEnrollmentsDataTableState
             DataCell(
               Tooltip(
                 message:
-                    '${data.midterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.midtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.midtermPanelCount} Panel Evaluators'}',
+                    '${data.midterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.midtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.midtermPanelCount} Panel Evaluator(s)'}',
                 child: CustomisedText(
                   text:
                       '${data.midterm.compareTo('-1') == 0 ? 'NA' : data.midterm.toString()} + ${data.midtermPanel.compareTo('-1') == 0 ? 'NA' : '${data.midtermPanel.toString()} (${data.midtermPanelCount})'}',
@@ -469,7 +472,7 @@ class _FacultyEnrollmentsDataTableState
             DataCell(
               Tooltip(
                 message:
-                    '${data.endterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.endtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.endtermPanelCount} Panel Evaluators'}',
+                    '${data.endterm.compareTo('-1') == 0 ? 'Supervisor Evaluation Not Completed' : 'Supervisor Evaluation'} + ${data.endtermPanel.compareTo('-1') == 0 ? 'No Panel Evaluation Completed' : 'Average Of ${data.endtermPanelCount} Panel Evaluator(s)'}',
                 child: CustomisedText(
                   text:
                       '${data.endterm.compareTo('-1') == 0 ? 'NA' : data.endterm.toString()} + ${data.endtermPanel.compareTo('-1') == 0 ? 'NA' : '${data.endtermPanel.toString()} (${data.endtermPanelCount})'}',
