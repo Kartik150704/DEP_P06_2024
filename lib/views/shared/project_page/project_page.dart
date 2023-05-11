@@ -138,30 +138,32 @@ class _ProjectPageState extends State<ProjectPage> {
       if (assignedPanelIds.isNotEmpty) {
         FirebaseFirestore.instance
             .collection('assigned_panel')
-            .where(FieldPath.documentId, whereIn: assignedPanelIds)
+            .where('panel_id', whereIn: assignedPanelIds)
             .get()
             .then((assignedPanelDocs) {
           for (var assignedPanelDoc in assignedPanelDocs.docs) {
-            assignedPanelTerm[assignedPanelDoc.id] = assignedPanelDoc['term'];
-            assignedPanelSemester[assignedPanelDoc.id] =
+            assignedPanelTerm[assignedPanelDoc['panel_id']] =
+                assignedPanelDoc['term'];
+            assignedPanelSemester[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['semester'];
-            assignedPanelYear[assignedPanelDoc.id] = assignedPanelDoc['year'];
-            assignedPanelPanelId[assignedPanelDoc.id] =
+            assignedPanelYear[assignedPanelDoc['panel_id']] =
+                assignedPanelDoc['year'];
+            assignedPanelPanelId[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['panel_id'];
-            assignedPanelCourse[assignedPanelDoc.id] =
+            assignedPanelCourse[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['course'];
-            assignedPanelNumberOfEvaluators[assignedPanelDoc.id] =
+            assignedPanelNumberOfEvaluators[assignedPanelDoc['panel_id']] =
                 int.tryParse(assignedPanelDoc['number_of_evaluators']);
-            assignedPanelEvaluatorIds[assignedPanelDoc.id] =
+            assignedPanelEvaluatorIds[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['evaluator_ids'];
-            assignedPanelEvaluatorNames[assignedPanelDoc.id] =
+            assignedPanelEvaluatorNames[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['evaluator_names'];
-            assignedPanelAssignedProjects[assignedPanelDoc.id] =
+            assignedPanelAssignedProjects[assignedPanelDoc['panel_id']] =
                 assignedPanelDoc['assigned_project_ids'];
           }
-
           for (String assignedPanelId in assignedPanelIds) {
             List<Evaluation> panelEvaluations = [];
+            // print(assignedPanelTerm[assignedPanelId]);
             if (assignedPanelTerm[assignedPanelId].contains('Mid')) {
               for (int i = 0; i < doc['midsem_evaluation'].length; i++) {
                 var eval = doc['midsem_evaluation'][i];
