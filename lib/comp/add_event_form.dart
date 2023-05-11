@@ -20,20 +20,20 @@ class AddEventForm extends StatefulWidget {
 class _AddEventFormState extends State<AddEventForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
-  String semester = '', year = '';
-  late bool isLoading, validSession;
+  String semester = '', year = '', status = '';
+  late bool loading, validSession;
 
   String? integerValidator(
       String? value, String fieldName, int lowerLimit, int higherLimit) {
     if (value == null) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     }
 
     int? val = int.tryParse(value);
     if (val == null) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     } else if (val > higherLimit || val < lowerLimit) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     }
     return null;
   }
@@ -64,33 +64,39 @@ class _AddEventFormState extends State<AddEventForm> {
           validSession = true;
         });
       } else {
-        print('add_event_form -> no valid session found');
         validSession = false;
       }
+
       setState(() {
-        isLoading = false;
+        loading = false;
       });
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    isLoading = true;
+    loading = true;
     validSession = true;
     getSession();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> vals = [];
-    if (isLoading) {
-      return CircularProgressIndicator();
+    if (loading) {
+      return const CircularProgressIndicator(
+        color: Colors.black,
+      );
+    } else if (!validSession) {
+      return const FormCustomText(
+        text: 'No session found',
+      );
+    } else if (status == 'completed') {
+      return const FormCustomText(
+        text: 'Event added successfully',
+      );
     }
-    if (!validSession) {
-      return FormCustomText(text: 'No valid session found');
-    }
+
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -112,7 +118,7 @@ class _AddEventFormState extends State<AddEventForm> {
           const SizedBox(
             height: 10,
           ),
-          const CustomisedText(text: 'Enter the year', color: Colors.black),
+          const CustomisedText(text: 'Year', color: Colors.black),
           FormBuilderTextField(
             name: 'year',
             validator: (value) => integerValidator(value, 'year', 2000, 2100),
@@ -126,11 +132,19 @@ class _AddEventFormState extends State<AddEventForm> {
           const CustomisedText(text: 'Select the course', color: Colors.black),
           FormBuilderDropdown(
             name: 'course',
-            items: List<String>.generate(5, (index) => 'CP30${index + 1}')
-                .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    ))
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a course';
+              }
+              return null;
+            },
+            items: List<String>.generate(3, (index) => 'CP30${index + 1}')
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(
@@ -141,11 +155,13 @@ class _AddEventFormState extends State<AddEventForm> {
             color: Colors.black,
           ),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
           FormBuilderRadioGroup(
             name: 'option',
             activeColor: Colors.black,
+            validator: (value) =>
+                (value == null) ? 'Please select an option' : null,
             options: const [
               // TODO: These are not static
               FormBuilderFieldOption(
@@ -162,7 +178,7 @@ class _AddEventFormState extends State<AddEventForm> {
             },
           ),
           const SizedBox(
-            height: 10,
+            height: 13,
           ),
           ((selectedEvent == 'week')
               ? Column(
@@ -171,6 +187,8 @@ class _AddEventFormState extends State<AddEventForm> {
                         text: 'Enter the week number', color: Colors.black),
                     FormBuilderTextField(
                       name: 'week',
+                      cursorColor: Colors.black,
+                      decoration: getDecoration('#Week'),
                       validator: (value) =>
                           integerValidator(value, 'week', 1, 50),
                     ),
@@ -190,6 +208,10 @@ class _AddEventFormState extends State<AddEventForm> {
                 onPressed: () async {
                   _formKey.currentState!.save();
                   if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      loading = true;
+                    });
+
                     String semester = _formKey.currentState!.value['semester']
                         .toString()
                         .trim();
@@ -277,8 +299,11 @@ class _AddEventFormState extends State<AddEventForm> {
                         });
                       }
                     });
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context, vals);
+
+                    setState(() {
+                      loading = false;
+                      status = 'completed';
+                    });
                   }
                 },
               ),

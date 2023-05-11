@@ -2,8 +2,9 @@ import 'package:casper/comp/data_not_found.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
-import 'package:casper/components/marks_submission_form.dart';
+import 'package:casper/components/add_marks_regular_form.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -36,10 +37,14 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
   bool isAscending = false;
   List<EnrollmentData> enrollmentData = [];
 
+  // TODO: get total marks from database
+  int totalMarks = evaluationCriteriasGLOBAL[0].regular;
+
   void getEnrollmentData() {
     setState(() {
       enrollmentData.clear();
     });
+
     for (var evnt in widget.releasedEvents.events) {
       for (var stdnt in widget.enrollment.team.students) {
         bool isEvaluated = false;
@@ -266,7 +271,7 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
                       : CustomisedButton(
                           width: double.infinity,
                           height: 35,
-                          text: 'Upload',
+                          text: (data.marks != 'NA' ? 'Edit' : 'Upload'),
                           onPressed: () {
                             TextEditingController marksController =
                                     TextEditingController(
@@ -278,66 +283,65 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
                               builder: (context) {
                                 return AlertDialog(
                                   title: Center(
-                                    child: MarksSubmissionForm(
-                                        marksInputController: marksController,
-                                        remarksInputController:
-                                            remarksController,
-                                        onSubmit: () {
-                                          FirebaseFirestore.instance
-                                              .collection('evaluations')
-                                              .doc(widget.evaluation_doc_id)
-                                              .get()
-                                              .then((doc) {
-                                            int weekNumber = int.parse(
-                                                    data.event.split('-')[1]) -
-                                                1;
-                                            if (doc.exists) {
-                                              var weekdata =
-                                                  doc['weekly_evaluations']
-                                                      [weekNumber];
+                                    child: AddMarksRegularForm(
+                                      marksInputController: marksController,
+                                      remarksInputController: remarksController,
+                                      totalMarks: totalMarks,
+                                      onSubmit: () {
+                                        FirebaseFirestore.instance
+                                            .collection('evaluations')
+                                            .doc(widget.evaluation_doc_id)
+                                            .get()
+                                            .then((doc) {
+                                          int weekNumber = int.parse(
+                                                  data.event.split('-')[1]) -
+                                              1;
+                                          if (doc.exists) {
+                                            var weekdata =
+                                                doc['weekly_evaluations']
+                                                    [weekNumber];
 
-                                              weekdata[
-                                                      data.studentEntryNumber] =
-                                                  marksController.text.trim();
-                                              doc['weekly_evaluations']
-                                                  [weekNumber] = weekdata;
-                                              var newWeeklyEvaluations =
-                                                  doc['weekly_evaluations'];
-                                              newWeeklyEvaluations[weekNumber] =
-                                                  weekdata;
+                                            weekdata[data.studentEntryNumber] =
+                                                marksController.text.trim();
+                                            doc['weekly_evaluations']
+                                                [weekNumber] = weekdata;
+                                            var newWeeklyEvaluations =
+                                                doc['weekly_evaluations'];
+                                            newWeeklyEvaluations[weekNumber] =
+                                                weekdata;
 
-                                              var weekComments =
-                                                  doc['weekly_comments']
-                                                      [weekNumber];
-                                              weekComments[
-                                                      data.studentEntryNumber] =
-                                                  remarksController.text.trim();
-                                              var newWeeklyComments =
-                                                  doc['weekly_comments'];
-                                              newWeeklyComments[weekNumber] =
-                                                  weekComments;
+                                            var weekComments =
+                                                doc['weekly_comments']
+                                                    [weekNumber];
+                                            weekComments[
+                                                    data.studentEntryNumber] =
+                                                remarksController.text.trim();
+                                            var newWeeklyComments =
+                                                doc['weekly_comments'];
+                                            newWeeklyComments[weekNumber] =
+                                                weekComments;
 
-                                              doc.reference.update({
-                                                'weekly_evaluations':
-                                                    newWeeklyEvaluations,
-                                                'weekly_comments':
-                                                    newWeeklyComments,
-                                              }).then((value) {
-                                                // widget.refresh();
-                                                // setState(() {
-                                                //   enrollmentData = [];
-                                                // });
-                                                // getEnrollmentData();
-                                              });
-                                            } else {
-                                              debugPrint(
-                                                  'evaluation key_id doesn\'t exist in database or is wrongly initialised');
-                                            }
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                        isFaculty: widget.isFaculty,
-                                        status: true),
+                                            doc.reference.update({
+                                              'weekly_evaluations':
+                                                  newWeeklyEvaluations,
+                                              'weekly_comments':
+                                                  newWeeklyComments,
+                                            }).then((value) {
+                                              // widget.refresh();
+                                              // setState(() {
+                                              //   enrollmentData = [];
+                                              // });
+                                              // getEnrollmentData();
+                                            });
+                                          } else {
+                                            debugPrint(
+                                                'evaluation key_id doesn\'t exist in database or is wrongly initialised');
+                                          }
+                                        });
+                                      },
+                                      isFaculty: widget.isFaculty,
+                                      status: true,
+                                    ),
                                   ),
                                 );
                               },

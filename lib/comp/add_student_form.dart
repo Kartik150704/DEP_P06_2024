@@ -18,7 +18,7 @@ class AddStudentForm extends StatefulWidget {
 }
 
 class _AddStudentFormState extends State<AddStudentForm> {
-  int status = 2;
+  int status = 0;
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
   List<String> csvData = [];
