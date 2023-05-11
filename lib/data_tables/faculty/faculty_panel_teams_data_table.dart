@@ -299,10 +299,8 @@ class _FacultyPanelTeamsDataTableState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomisedText(
-                              text: '${data.evaluation}/' +
-                                  (data.evaluationObject.type == 'MidTerm'
-                                      ? '${evaluationCriteria.midtermPanel}'
-                                      : '${evaluationCriteria.endtermPanel}'),
+                              text:
+                                  '${data.evaluation}/${data.evaluationObject.type == 'MidTerm' ? '${evaluationCriteria.midtermPanel}' : '${evaluationCriteria.endtermPanel}'}',
                               color: Colors.black,
                             ),
                             CustomisedButton(

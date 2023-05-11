@@ -234,11 +234,11 @@ class _StudentEnrollmentRequestsDataTableState
             color: MaterialStateProperty.resolveWith(
               (states) {
                 if (request.status == '0') {
-                  return const Color.fromARGB(255, 223, 104, 104);
+                  return const Color.fromARGB(255, 106, 152, 211);
                 } else if (request.status == '1') {
                   return const Color(0xff7ae37b);
                 } else if (request.status == '3') {
-                  return const Color.fromARGB(255, 223, 104, 104);
+                  return const Color.fromARGB(255, 106, 152, 211);
                 } else {
                   return const Color.fromARGB(255, 208, 219, 144);
                 }
