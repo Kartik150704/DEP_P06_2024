@@ -220,7 +220,8 @@ class _AssignTeamsToPanelsFromCSVFormState
               .get()
               .then((teamValue) {
             if (teamValue.docs.isNotEmpty) {
-              studentEntryNumbers = teamValue.docs[0]['students'];
+              studentEntryNumbers =
+                  teamValue.docs[0]['students'].cast<String>();
             } else {
               aborted = false;
             }
@@ -442,6 +443,16 @@ class _AssignTeamsToPanelsFromCSVFormState
                 buttonText: 'Submit',
                 enabled: currentSemester != '' && currentYear != '',
                 onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(
+                          child: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: CircularProgressIndicator()),
+                        );
+                      });
                   _onFormSubmitted();
                 },
               ),
