@@ -296,12 +296,12 @@ class _CoordinatorPanelManagementPageState
                               )),
                       ),
                     ),
+                    const SizedBox(
+                      height: 65,
+                    )
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 65,
-              )
             ],
           ),
         ),
