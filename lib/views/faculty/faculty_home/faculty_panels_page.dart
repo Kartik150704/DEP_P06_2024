@@ -31,8 +31,8 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
       termController = TextEditingController(),
-      courseController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      courseController = TextEditingController(text: 'CP303'),
+      yearSemesterController = TextEditingController(text: '2022-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
   late final cachedAssignedPanels;
@@ -42,6 +42,26 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   Map assignedTeams = {};
 
   bool loading_teams_and_evaluations = true;
+
+  String currentSemester = '', currentYear = '';
+
+  void getSession() async {
+    FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          currentSemester = doc['semester'];
+          currentYear = doc['year'];
+          yearSemesterController.text = '$currentYear-$currentSemester';
+        });
+      } else {
+        print('faculty_panels_page.dart: No current session found');
+      }
+    });
+  }
 
   void updateEvaluation(Evaluation newEvaluation, String panelId) {
     List<Evaluation> evaluations = panelEvalutaions[panelId];
@@ -368,6 +388,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         String temp = panel.id.toString().trim().toLowerCase();
         flag = flag && temp.contains(panelID!);
       }
+      print(flag);
       if (evaluatorName != null && evaluatorName != '') {
         List<Faculty> temp = panel.panel.evaluators;
         bool internalflag = false;
@@ -377,27 +398,36 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         }
         flag = flag && internalflag;
       }
+      print(flag);
+
       if (term != null && term != '') {
         String temp = panel.term.toString().trim().toLowerCase();
         flag = flag && temp.contains(term!);
       }
+      print(flag);
+
       if (course != null && course != '') {
         String temp = panel.course.toString().trim().toLowerCase();
         flag = flag && temp.contains(course!);
       }
+      print(flag);
+
       if (yearSemester != null && yearSemester != '') {
         String sem = panel.semester.toString().trim().toLowerCase();
         String year = panel.year.toString().trim().toLowerCase();
         String temp = '$year-$sem';
         flag = flag && temp.contains(yearSemester!);
       }
+      print(flag);
+
       if (flag) {
         setState(() {
           assignedPanels.add(panel);
-          if (assignedPanels.length == 2) searching = false;
+          searching = false;
         });
       }
     }
+    print(assignedPanels.length);
     setState(() {
       searching = false;
     });
@@ -407,6 +437,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   void initState() {
     super.initState();
     getEvaluations();
+    getSession();
   }
 
   @override
@@ -524,7 +555,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                             color: Colors.black,
                             size: 29,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            search();
+                          },
                         ),
                       ),
                     ],
