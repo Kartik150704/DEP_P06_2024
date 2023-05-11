@@ -68,8 +68,8 @@ class _FacultyEnrollmentRequestsPageState
         var len = requests.length;
         await FirebaseFirestore.instance
             .collection('offerings')
-            // .where(FieldPath.documentId,
-            //     isEqualTo: doc['offering_id'].toString().trim())
+            .where(FieldPath.documentId,
+                isEqualTo: doc['offering_id'].toString().trim())
             .get()
             .then((value) async {
           for (var doc1 in value.docs) {
