@@ -82,6 +82,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         .get()
         .then((assignedPanelValue) async {
       for (var doc in assignedPanelValue.docs) {
+        List<String> releasedEvents = [];
         List<Evaluation> evaluations = [];
         List<Faculty> facultyInPanel = [];
         String panelType = doc['term'];
@@ -98,6 +99,19 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
 
         if (doc['assigned_project_ids'].isEmpty) continue;
 
+        await FirebaseFirestore.instance
+            .collection('released_events')
+            .where('semester', isEqualTo: doc['semester'])
+            .where('year', isEqualTo: doc['year'])
+            .where('course', isEqualTo: doc['course'])
+            .get()
+            .then((releasedEventsValue) async {
+          if (releasedEventsValue.docs.length == 1) {
+            releasedEvents =
+                releasedEventsValue.docs[0]['events'].keys.toList();
+          }
+        });
+        print(releasedEvents);
         await FirebaseFirestore.instance
             .collection('evaluations')
             .where('project_id', whereIn: doc['assigned_project_ids'])
@@ -138,11 +152,12 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                 assignedTeams[panel_id] = [team];
               }
             });
-
+            print('project id: ${doc['project_id']}');
             for (int i = 0; i < facultyInPanel.length; i++) {
               for (int j = 0; j < studentInProject.length; j++) {
                 Evaluation? mid, end;
-                if (panelType == 'MidTerm' || panelType == 'All') {
+                if ((panelType == 'MidTerm' || panelType == 'All') &&
+                    releasedEvents.contains('MidTerm')) {
                   if (doc['midsem_evaluation'][i]
                           [studentInProject[j].entryNumber] !=
                       null) {
@@ -175,7 +190,9 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                       localIndex: localIndexEvaluations++,
                     );
                   }
-                } else if (panelType == 'EndTerm' || panelType == 'All') {
+                }
+                if ((panelType == 'EndTerm' || panelType == 'All') &&
+                    releasedEvents.contains('EndTerm')) {
                   if (doc['endsem_evaluation'][i]
                           [studentInProject[j].entryNumber] !=
                       null) {

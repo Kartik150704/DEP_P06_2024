@@ -63,11 +63,9 @@ class _FacultyPanelTeamsDataTableState
   }
 
   void updateEvaluation(Evaluation evaluation) {
-    print(evaluation.marks);
     int local_idx = evaluation.localIndex!;
     for (int i = 0; i < assignedPanel.evaluations.length; i++) {
       if (assignedPanel.evaluations[i].localIndex == local_idx) {
-        print(1);
         setState(() {
           assignedPanel.evaluations[i] = evaluation;
         });
@@ -109,30 +107,31 @@ class _FacultyPanelTeamsDataTableState
         bool myPanel = false;
         double evaluation = -1;
         late Evaluation evaluationObj;
+        // int c = 1;
+
         for (final eval in assignedPanel.evaluations) {
+          // print(c++);
           if (eval.faculty.id == myId) {
             myPanel = true;
-
             if (eval.student.id == student.id) {
               evaluation = eval.marks;
               evaluationObj = eval;
+              setState(() {
+                studentData.add(
+                  StudentData1(
+                    teamId: team.id,
+                    panelId: assignedPanel.panel.id,
+                    student: student,
+                    type: evaluationObj.type,
+                    evaluation: evaluation.toString(),
+                    myPanel: myPanel,
+                    evaluationObject: evaluationObj,
+                  ),
+                );
+              });
             }
           }
         }
-
-        setState(() {
-          studentData.add(
-            StudentData1(
-              teamId: team.id,
-              panelId: assignedPanel.panel.id,
-              student: student,
-              type: assignedPanel.term,
-              evaluation: evaluation.toString(),
-              myPanel: myPanel,
-              evaluationObject: evaluationObj,
-            ),
-          );
-        });
       }
     }
   }
@@ -185,10 +184,12 @@ class _FacultyPanelTeamsDataTableState
   @override
   void initState() {
     super.initState();
+    print(widget.assignedPanel.evaluations.length);
     assignedPanel = widget.assignedPanel;
     assignedTeams = widget.assignedTeams;
     getStudentData();
     getCriteriaDetails();
+    // print(studentData.length);
   }
 
   @override
@@ -204,12 +205,7 @@ class _FacultyPanelTeamsDataTableState
       (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
     if (loading) {
-      return const Center(
-        child: SizedBox(
-          height: 900,
-          child: LoadingPage(),
-        ),
-      );
+      return const LoadingPage();
     }
     return Theme(
       data: Theme.of(context).copyWith(

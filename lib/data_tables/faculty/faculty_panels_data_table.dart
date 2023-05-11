@@ -33,6 +33,8 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
     int count = 0;
     for (Team team in assignedPanel.assignedTeams) {
       int studentsDone = 0;
+      int numexpected = 0;
+
       List<String> students = List.generate(
           team.numberOfMembers, (index) => team.students[index].id);
 
@@ -43,8 +45,12 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
             students.contains(evaluation.student.id)) {
           studentsDone += 1;
         }
+        if (students.contains(evaluation.student.id) &&
+            evaluation.faculty.id == myId) {
+          numexpected += 1;
+        }
       }
-      if (studentsDone == team.numberOfMembers) {
+      if (studentsDone == numexpected) {
         count += 1;
       }
     }
