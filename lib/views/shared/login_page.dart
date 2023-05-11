@@ -22,8 +22,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // TODO: Get more images
     final List<String> imageList = [
-      'assets/images/carousel_image_1.jpeg',
+      'assets/images/carousel_image_1.jpg',
       'assets/images/carousel_image_2.jpg',
+      'assets/images/carousel_image_3.jpeg',
+      'assets/images/carousel_image_4.jpg',
+      'assets/images/carousel_image_5.jpg',
     ];
 
     void displayErrorMessage(String message) {

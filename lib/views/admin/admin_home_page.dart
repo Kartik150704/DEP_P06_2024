@@ -1,4 +1,4 @@
-import 'package:casper/comp/add_instructor_form.dart';
+import 'package:casper/comp/add_faculty_form.dart';
 import 'package:casper/comp/add_student_form.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/customised_button.dart';
@@ -36,13 +36,13 @@ class AdminHomePage extends StatelessWidget {
                       CustomisedButton(
                         width: 222 * wfem,
                         height: 60,
-                        text: 'Add Students',
+                        text: 'Add Faculty',
                         onPressed: () {
                           showDialog(
                               context: context,
                               builder: (context) {
                                 return const AlertDialog(
-                                  title: Center(child: AddStudentForm()),
+                                  title: Center(child: AddFacultyForm()),
                                 );
                               });
                         },
@@ -53,13 +53,13 @@ class AdminHomePage extends StatelessWidget {
                       CustomisedButton(
                         width: 222 * wfem,
                         height: 60,
-                        text: 'Add Faculty',
+                        text: 'Add Students',
                         onPressed: () {
                           showDialog(
                               context: context,
                               builder: (context) {
                                 return const AlertDialog(
-                                  title: Center(child: AddInstructorForm()),
+                                  title: Center(child: AddStudentForm()),
                                 );
                               });
                         },
