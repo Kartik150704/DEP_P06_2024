@@ -1,6 +1,5 @@
 import 'package:casper/utilities/auth.dart';
 import 'package:casper/utilities/fake_device_pixel_ratio.dart';
-import 'package:casper/utilities/firebase_options.dart';
 import 'package:flutter/material.dart';
 
 // ignore: depend_on_referenced_packages
