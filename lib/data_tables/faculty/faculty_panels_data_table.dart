@@ -275,9 +275,9 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
                   ? -1
                   : 0
           : int.parse(value2) < int.parse(value1)
-              ? 1
+              ? -1
               : int.parse(value2) > int.parse(value1)
-                  ? -1
+                  ? 1
                   : 0);
     }
     return (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
