@@ -297,6 +297,20 @@ class _StudentEnrollmentRequestsDataTableState
     });
   }
 
-  int compareString(bool ascending, String value1, String value2) =>
-      (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
+  int compareString(bool ascending, String value1, String value2) {
+    if (int.tryParse(value1) != null && int.tryParse(value2) != null) {
+      return (ascending
+          ? int.parse(value1) > int.parse(value2)
+              ? 1
+              : int.parse(value1) < int.parse(value2)
+                  ? -1
+                  : 0
+          : int.parse(value2) < int.parse(value1)
+              ? 1
+              : int.parse(value2) > int.parse(value1)
+                  ? -1
+                  : 0);
+    }
+    return (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
+  }
 }
