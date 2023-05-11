@@ -74,10 +74,13 @@ class Panel {
 }
 
 class Evaluation {
-  final double marks;
+  double marks;
   final String id, remarks, type;
   final Student student;
   final Faculty faculty;
+  final int? panelIndex;
+  bool? done;
+  int? localIndex;
 
   Evaluation({
     required this.id,
@@ -86,6 +89,9 @@ class Evaluation {
     required this.type,
     required this.student,
     required this.faculty,
+    this.panelIndex,
+    this.done,
+    this.localIndex,
   });
 }
 

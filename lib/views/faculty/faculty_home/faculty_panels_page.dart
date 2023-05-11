@@ -35,15 +35,203 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
+  Map panelEvalutaions = {};
+  Map assignedTeams = {};
+
+  bool loading_teams_and_evaluations = true;
+
+  void updateEvaluation(Evaluation newEvaluation, String panelId) {
+    List<Evaluation> evaluations = panelEvalutaions[panelId];
+    for (int i = 0; i < evaluations.length; i++) {
+      if (evaluations[i].student.id == newEvaluation.student.id) {
+        evaluations[i] = newEvaluation;
+        break;
+      }
+    }
+    setState(() {
+      panelEvalutaions[panelId] = evaluations;
+    });
+    print('updated evaluation');
+  }
+
+  void getEvaluations() async {
+    List<String> teams = [];
+    List<String> panelIds = [];
+    int localIndexEvaluations = 0;
+    await FirebaseFirestore.instance
+        .collection('instructors')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((instructorValue) {
+      for (var doc in instructorValue.docs) {
+        panelIds = doc['panel_ids'].cast<String>();
+      }
+    });
+    if (panelIds.isEmpty) {
+      setState(() {
+        loading = false;
+        searching = false;
+        loading_teams_and_evaluations = false;
+      });
+      return;
+    }
+
+    await FirebaseFirestore.instance
+        .collection('assigned_panel')
+        .where('panel_id', whereIn: panelIds)
+        .get()
+        .then((assignedPanelValue) async {
+      for (var doc in assignedPanelValue.docs) {
+        List<Evaluation> evaluations = [];
+        List<Faculty> facultyInPanel = [];
+        String panelType = doc['term'];
+        String panel_id = doc['panel_id'];
+        for (int i = 0; i < doc['evaluator_ids'].length; i++) {
+          Faculty faculty = Faculty(
+            id: doc['evaluator_ids'][i],
+            name: doc['evaluator_names'][i],
+            //TODO: never used so passsing placeholder
+            email: 'placeholder',
+          );
+          facultyInPanel.add(faculty);
+        }
+
+        if (doc['assigned_project_ids'].isEmpty) continue;
+
+        await FirebaseFirestore.instance
+            .collection('evaluations')
+            .where('project_id', whereIn: doc['assigned_project_ids'])
+            .get()
+            .then((evaluationValue) async {
+          for (var doc in evaluationValue.docs) {
+            // for loop faculty
+            // for loop student
+            List<Student> studentInProject = [];
+            late String teamid;
+            for (int i = 0; i < doc['student_ids'].length; i++) {
+              Student student = Student(
+                id: doc['student_ids'][i],
+                name: doc['student_names'][i],
+                entryNumber: doc['student_ids'][i],
+                email: '${doc['student_ids'][i]}@iitrpr.ac.in',
+              );
+              studentInProject.add(student);
+            }
+
+            await FirebaseFirestore.instance
+                .collection('projects')
+                .where(FieldPath.documentId, isEqualTo: doc['project_id'])
+                .get()
+                .then((projectValue) async {
+              if (projectValue.docs.length == 1) {
+                teamid = projectValue.docs[0]['team_id'];
+              }
+            });
+            Team team = Team(
+                id: teamid,
+                numberOfMembers: studentInProject.length,
+                students: studentInProject);
+            setState(() {
+              if (assignedTeams.containsKey(panel_id)) {
+                assignedTeams[panel_id].add(team);
+              } else {
+                assignedTeams[panel_id] = [team];
+              }
+            });
+
+            for (int i = 0; i < facultyInPanel.length; i++) {
+              for (int j = 0; j < studentInProject.length; j++) {
+                Evaluation? mid, end;
+                if (panelType == 'MidTerm' || panelType == 'All') {
+                  if (doc['midsem_evaluation'][i]
+                          [studentInProject[j].entryNumber] !=
+                      null) {
+                    mid = Evaluation(
+                      id: doc.id,
+                      marks: double.parse(doc['midsem_evaluation'][i]
+                          [studentInProject[j].entryNumber]),
+                      remarks: doc['midsem_panel_comments'][i]
+                              [studentInProject[j].entryNumber] ??
+                          'NA',
+                      type: 'MidTerm',
+                      student: studentInProject[j],
+                      faculty: facultyInPanel[i],
+                      panelIndex: i,
+                      done: true,
+                      localIndex: localIndexEvaluations++,
+                    );
+                  } else {
+                    mid = Evaluation(
+                      id: doc.id,
+                      marks: -1.0,
+                      remarks: doc['midsem_panel_comments'][i]
+                              [studentInProject[j].entryNumber] ??
+                          'NA',
+                      type: 'MidTerm',
+                      student: studentInProject[j],
+                      faculty: facultyInPanel[i],
+                      panelIndex: i,
+                      done: false,
+                      localIndex: localIndexEvaluations++,
+                    );
+                  }
+                } else if (panelType == 'EndTerm' || panelType == 'All') {
+                  if (doc['endsem_evaluation'][i]
+                          [studentInProject[j].entryNumber] !=
+                      null) {
+                    end = Evaluation(
+                      id: doc.id,
+                      marks: double.parse(doc['endsem_evaluation'][i]
+                          [studentInProject[j].entryNumber]),
+                      remarks: doc['endsem_panel_comments'][i]
+                              [studentInProject[j].entryNumber] ??
+                          'NA',
+                      type: 'EndTerm',
+                      student: studentInProject[j],
+                      faculty: facultyInPanel[i],
+                      panelIndex: i,
+                      done: true,
+                      localIndex: localIndexEvaluations++,
+                    );
+                  } else {
+                    end = Evaluation(
+                      id: doc.id,
+                      marks: -1.0,
+                      remarks: doc['endsem_panel_comments'][i]
+                              [studentInProject[j].entryNumber] ??
+                          'NA',
+                      type: 'EndTerm',
+                      student: studentInProject[j],
+                      faculty: facultyInPanel[i],
+                      panelIndex: i,
+                      done: false,
+                      localIndex: localIndexEvaluations++,
+                    );
+                  }
+                }
+                if (mid != null) {
+                  evaluations.add(mid);
+                }
+                if (end != null) {
+                  evaluations.add(end);
+                }
+              }
+            }
+          }
+        });
+        setState(() {
+          panelEvalutaions[doc['panel_id']] = evaluations;
+        });
+      }
+    });
+    loading_teams_and_evaluations = false;
+    getAssignedPanels();
+  }
+
+  void getAssignedPanels() {
     FirebaseFirestore.instance
         .collection('instructors')
-        .where(
-          'uid',
-          isEqualTo: FirebaseAuth.instance.currentUser?.uid,
-        )
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then(
       (value) {
@@ -51,13 +239,11 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         List<String> panelids = List<String>.from(
           doc['panel_ids'],
         );
-        print(FirebaseAuth.instance.currentUser?.uid);
         if (panelids.isEmpty) {
           setState(() {
             loading = false;
             searching = false;
           });
-
           return;
         }
         FirebaseFirestore.instance
@@ -75,7 +261,8 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     term: doc['term'],
                     semester: doc['semester'],
                     year: doc['year'],
-                    numberOfAssignedTeams: 1,
+                    numberOfAssignedTeams:
+                        int.parse(doc['number_of_assigned_projects']),
                     panel: Panel(
                       course: doc['course'],
                       semester: doc['semester'],
@@ -94,8 +281,8 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                             email: ''),
                       ),
                     ),
-                    assignedTeams: [],
-                    evaluations: [evaluationsGLOBAL[4]],
+                    assignedTeams: assignedTeams[doc['panel_id']] ?? [],
+                    evaluations: panelEvalutaions[doc['panel_id']] ?? [],
                     assignedProjectIds: List<String>.from(
                       doc['assigned_project_ids'],
                     ),
@@ -114,6 +301,12 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEvaluations();
   }
 
   @override
@@ -256,7 +449,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       // TODO: Implement search
-                      child: (searching
+                      child: (searching || loading_teams_and_evaluations
                           ? SizedBox(
                               width: double.infinity,
                               height: 500 * wfem,
@@ -291,6 +484,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                                           userRole: widget.userRole,
                                           viewPanel: widget.viewPanel,
                                           assignedPanels: assignedPanels,
+                                          updateEvaluation: updateEvaluation,
                                         ),
                                       ),
                                     ),

@@ -6,17 +6,22 @@ import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/evaluation_submission_form.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
+import 'package:casper/views/shared/loading_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelTeamsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final actionType, assignedPanel, assignedTeams;
+  Function? updateEvaluation;
 
-  const FacultyPanelTeamsDataTable({
+  FacultyPanelTeamsDataTable({
     super.key,
     required this.actionType,
     required this.assignedPanel,
     required this.assignedTeams,
+    this.updateEvaluation,
   });
 
   @override
@@ -30,9 +35,15 @@ class _FacultyPanelTeamsDataTableState
   bool isAscending = false;
 
   // TODO: Fetch these values
-  final myId = '1',
-      totalMidTermMarks = evaluationCriteriasGLOBAL[0].midtermPanel;
-  List<StudentData> studentData = [];
+  final myId = FirebaseAuth.instance.currentUser?.uid;
+  EvaluationCriteria evaluationCriteria = evaluationCriteriasGLOBAL[0];
+
+  List<StudentData1> studentData = [];
+
+  late AssignedPanel assignedPanel;
+  late var assignedTeams;
+  late var rows;
+  bool loading = true;
 
   void confirmAction(teamId, panelId) {
     showDialog(
@@ -51,14 +62,40 @@ class _FacultyPanelTeamsDataTableState
     );
   }
 
-  void uploadEvaluation(student) {
+  void updateEvaluation(Evaluation evaluation) {
+    print(evaluation.marks);
+    int local_idx = evaluation.localIndex!;
+    for (int i = 0; i < assignedPanel.evaluations.length; i++) {
+      if (assignedPanel.evaluations[i].localIndex == local_idx) {
+        print(1);
+        setState(() {
+          assignedPanel.evaluations[i] = evaluation;
+        });
+      }
+    }
+    refresh();
+  }
+
+  void refresh() {
+    setState(() {
+      studentData = [];
+    });
+    getStudentData();
+    setState(() {
+      rows = getRows(studentData);
+    });
+  }
+
+  void uploadEvaluation(StudentData1 studentData) {
+    // print(studentData.evaluationObject.id);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Center(
             child: EvaluationSubmissionForm(
-              student: student,
+              studentdata: studentData,
+              updateEvaluation: updateEvaluation,
             ),
           ),
         );
@@ -67,30 +104,32 @@ class _FacultyPanelTeamsDataTableState
   }
 
   void getStudentData() {
-    for (final team in widget.assignedTeams) {
+    for (final team in assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
         double evaluation = -1;
-
-        for (final eval in widget.assignedPanel.evaluations) {
+        late Evaluation evaluationObj;
+        for (final eval in assignedPanel.evaluations) {
           if (eval.faculty.id == myId) {
             myPanel = true;
 
             if (eval.student.id == student.id) {
               evaluation = eval.marks;
+              evaluationObj = eval;
             }
           }
         }
 
         setState(() {
           studentData.add(
-            StudentData(
+            StudentData1(
               teamId: team.id,
-              panelId: widget.assignedPanel.panel.id,
+              panelId: assignedPanel.panel.id,
               student: student,
-              type: widget.assignedPanel.term,
+              type: assignedPanel.term,
               evaluation: evaluation.toString(),
               myPanel: myPanel,
+              evaluationObject: evaluationObj,
             ),
           );
         });
@@ -98,18 +137,64 @@ class _FacultyPanelTeamsDataTableState
     }
   }
 
+  void getCriteriaDetails() async {
+    String sem = '', year = '';
+    await FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) async {
+      if (value.docs.isNotEmpty) {
+        sem = value.docs[0]['semester'];
+        year = value.docs[0]['year'];
+      }
+    });
+    String course = assignedPanel.course;
+
+    await FirebaseFirestore.instance
+        .collection('evaluation_criteria')
+        .where('semester', isEqualTo: sem)
+        .where('year', isEqualTo: year)
+        .where('course', isEqualTo: course)
+        .get()
+        .then((value) async {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          evaluationCriteria = EvaluationCriteria(
+              id: doc.id,
+              weeksToConsider: int.parse(doc['weeksToConsider']),
+              course: doc['course'],
+              semester: doc['semester'],
+              year: doc['year'],
+              numberOfWeeks: int.parse(doc['numberOfWeeks']),
+              regular: int.parse(doc['regular']),
+              midtermSupervisor: int.parse(doc['midtermSupervisor']),
+              midtermPanel: int.parse(doc['midtermPanel']),
+              endtermSupervisor: int.parse(doc['endtermSupervisor']),
+              endtermPanel: int.parse(doc['endtermPanel']),
+              report: int.parse(doc['report']));
+        });
+      }
+    });
+    setState(() {
+      loading = false;
+    });
+    rows = getRows(studentData);
+  }
+
   @override
   void initState() {
     super.initState();
+    assignedPanel = widget.assignedPanel;
+    assignedTeams = widget.assignedTeams;
     getStudentData();
+    getCriteriaDetails();
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.assignedTeams.isEmpty) {
       return DataNotFound(message: 'No teams found');
-    } else if (studentData.isEmpty) {
-      getStudentData();
     }
 
     final columns = [
@@ -118,7 +203,14 @@ class _FacultyPanelTeamsDataTableState
       'Student Entry Number',
       (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
-
+    if (loading) {
+      return const Center(
+        child: SizedBox(
+          height: 900,
+          child: LoadingPage(),
+        ),
+      );
+    }
     return Theme(
       data: Theme.of(context).copyWith(
           iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
@@ -131,7 +223,7 @@ class _FacultyPanelTeamsDataTableState
         sortAscending: isAscending,
         sortColumnIndex: sortColumnIndex,
         columns: getColumns(columns),
-        rows: getRows(studentData),
+        rows: rows,
         headingRowColor: MaterialStateColor.resolveWith(
           (states) {
             return const Color(0xff12141D);
@@ -172,8 +264,8 @@ class _FacultyPanelTeamsDataTableState
     return headings;
   }
 
-  List<DataRow> getRows(List<StudentData> rows) => rows.map(
-        (StudentData data) {
+  List<DataRow> getRows(List<StudentData1> rows) => rows.map(
+        (StudentData1 data) {
           final cells = [
             DataCell(
               SizedBox(
@@ -211,7 +303,10 @@ class _FacultyPanelTeamsDataTableState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomisedText(
-                              text: '${data.evaluation}/$totalMidTermMarks',
+                              text: '${data.evaluation}/' +
+                                  (data.evaluationObject.type == 'MidTerm'
+                                      ? '${evaluationCriteria.midtermPanel}'
+                                      : '${evaluationCriteria.endtermPanel}'),
                               color: Colors.black,
                             ),
                             CustomisedButton(
@@ -219,7 +314,7 @@ class _FacultyPanelTeamsDataTableState
                               height: 37,
                               width: 50,
                               onPressed: () => uploadEvaluation(
-                                data.student,
+                                data,
                               ),
                               elevation: 0,
                             )
@@ -238,9 +333,7 @@ class _FacultyPanelTeamsDataTableState
                           text: 'Upload',
                           height: 37,
                           width: double.infinity,
-                          onPressed: () => uploadEvaluation(
-                            data.student,
-                          ),
+                          onPressed: () => uploadEvaluation(data),
                           elevation: 0,
                         ))),
             ),
@@ -314,17 +407,19 @@ class _FacultyPanelTeamsDataTableState
       (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
 }
 
-class StudentData {
+class StudentData1 {
   final bool myPanel;
   final String teamId, panelId, type, evaluation;
   final Student student;
+  final Evaluation evaluationObject;
 
-  StudentData({
+  StudentData1({
     required this.teamId,
     required this.panelId,
     required this.student,
     required this.evaluation,
     required this.myPanel,
     required this.type,
+    required this.evaluationObject,
   });
 }

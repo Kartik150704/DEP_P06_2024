@@ -3,17 +3,20 @@ import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/models/models.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacultyPanelsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final userRole, assignedPanels, viewPanel;
+  Function? updateEvaluation;
 
-  const FacultyPanelsDataTable({
+  FacultyPanelsDataTable({
     super.key,
     required this.userRole,
     required this.assignedPanels,
     required this.viewPanel,
+    this.updateEvaluation,
   });
 
   @override
@@ -24,15 +27,46 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
   int? sortColumnIndex;
   bool isAscending = false;
 
-  final myId = '1';
+  late final myId;
+
   int getNumberOfTeamsEvaluated(AssignedPanel assignedPanel) {
     int count = 0;
-    for (final evaluation in assignedPanel.evaluations) {
-      if (evaluation.faculty.id == myId) {
+    for (Team team in assignedPanel.assignedTeams) {
+      int studentsDone = 0;
+      List<String> students = List.generate(
+          team.numberOfMembers, (index) => team.students[index].id);
+
+      for (Evaluation evaluation in assignedPanel.evaluations) {
+        // TODO: check null safety
+        if ((evaluation.done ?? false) &&
+            evaluation.faculty.id == myId &&
+            students.contains(evaluation.student.id)) {
+          studentsDone += 1;
+        }
+      }
+      if (studentsDone == team.numberOfMembers) {
         count += 1;
       }
     }
-    return (count / 2).round();
+    return count;
+    // for (Evaluation evaluation in assignedPanel.evaluations) {
+    //   if (evaluation.faculty.id == myId) {
+    //     count+=1;
+    //   }
+    // }
+    // for (final evaluation in assignedPanel.evaluations) {
+    //   if (evaluation.faculty.id == myId) {
+    //     count += 1;
+    //   }
+    // }
+    // return (count / 2).round();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    myId = FirebaseAuth.instance.currentUser?.uid;
   }
 
   @override
@@ -172,7 +206,8 @@ class _FacultyPanelsDataTableState extends State<FacultyPanelsDataTable> {
                 ),
                 height: 37,
                 width: double.infinity,
-                onPressed: () => widget.viewPanel(assignedPanel, 2),
+                onPressed: () => widget.viewPanel(assignedPanel, 2,
+                    updateEvaluation: widget.updateEvaluation),
                 elevation: 0,
               ),
             ),

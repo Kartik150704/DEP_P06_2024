@@ -40,12 +40,14 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     });
   }
 
-  void viewPanel(assignedPanel, actionType) {
+  void viewPanel(assignedPanel, actionType,
+      {Function? updateEvaluation = null}) {
     setState(() {
       displayPage = FacultyPanelTeamsPage(
         actionType: actionType,
         userRole: widget.userRole,
         assignedPanel: assignedPanel,
+        updateEvaluation: updateEvaluation,
       );
     });
   }
