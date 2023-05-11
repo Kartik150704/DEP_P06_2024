@@ -61,7 +61,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
           return;
         }
         FirebaseFirestore.instance
-            .collection('panels')
+            .collection('assigned_panel')
             .where('panel_id', whereIn: panelids)
             .get()
             .then(
@@ -71,15 +71,15 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                 assignedPanels.add(
                   AssignedPanel(
                     id: doc['panel_id'],
-                    course: 'CP302',
-                    term: 'MidTerm',
-                    semester: '1',
-                    year: '2023',
+                    course: doc['course'],
+                    term: doc['term'],
+                    semester: doc['semester'],
+                    year: doc['year'],
                     numberOfAssignedTeams: 1,
                     panel: Panel(
-                      course: 'CP302',
-                      semester: '2',
-                      year: '2023',
+                      course: doc['course'],
+                      semester: doc['semester'],
+                      year: doc['year'],
                       id: doc['panel_id'],
                       numberOfEvaluators: int.parse(
                         doc['number_of_evaluators'],

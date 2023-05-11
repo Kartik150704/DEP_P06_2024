@@ -83,6 +83,64 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
   }
 
   void addEvent() {
+    // FirebaseFirestore.instance.collection('panels').get().then((value) {
+    //   //Update assigned_project_ids to empty array
+    //   for (var element in value.docs) {
+    //     FirebaseFirestore.instance.collection('panels').doc(element.id).update({
+    //       'assigned_project_ids': [],
+    //       'number_of_assigned_projects': '0',
+    //     });
+    //   }
+    //   FirebaseFirestore.instance.collection('projects').get().then((value) {
+    //     for (var element in value.docs) {
+    //       FirebaseFirestore.instance
+    //           .collection('projects')
+    //           .doc(element.id)
+    //           .update({
+    //         'panel_ids': [],
+    //       });
+    //     }
+    //   });
+    //   FirebaseFirestore.instance.collection('evaluations').get().then((value) {
+    //     for (var element in value.docs) {
+    //       FirebaseFirestore.instance
+    //           .collection('evaluations')
+    //           .doc(element.id)
+    //           .update({
+    //         'assigned_panels': [],
+    //         'endsem_evaluation': [],
+    //         'endsem_panel_comments': [],
+    //         'midsem_evaluation': [],
+    //         'midsem_panel_comments': [],
+    //       });
+    //     }
+    //   });
+    //   FirebaseFirestore.instance.collection('instructors').get().then((value) {
+    //     for (var element in value.docs) {
+    //       FirebaseFirestore.instance
+    //           .collection('instructors')
+    //           .doc(element.id)
+    //           .update({
+    //         'project_as_panel_ids': [],
+    //         'number_of_projects_panel': 0,
+    //       });
+    //     }
+    //   });
+    //   FirebaseFirestore.instance
+    //       .collection('assigned_panel')
+    //       .get()
+    //       .then((value) {
+    //     for (var element in value.docs) {
+    //       FirebaseFirestore.instance
+    //           .collection('assigned_panel')
+    //           .doc(element.id)
+    //           .update({
+    //         'assigned_project_ids': [],
+    //         'number_of_assigned_projects': '0',
+    //       });
+    //     }
+    //   });
+    // });
     showDialog(
       context: context,
       builder: (context) {
