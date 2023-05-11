@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/data_tables/faculty/faculty_panels_data_table.dart';
 import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';
@@ -34,6 +35,8 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
       yearSemesterController = TextEditingController(text: '2023-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
+  late final cachedAssignedPanels;
+  String? panelID, evaluatorName, term, course, yearSemester;
 
   Map panelEvalutaions = {};
   Map assignedTeams = {};
@@ -52,6 +55,84 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
       panelEvalutaions[panelId] = evaluations;
     });
     print('updated evaluation');
+  }
+
+  void getAssignedPanels() async {
+    await FirebaseFirestore.instance
+        .collection('instructors')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then(
+      (value) async {
+        var doc = value.docs[0];
+        List<String> panelids = List<String>.from(
+          doc['panel_ids'],
+        );
+        if (panelids.isEmpty) {
+          setState(() {
+            loading = false;
+            searching = false;
+          });
+          return;
+        }
+        await FirebaseFirestore.instance
+            .collection('assigned_panel')
+            .where('panel_id', whereIn: panelids)
+            .get()
+            .then(
+          (value) async {
+            for (var doc in value.docs) {
+              setState(() {
+                assignedPanels.add(
+                  AssignedPanel(
+                    id: doc['panel_id'],
+                    course: doc['course'],
+                    term: doc['term'],
+                    semester: doc['semester'],
+                    year: doc['year'],
+                    numberOfAssignedTeams:
+                        int.parse(doc['number_of_assigned_projects']),
+                    panel: Panel(
+                      course: doc['course'],
+                      semester: doc['semester'],
+                      year: doc['year'],
+                      id: doc['panel_id'],
+                      numberOfEvaluators: int.parse(
+                        doc['number_of_evaluators'],
+                      ),
+                      evaluators: List<Faculty>.generate(
+                        int.parse(
+                          doc['number_of_evaluators'],
+                        ),
+                        (index) => Faculty(
+                            id: doc['evaluator_ids'][index],
+                            name: doc['evaluator_names'][index],
+                            email: ''),
+                      ),
+                    ),
+                    assignedTeams: assignedTeams[doc['panel_id']] ?? [],
+                    evaluations: panelEvalutaions[doc['panel_id']] ?? [],
+                    assignedProjectIds: List<String>.from(
+                      doc['assigned_project_ids'],
+                    ),
+                    numberOfAssignedProjects: int.tryParse(
+                      doc['number_of_assigned_projects'],
+                    ),
+                  ),
+                );
+              });
+              setState(() {
+                loading = false;
+                searching = false;
+              });
+            }
+          },
+        );
+      },
+    );
+    setState(() {
+      cachedAssignedPanels = assignedPanels;
+    });
   }
 
   void getEvaluations() async {
@@ -111,7 +192,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                 releasedEventsValue.docs[0]['events'].keys.toList();
           }
         });
-        print(releasedEvents);
+        // print(releasedEvents);
         await FirebaseFirestore.instance
             .collection('evaluations')
             .where('project_id', whereIn: doc['assigned_project_ids'])
@@ -152,7 +233,7 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
                 assignedTeams[panel_id] = [team];
               }
             });
-            print('project id: ${doc['project_id']}');
+            // print('project id: ${doc['project_id']}');
             for (int i = 0; i < facultyInPanel.length; i++) {
               for (int j = 0; j < studentInProject.length; j++) {
                 Evaluation? mid, end;
@@ -245,79 +326,81 @@ class _FacultyPanelsPageState extends State<FacultyPanelsPage> {
     getAssignedPanels();
   }
 
-  void getAssignedPanels() {
-    FirebaseFirestore.instance
-        .collection('instructors')
-        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get()
-        .then(
-      (value) {
-        var doc = value.docs[0];
-        List<String> panelids = List<String>.from(
-          doc['panel_ids'],
-        );
-        if (panelids.isEmpty) {
-          setState(() {
-            loading = false;
-            searching = false;
+  bool updateSearchParameters() {
+    setState(() {
+      panelID = panelIdController.text.toString().trim().toLowerCase();
+      evaluatorName =
+          evaluatorNameController.text.toString().trim().toLowerCase();
+      course = courseController.text.toString().trim().toLowerCase();
+      term = termController.text.toString().trim().toLowerCase();
+      yearSemester =
+          yearSemesterController.text.toString().trim().toLowerCase();
+    });
+    if (yearSemester == '' || course == '') {
+      return false;
+    }
+    return true;
+  }
+
+  // String? panelID, evaluatorName, term, course, yearSemester;
+
+  void search() {
+    if (!updateSearchParameters()) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              title: FormCustomText(
+                text: 'course and year-semester are required files',
+              ),
+            );
           });
-          return;
+      return;
+    }
+    setState(() {
+      searching = true;
+      assignedPanels = [];
+    });
+
+    for (AssignedPanel panel in cachedAssignedPanels) {
+      bool flag = true;
+      if (panelID != null && panelID != '') {
+        String temp = panel.id.toString().trim().toLowerCase();
+        flag = flag && temp.contains(panelID!);
+      }
+      if (evaluatorName != null && evaluatorName != '') {
+        List<Faculty> temp = panel.panel.evaluators;
+        bool internalflag = false;
+        for (Faculty faculty in temp) {
+          String temp2 = faculty.name.toString().trim().toLowerCase();
+          internalflag = internalflag || temp2.contains(evaluatorName!);
         }
-        FirebaseFirestore.instance
-            .collection('assigned_panel')
-            .where('panel_id', whereIn: panelids)
-            .get()
-            .then(
-          (value) {
-            for (var doc in value.docs) {
-              setState(() {
-                assignedPanels.add(
-                  AssignedPanel(
-                    id: doc['panel_id'],
-                    course: doc['course'],
-                    term: doc['term'],
-                    semester: doc['semester'],
-                    year: doc['year'],
-                    numberOfAssignedTeams:
-                        int.parse(doc['number_of_assigned_projects']),
-                    panel: Panel(
-                      course: doc['course'],
-                      semester: doc['semester'],
-                      year: doc['year'],
-                      id: doc['panel_id'],
-                      numberOfEvaluators: int.parse(
-                        doc['number_of_evaluators'],
-                      ),
-                      evaluators: List<Faculty>.generate(
-                        int.parse(
-                          doc['number_of_evaluators'],
-                        ),
-                        (index) => Faculty(
-                            id: doc['evaluator_ids'][index],
-                            name: doc['evaluator_names'][index],
-                            email: ''),
-                      ),
-                    ),
-                    assignedTeams: assignedTeams[doc['panel_id']] ?? [],
-                    evaluations: panelEvalutaions[doc['panel_id']] ?? [],
-                    assignedProjectIds: List<String>.from(
-                      doc['assigned_project_ids'],
-                    ),
-                    numberOfAssignedProjects: int.tryParse(
-                      doc['number_of_assigned_projects'],
-                    ),
-                  ),
-                );
-              });
-              setState(() {
-                loading = false;
-                searching = false;
-              });
-            }
-          },
-        );
-      },
-    );
+        flag = flag && internalflag;
+      }
+      if (term != null && term != '') {
+        String temp = panel.term.toString().trim().toLowerCase();
+        flag = flag && temp.contains(term!);
+      }
+      if (course != null && course != '') {
+        String temp = panel.course.toString().trim().toLowerCase();
+        flag = flag && temp.contains(course!);
+      }
+      if (yearSemester != null && yearSemester != '') {
+        String sem = panel.semester.toString().trim().toLowerCase();
+        String year = panel.year.toString().trim().toLowerCase();
+        String temp = '$year-$sem';
+        flag = flag && temp.contains(yearSemester!);
+      }
+      if (flag) {
+        setState(() {
+          assignedPanels.add(panel);
+          if (assignedPanels.length == 2) searching = false;
+        });
+      }
+    }
+    setState(() {
+      searching = false;
+    });
   }
 
   @override
