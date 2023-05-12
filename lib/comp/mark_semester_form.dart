@@ -159,7 +159,7 @@ class _AddEventFormState extends State<MarkSemesterForm> {
                     if (flag) {
                       await FirebaseFirestore.instance
                           .collection('current_session')
-                          .doc('session')
+                          .doc()
                           .set({
                         'semester': semester,
                         'year': year,
