@@ -92,8 +92,9 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
 
         if (!isEvaluated) {
           String eventType = 'Week-${evnt.type.substring(5, 6)}';
-          if (evnt.type == 'midterm' || evnt.type == 'endterm') {
-            eventType = (evnt.type == 'midterm' ? 'MidTerm' : 'EndTerm');
+          print(eventType);
+          if (evnt.type == 'MidTerm' || evnt.type == 'EndTerm') {
+            eventType = (evnt.type == 'MidTerm' ? 'MidTerm' : 'EndTerm');
             double marks = 0, count = 0;
             for (var panel in widget.assignedPanels) {
               for (var panelEval in panel.evaluations) {
@@ -107,7 +108,7 @@ class _ProjectDataTableState extends State<ProjectDataTable> {
 
             enrollmentData.add(
               EnrollmentData(
-                  event: (evnt.type == 'midterm' ? 'MidTerm' : 'EndTerm'),
+                  event: (evnt.type == 'MidTerm' ? 'MidTerm' : 'EndTerm'),
                   studentName: stdnt.name,
                   studentEntryNumber: stdnt.entryNumber,
                   duration: '${evnt.start} - ${evnt.end}',
