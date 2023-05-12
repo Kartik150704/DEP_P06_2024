@@ -1,6 +1,7 @@
 import 'package:casper/comp/add_faculty_form.dart';
 import 'package:casper/comp/add_student_form.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/comp/mark_semester_form.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +72,15 @@ class AdminHomePage extends StatelessWidget {
                         width: 222 * wfem,
                         height: 60,
                         text: 'Mark Semester',
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Center(child: MarkSemesterForm()),
+                                );
+                              });
+                        },
                       ),
                       const SizedBox(
                         height: 20,
