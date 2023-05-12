@@ -64,7 +64,7 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
     }
 
     final columns = [
-      'ID',
+      'Sr. No.',
       'Project',
       'Supervisor',
       'Course',
