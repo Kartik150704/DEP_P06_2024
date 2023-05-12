@@ -76,7 +76,10 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-          iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white)),
+          iconTheme: Theme
+              .of(context)
+              .iconTheme
+              .copyWith(color: Colors.white)),
       child: DataTable(
         border: TableBorder.all(
           width: 2,
@@ -88,7 +91,7 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
         columns: getColumns(columns),
         rows: getRows(widget.offerings),
         headingRowColor: MaterialStateColor.resolveWith(
-          (states) {
+              (states) {
             return const Color(0xff12141D);
           },
         ),
@@ -134,8 +137,9 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
     return headings;
   }
 
-  List<DataRow> getRows(List<Offering> rows) => rows.map(
-        (Offering offerings) {
+  List<DataRow> getRows(List<Offering> rows) =>
+      rows.map(
+            (Offering offerings) {
           final cells = [
             DataCell(
               SizedBox(
@@ -148,7 +152,7 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
             DataCell(
               Tooltip(
                 message:
-                    '${offerings.project.title} - ${offerings.project.description}',
+                '${offerings.project.title} - ${offerings.project.description}',
                 child: SizedBox(
                   width: 300,
                   child: CustomisedOverflowText(
@@ -183,11 +187,50 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
                   height: 37,
                   width: double.infinity,
                   onPressed: () {
+                    // String course = '', semester = '', year = '';
+                    // await FirebaseFirestore.instance
+                    //     .collection('offerings')
+                    //     .doc(request.offering.id)
+                    //     .get()
+                    //     .then((value) {
+                    //   if (value.exists) {
+                    //     course = value['type'];
+                    //     semester = value['semester'];
+                    //     year = value['year'];
+                    //   }
+                    // });
+                    //
+                    // bool flag = true;
+                    //
+                    // await FirebaseFirestore.instance
+                    //     .collection('projects')
+                    //     .where('team_id', isEqualTo: request.teamId)
+                    //     .where('year', isEqualTo: year)
+                    //     .where('semester', isEqualTo: semester)
+                    //     .where('type', isEqualTo: course)
+                    //     .get()
+                    //     .then((value) {
+                    //   if (value.docs.isNotEmpty) {
+                    //     flag = false;
+                    //   }
+                    // });
+                    // if (!flag) {
+                    //   showDialog(
+                    //       context: context,
+                    //       builder: (context) {
+                    //         return const AlertDialog(
+                    //             title: FormCustomText(
+                    //               text: 'Unauthorized',
+                    //             ));
+                    //       });
+                    //   return;
+                    // }
+
                     // ensure not already requested
                     FirebaseFirestore.instance
                         .collection('student')
                         .where('uid',
-                            isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                        isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                         .get()
                         .then((value) {
                       var doc = value.docs[0];
@@ -243,35 +286,39 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       widget.offerings.sort(
-        (panel1, panel2) => compareString(
-          ascending,
-          panel1.id.toString(),
-          panel2.id.toString(),
-        ),
+            (panel1, panel2) =>
+            compareString(
+              ascending,
+              panel1.id.toString(),
+              panel2.id.toString(),
+            ),
       );
     } else if (columnIndex == 1) {
       widget.offerings.sort(
-        (panel1, panel2) => compareString(
-          ascending,
-          panel1.project.title.toString(),
-          panel2.project.title.toString(),
-        ),
+            (panel1, panel2) =>
+            compareString(
+              ascending,
+              panel1.project.title.toString(),
+              panel2.project.title.toString(),
+            ),
       );
     } else if (columnIndex == 2) {
       widget.offerings.sort(
-        (panel1, panel2) => compareString(
-          ascending,
-          panel1.instructor.name.toString(),
-          panel2.instructor.name.toString(),
-        ),
+            (panel1, panel2) =>
+            compareString(
+              ascending,
+              panel1.instructor.name.toString(),
+              panel2.instructor.name.toString(),
+            ),
       );
     } else if (columnIndex == 3) {
       widget.offerings.sort(
-        (panel1, panel2) => compareString(
-          ascending,
-          panel1.course.toString(),
-          panel2.course.toString(),
-        ),
+            (panel1, panel2) =>
+            compareString(
+              ascending,
+              panel1.course.toString(),
+              panel2.course.toString(),
+            ),
       );
     }
 
@@ -285,15 +332,15 @@ class _OfferedProjectsDataTableState extends State<OfferedProjectsDataTable> {
     if (int.tryParse(value1) != null && int.tryParse(value2) != null) {
       return (ascending
           ? int.parse(value1) > int.parse(value2)
-              ? 1
-              : int.parse(value1) < int.parse(value2)
-                  ? -1
-                  : 0
+          ? 1
+          : int.parse(value1) < int.parse(value2)
+          ? -1
+          : 0
           : int.parse(value2) < int.parse(value1)
-              ? -1
-              : int.parse(value2) > int.parse(value1)
-                  ? 1
-                  : 0);
+          ? -1
+          : int.parse(value2) > int.parse(value1)
+          ? 1
+          : 0);
     }
     return (ascending ? value1.compareTo(value2) : value2.compareTo(value1));
   }

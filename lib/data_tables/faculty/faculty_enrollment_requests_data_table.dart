@@ -3,6 +3,7 @@ import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +44,21 @@ class _EnrollmentRequestDataTableState
             title: Center(
               child: ConfirmAction(
                 onSubmit: () async {
+                  // // TODO: test auto withdrawal of other requests
+                  // await FirebaseFirestore.instance
+                  //     .collection('enrollment_requests')
+                  //     .where('team_id', isEqualTo: teamId)
+                  //     .get()
+                  //     .then((value) {
+                  //   for (var doc in value.docs) {
+                  //     if (doc.id != request.key_id) {
+                  //       FirebaseFirestore.instance
+                  //           .collection('enrollment_requests')
+                  //           .doc(doc.id)
+                  //           .update({'status': '3'});
+                  //     }
+                  //   }
+                  // });
                   await FirebaseFirestore.instance
                       .collection('enrollment_requests')
                       .doc(request.key_id)
