@@ -6,6 +6,7 @@ import 'package:casper/comp/customised_text.dart';
 import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
+import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,79 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
       studentEntryNumberController = TextEditingController();
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
+  late final AssignedPanel cachedAssignedPanel;
+  String? teamId, studentName, studentEntryNumber;
+
+  late AssignedPanel assignedPanelFiltered;
+
+  bool updateSearchParameters() {
+    teamId = teamIdController.text.toString().toLowerCase().trim();
+    studentName = studentNameController.text.toString().toLowerCase().trim();
+    studentEntryNumber =
+        studentEntryNumberController.text.toString().toLowerCase().trim();
+    return true;
+  }
+
+  Future<void> search() async {
+    if (!updateSearchParameters()) {
+      return;
+    }
+    print('searching');
+    setState(() {
+      searching = true;
+    });
+    List<Evaluation> tempevaluations = [];
+    Map notToBeIncluded = {};
+    for (Evaluation evaluation in cachedAssignedPanel.evaluations) {
+      bool flag = true;
+      if (!evaluation.student.id
+          .toLowerCase()
+          .contains(studentEntryNumber ?? '')) {
+        flag = false;
+      }
+      // if (!evaluation.student.name.toLowerCase().contains(studentName ?? '')) {
+      //   flag = false;
+      // }
+      // print(flag);
+      if (flag) {
+        tempevaluations.add(evaluation);
+      } else {
+        notToBeIncluded[evaluation.student.id] = true;
+        notToBeIncluded[evaluation.student.name] = true;
+      }
+    }
+    List<Team> tempTeams = cachedAssignedPanel.assignedTeams;
+    // for (Team team in cachedAssignedPanel.assignedTeams) {
+    //   bool flag = true;
+    //   if (!team.id.toLowerCase().contains(teamId ?? '')) {
+    //     flag = false;
+    //   }
+    //   bool tempflag = false;
+    //   for (Student student in team.students) {
+    //     if(student.)
+    //   }
+    //   print(flag);
+    //   if (flag) {
+    //     tempTeams.add(team);
+    //   }
+    // }
+    setState(() {
+      assignedPanelFiltered = AssignedPanel(
+          id: cachedAssignedPanel.id,
+          course: cachedAssignedPanel.course,
+          term: cachedAssignedPanel.term,
+          semester: cachedAssignedPanel.term,
+          year: cachedAssignedPanel.term,
+          numberOfAssignedTeams: 0,
+          panel: cachedAssignedPanel.panel,
+          assignedTeams: tempTeams,
+          evaluations: tempevaluations);
+      searching = false;
+      // loading = false;
+    });
+
+    print(assignedPanelFiltered.evaluations.length);
+  }
 
   void getPanelData() async {
     int localIndexEvaluations = 0;
@@ -189,9 +263,11 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
 
     //*********
     setState(() {
+      cachedAssignedPanel = widget.assignedPanel;
+      assignedPanelFiltered = widget.assignedPanel;
       loading = false;
     });
-    print('assigned teams length ${widget.assignedPanel.assignedTeams.length}');
+    // print('assigned teams length ${widget.assignedPanel.assignedTeams.length}');
   }
 
   void addTeams() {
@@ -211,9 +287,10 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
   void initState() {
     super.initState();
     if (widget.actionType == 1) {
-      print('action type 1 invoked');
       getPanelData();
     } else {
+      cachedAssignedPanel = widget.assignedPanel;
+      assignedPanelFiltered = widget.assignedPanel;
       loading = false;
     }
   }
@@ -321,7 +398,9 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                               color: Colors.black,
                               size: 29,
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await search();
+                            },
                           ),
                         ),
                       ],
@@ -379,9 +458,11 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
                                           width: max(1217, 950 * wfem),
                                           child: FacultyPanelTeamsDataTable(
                                             actionType: widget.actionType,
-                                            assignedPanel: widget.assignedPanel,
-                                            assignedTeams: widget
-                                                .assignedPanel.assignedTeams,
+                                            assignedPanel:
+                                                assignedPanelFiltered,
+                                            assignedTeams: assignedPanelFiltered
+                                                .assignedTeams,
+                                            //TODO: remove, not used anymore
                                             updateEvaluation:
                                                 widget.updateEvaluation,
                                           ),

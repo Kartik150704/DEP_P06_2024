@@ -104,6 +104,10 @@ class _FacultyPanelTeamsDataTableState
   Map atleastOneStudentOfTeamEvaluated = {};
 
   void getStudentData() {
+    print(assignedPanel.evaluations.length);
+    setState(() {
+      studentData = [];
+    });
     for (final team in assignedTeams) {
       for (final student in team.students) {
         bool myPanel = false;
@@ -200,12 +204,13 @@ class _FacultyPanelTeamsDataTableState
     // print(studentData.length);
   }
 
+  var temp;
+
   @override
   Widget build(BuildContext context) {
     if (widget.assignedTeams.isEmpty) {
       return DataNotFound(message: 'No teams found');
     }
-
     final columns = [
       'Team ID',
       'Student Name',
