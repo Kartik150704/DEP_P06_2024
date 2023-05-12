@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 class FacultyPanelTeamsPage extends StatefulWidget {
   final int actionType;
   final String userRole;
-  final AssignedPanel assignedPanel;
+  AssignedPanel assignedPanel;
   Function? updateEvaluation;
 
   FacultyPanelTeamsPage({
@@ -37,112 +37,162 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
 
-  // void getPanelData() {
-  //   if (widget.assignedPanel.assignedProjectIds!.isEmpty) {
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //     return;
-  //   }
-  //   FirebaseFirestore.instance
-  //       .collection('projects')
-  //       .where(FieldPath.documentId,
-  //           whereIn: widget.assignedPanel.assignedProjectIds)
-  //       .get()
-  //       .then((value) {
-  //     for (var doc in value.docs) {
-  //       print(doc.id);
-  //       List<Student> students = [];
-  //       for (int i = 0; i < doc['student_ids'].length; i++) {
-  //         students.add(Student(
-  //             id: doc['student_ids'][i],
-  //             name: doc['student_name'][i],
-  //             entryNumber: doc['student_ids'][i],
-  //             email: doc['student_ids'][i] + '@iitrpr.ac.in'));
-  //       }
-  //       Team team = Team(
-  //           id: doc['team_id'],
-  //           numberOfMembers: doc['student_ids'].length,
-  //           students: students);
-  //       setState(() {
-  //         assignedTeams.add(team);
-  //       });
-  //
-  //       FirebaseFirestore.instance
-  //           .collection('evaluations')
-  //           .where('project_id', isEqualTo: doc.id)
-  //           .get()
-  //           .then(
-  //         (value) {
-  //           List<Evaluation> evals = [];
-  //           for (var doc in value.docs) {
-  //             for (int i = 0;
-  //                 i < widget.assignedPanel.panel.numberOfEvaluators;
-  //                 i++) {
-  //               for (Student student in students) {
-  //                 Evaluation evaluation = Evaluation(
-  //                   id: '1',
-  //                   marks: double.tryParse(
-  //                       doc['midsem_evaluation'][i][student.entryNumber])!,
-  //                   remarks: doc['midsem_panel_comments'][i]
-  //                       [student.entryNumber],
-  //                   type: 'midterm-panel',
-  //                   student: student,
-  //                   faculty: widget.assignedPanel.panel.evaluators[i],
-  //                 );
-  //                 evals.add(evaluation);
-  //               }
-  //             }
-  //             for (int i = 0;
-  //                 i < widget.assignedPanel.panel.numberOfEvaluators;
-  //                 i++) {
-  //               for (Student student in students) {
-  //                 Evaluation evaluation = Evaluation(
-  //                   id: '1',
-  //                   marks: double.tryParse(
-  //                       doc['endsem_evaluation'][i][student.entryNumber])!,
-  //                   remarks: doc['endsem_panel_comments'][i]
-  //                       [student.entryNumber],
-  //                   type: 'endterm-panel',
-  //                   student: student,
-  //                   faculty: widget.assignedPanel.panel.evaluators[i],
-  //                 );
-  //                 evals.add(evaluation);
-  //               }
-  //             }
-  //             for (Student student in students) {
-  //               for (int week = 0;
-  //                   week < int.tryParse(doc['number_of_evaluations'])!;
-  //                   week++) {
-  //                 Evaluation evaluation = Evaluation(
-  //                   id: '1',
-  //                   marks: double.tryParse(
-  //                       doc['weekly_evaluations'][week][student.entryNumber])!,
-  //                   remarks: doc['weekly_comments'][week][student.entryNumber],
-  //                   type: 'week-${week + 1}',
-  //                   student: student,
-  //                   //TODO: add name and email
-  //                   faculty: Faculty(
-  //                       id: doc['supervisor_id'],
-  //                       name: 'temp',
-  //                       email: 'temp@iitrpr.ac.iin'),
-  //                 );
-  //                 evals.add(evaluation);
-  //               }
-  //             }
-  //           }
-  //
-  //           setState(() {
-  //             widget.assignedPanel.evaluations.addAll(evals);
-  //           });
-  //         },
-  //       );
-  //       setState(() {
-  //         loading = false;
-  //       });
-  //     }
-  //   });
-  // }
+  void getPanelData() async {
+    int localIndexEvaluations = 0;
+    if (widget.assignedPanel.assignedProjectIds!.isEmpty) {
+      setState(() {
+        loading = false;
+      });
+      return;
+    }
+    List<String> releasedEvents = [];
+    List<Evaluation> evaluations = [];
+    List<Faculty> facultyInPanel = [];
+    String panelType = widget.assignedPanel.term;
+    String panel_id = widget.assignedPanel.id;
+
+    facultyInPanel = widget.assignedPanel.panel.evaluators;
+
+    if (widget.assignedPanel.assignedProjectIds!.isEmpty) return;
+
+    await FirebaseFirestore.instance
+        .collection('released_events')
+        .where('semester', isEqualTo: widget.assignedPanel.semester)
+        .where('year', isEqualTo: widget.assignedPanel.year)
+        .where('course', isEqualTo: widget.assignedPanel.course)
+        .get()
+        .then((releasedEventsValue) async {
+      if (releasedEventsValue.docs.length == 1) {
+        releasedEvents = releasedEventsValue.docs[0]['events'].keys.toList();
+      }
+    });
+    // print(releasedEvents);
+    await FirebaseFirestore.instance
+        .collection('evaluations')
+        .where('project_id', whereIn: widget.assignedPanel.assignedProjectIds)
+        .get()
+        .then((evaluationValue) async {
+      for (var doc in evaluationValue.docs) {
+        List<Student> studentInProject = [];
+        late String teamid;
+        for (int i = 0; i < doc['student_ids'].length; i++) {
+          Student student = Student(
+            id: doc['student_ids'][i],
+            name: doc['student_names'][i],
+            entryNumber: doc['student_ids'][i],
+            email: '${doc['student_ids'][i]}@iitrpr.ac.in',
+          );
+          studentInProject.add(student);
+        }
+
+        await FirebaseFirestore.instance
+            .collection('projects')
+            .where(FieldPath.documentId, isEqualTo: doc['project_id'])
+            .get()
+            .then((projectValue) async {
+          if (projectValue.docs.length == 1) {
+            teamid = projectValue.docs[0]['team_id'];
+          }
+        });
+        Team team = Team(
+            id: teamid,
+            numberOfMembers: studentInProject.length,
+            students: studentInProject);
+
+        widget.assignedPanel.assignedTeams.add(team);
+        // print('project id: ${doc['project_id']}');
+        for (int i = 0; i < facultyInPanel.length; i++) {
+          for (int j = 0; j < studentInProject.length; j++) {
+            Evaluation? mid, end;
+            if ((panelType == 'MidTerm' || panelType == 'All') &&
+                releasedEvents.contains('MidTerm')) {
+              if (doc['midsem_evaluation'][i]
+                      [studentInProject[j].entryNumber] !=
+                  null) {
+                mid = Evaluation(
+                  id: doc.id,
+                  marks: double.parse(doc['midsem_evaluation'][i]
+                      [studentInProject[j].entryNumber]),
+                  remarks: doc['midsem_panel_comments'][i]
+                          [studentInProject[j].entryNumber] ??
+                      'NA',
+                  type: 'MidTerm',
+                  student: studentInProject[j],
+                  faculty: facultyInPanel[i],
+                  panelIndex: i,
+                  done: true,
+                  localIndex: localIndexEvaluations++,
+                );
+              } else {
+                mid = Evaluation(
+                  id: doc.id,
+                  marks: -1.0,
+                  remarks: doc['midsem_panel_comments'][i]
+                          [studentInProject[j].entryNumber] ??
+                      'NA',
+                  type: 'MidTerm',
+                  student: studentInProject[j],
+                  faculty: facultyInPanel[i],
+                  panelIndex: i,
+                  done: false,
+                  localIndex: localIndexEvaluations++,
+                );
+              }
+            }
+            if ((panelType == 'EndTerm' || panelType == 'All') &&
+                releasedEvents.contains('EndTerm')) {
+              if (doc['endsem_evaluation'][i]
+                      [studentInProject[j].entryNumber] !=
+                  null) {
+                end = Evaluation(
+                  id: doc.id,
+                  marks: double.parse(doc['endsem_evaluation'][i]
+                      [studentInProject[j].entryNumber]),
+                  remarks: doc['endsem_panel_comments'][i]
+                          [studentInProject[j].entryNumber] ??
+                      'NA',
+                  type: 'EndTerm',
+                  student: studentInProject[j],
+                  faculty: facultyInPanel[i],
+                  panelIndex: i,
+                  done: true,
+                  localIndex: localIndexEvaluations++,
+                );
+              } else {
+                end = Evaluation(
+                  id: doc.id,
+                  marks: -1.0,
+                  remarks: doc['endsem_panel_comments'][i]
+                          [studentInProject[j].entryNumber] ??
+                      'NA',
+                  type: 'EndTerm',
+                  student: studentInProject[j],
+                  faculty: facultyInPanel[i],
+                  panelIndex: i,
+                  done: false,
+                  localIndex: localIndexEvaluations++,
+                );
+              }
+            }
+            if (mid != null) {
+              evaluations.add(mid);
+            }
+            if (end != null) {
+              evaluations.add(end);
+            }
+          }
+        }
+      }
+    });
+
+    widget.assignedPanel.evaluations = evaluations;
+
+    //*********
+    setState(() {
+      loading = false;
+    });
+    print('assigned teams length ${widget.assignedPanel.assignedTeams.length}');
+  }
 
   void addTeams() {
     showDialog(
@@ -160,9 +210,12 @@ class _FacultyPanelTeamsPageState extends State<FacultyPanelTeamsPage> {
   @override
   void initState() {
     super.initState();
-    // getPanelData();
-    loading = false;
-    print(assignedTeams.length);
+    if (widget.actionType == 1) {
+      print('action type 1 invoked');
+      getPanelData();
+    } else {
+      loading = false;
+    }
   }
 
   @override

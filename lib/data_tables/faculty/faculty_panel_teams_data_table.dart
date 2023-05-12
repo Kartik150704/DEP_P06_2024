@@ -101,6 +101,8 @@ class _FacultyPanelTeamsDataTableState
     );
   }
 
+  Map atleastOneStudentOfTeamEvaluated = {};
+
   void getStudentData() {
     for (final team in assignedTeams) {
       for (final student in team.students) {
@@ -108,14 +110,18 @@ class _FacultyPanelTeamsDataTableState
         double evaluation = -1;
         late Evaluation evaluationObj;
         // int c = 1;
-
         for (final eval in assignedPanel.evaluations) {
           // print(c++);
-          if (eval.faculty.id == myId) {
+          if (eval.faculty.id == myId || widget.actionType == 1) {
             myPanel = true;
             if (eval.student.id == student.id) {
               evaluation = eval.marks;
               evaluationObj = eval;
+              if (evaluationObj.done == true) {
+                setState(() {
+                  atleastOneStudentOfTeamEvaluated[team.id] = true;
+                });
+              }
               setState(() {
                 studentData.add(
                   StudentData1(
@@ -178,6 +184,7 @@ class _FacultyPanelTeamsDataTableState
     setState(() {
       loading = false;
     });
+    print('getting rows');
     rows = getRows(studentData);
   }
 
@@ -185,6 +192,7 @@ class _FacultyPanelTeamsDataTableState
   void initState() {
     super.initState();
     print(widget.assignedPanel.evaluations.length);
+    print(widget.assignedTeams.length);
     assignedPanel = widget.assignedPanel;
     assignedTeams = widget.assignedTeams;
     getStudentData();
@@ -315,14 +323,20 @@ class _FacultyPanelTeamsDataTableState
                           ],
                         ))
                   : (widget.actionType == 1
-                      ? CustomisedButton(
-                          text: 'Remove Team',
-                          height: 37,
-                          width: double.infinity,
-                          onPressed: () =>
-                              confirmAction(data.teamId, data.panelId),
-                          elevation: 0,
-                        )
+                      ? ((atleastOneStudentOfTeamEvaluated[data.teamId] ??
+                              false)
+                          ? const CustomisedText(
+                              text: 'Evaluated',
+                              color: Colors.black,
+                            )
+                          : CustomisedButton(
+                              text: 'Remove Team',
+                              height: 37,
+                              width: double.infinity,
+                              onPressed: () =>
+                                  confirmAction(data.teamId, data.panelId),
+                              elevation: 0,
+                            ))
                       : CustomisedButton(
                           text: 'Upload',
                           height: 37,
@@ -337,7 +351,9 @@ class _FacultyPanelTeamsDataTableState
             cells: cells,
             color: MaterialStateProperty.all(
               (widget.actionType == 1
-                  ? (data.evaluation.compareTo('-1') != 0
+                  ? (data.evaluation.compareTo('-1') != 0 ||
+                          (atleastOneStudentOfTeamEvaluated[data.teamId] ??
+                              false)
                       ? const Color.fromARGB(255, 192, 188, 192)
                       : const Color.fromARGB(255, 212, 203, 216))
                   : (data.evaluation.compareTo('-1') != 0
