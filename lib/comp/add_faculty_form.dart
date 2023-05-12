@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:casper/comp/customised_overflow_text.dart';
-import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -111,21 +111,7 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
         ),
       );
     } else if (status == 2) {
-      return Container(
-        width: 450,
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(7),
-          color: Colors.green,
-        ),
-        child: const Center(
-          child: CustomisedText(
-            text: 'Faculty added successfully',
-            color: Colors.black,
-            fontSize: 25,
-          ),
-        ),
-      );
+      return const FormCustomText(text: 'Faculty added successfully');
     }
 
     return FormBuilder(

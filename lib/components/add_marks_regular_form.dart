@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
+// ignore: must_be_immutable
 class AddMarksRegularForm extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final TextEditingController marksInputController, remarksInputController;
   final Function onSubmit;
-  int totalMarks;
-
-  //status true == can upload marks
   final bool isFaculty, status;
+  final int totalMarks;
 
   AddMarksRegularForm({
     super.key,

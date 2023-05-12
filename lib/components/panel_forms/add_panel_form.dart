@@ -1,16 +1,13 @@
-import 'dart:math';
-
+import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
 import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:multiselect/multiselect.dart';
-
-import '../form_custom_text.dart';
 
 class AddPanelForm extends StatefulWidget {
   final refresh;
@@ -25,7 +22,9 @@ class AddPanelForm extends StatefulWidget {
 }
 
 class _AddPanelFormState extends State<AddPanelForm> {
+  int status = 0;
   final _formKey = GlobalKey<FormBuilderState>();
+  // ignore: non_constant_identifier_names
   int number_of_evaluators = 1;
   String semester = '', year = '';
 
@@ -46,6 +45,20 @@ class _AddPanelFormState extends State<AddPanelForm> {
     });
   }
 
+  InputDecoration getDecoration(String hintText) {
+    return InputDecoration(
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.black,
+        ),
+      ),
+      hintText: hintText,
+      hintStyle: const TextStyle(
+        color: Colors.grey,
+      ),
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,22 +70,35 @@ class _AddPanelFormState extends State<AddPanelForm> {
   String? integerValidator(
       String? value, String fieldName, int lowerLimit, int higherLimit) {
     if (value == null) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     }
     int? val = int.tryParse(value);
     if (val == null) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     } else if (val > higherLimit || val < lowerLimit) {
-      return 'enter a valid $fieldName';
+      return 'Please enter a valid $fieldName';
     }
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (semester == '' || year == '') {
-      return const FormCustomText(text: 'No valid session.');
+    if (status == 1 || semester == '' || year == '') {
+      return const SizedBox(
+        width: 450,
+        height: 150,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+      );
+    } else if (status == 2) {
+      return const FormCustomText(
+        text: 'Panel added successfully',
+      );
     }
+
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -80,14 +106,9 @@ class _AddPanelFormState extends State<AddPanelForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Semester',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Semester',
+            color: Color(0xff000000),
           ),
           FormBuilderTextField(
             name: 'semester',
@@ -98,14 +119,9 @@ class _AddPanelFormState extends State<AddPanelForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Year',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Year',
+            color: Color(0xff000000),
           ),
           FormBuilderTextField(
             name: 'year',
@@ -116,21 +132,19 @@ class _AddPanelFormState extends State<AddPanelForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Enter the term',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
+          const CustomisedText(
+            text: 'Select the term',
+            color: Color(0xff000000),
           ),
           FormBuilderRadioGroup(
             name: 'term',
             activeColor: Colors.black,
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a term';
+              }
+              return null;
+            },
             options: const [
               // TODO: These are not static
               FormBuilderFieldOption(
@@ -144,47 +158,55 @@ class _AddPanelFormState extends State<AddPanelForm> {
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
-          Text(
-            'Enter the course',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Select the course',
+            color: Colors.black,
           ),
-          FormBuilderTextField(
+          FormBuilderDropdown(
             name: 'course',
             validator: (value) {
-              if (['CP301', 'CP302', 'CP303'].contains(value)) {
-                return null;
+              if (value == null) {
+                return 'Please select a course';
               }
-              return 'enter a valid course. [CP301, CP302, CP303]';
+              return null;
             },
+            items: List<String>.generate(3, (index) => 'CP30${index + 1}')
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Enter the number of evaluators',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Select the number of evaluators',
+            color: Colors.black,
           ),
-          FormBuilderTextField(
+          FormBuilderDropdown(
             name: 'number_of_evaluators',
-            validator: (value) => integerValidator(
-                value, 'number of evaluators from 1 to 5', 1, 5),
-            initialValue: '1',
+            validator: (value) {
+              if (value == null) {
+                return 'Please pick an option';
+              }
+              return null;
+            },
+            items: List<String>.generate(4, (index) => '${index + 1}')
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
             onChanged: (value) {
               setState(() {
-                if (integerValidator(
-                        value, 'number of evaluators from 1 to 5', 1, 5) ==
+                if (integerValidator(value, 'number between 1 and 4', 1, 4) ==
                     null) {
                   number_of_evaluators = int.parse(value!);
                 }
@@ -198,19 +220,16 @@ class _AddPanelFormState extends State<AddPanelForm> {
             child: Column(
               children: [
                 for (int i = 0; i < number_of_evaluators; i++) ...[
-                  Text(
-                    'Evaluator ${i + 1} email: ',
-                    style: SafeGoogleFont(
-                      'Ubuntu',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xff000000),
-                    ),
+                  CustomisedText(
+                    text: 'Enter evaluator ${i + 1} email',
+                    color: Colors.black,
                   ),
                   FormBuilderTextField(
                     name: 'evaluator${i}id',
                     validator: FormBuilderValidators.required(
-                        errorText: 'email cannot be empty'),
+                        errorText: 'Please enter a valid email'),
+                    cursorColor: Colors.black,
+                    decoration: getDecoration('Email ${i + 1}'),
                   ),
                   const SizedBox(
                     height: 10,
@@ -225,11 +244,17 @@ class _AddPanelFormState extends State<AddPanelForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                buttonText: 'Submit',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Submit',
                 onPressed: () {
                   _formKey.currentState?.save();
                   if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      status = 1;
+                    });
+
                     var emails = List<String>.generate(
                         number_of_evaluators,
                         (index) => _formKey
@@ -247,13 +272,13 @@ class _AddPanelFormState extends State<AddPanelForm> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text('Please verify inputted data'),
+                                title: const Text('Please verify input data'),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text('OK'))
+                                      child: const Text('OK'))
                                 ],
                               );
                             });
@@ -275,13 +300,13 @@ class _AddPanelFormState extends State<AddPanelForm> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Please verify inputted data'),
+                                  title: const Text('Please verify input data'),
                                   actions: [
                                     TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text('OK'))
+                                        child: const Text('OK'))
                                   ],
                                 );
                               });
@@ -368,17 +393,20 @@ class _AddPanelFormState extends State<AddPanelForm> {
                         });
                       }
                     });
-
-                    Navigator.pop(context);
+                    setState(() {
+                      status = 2;
+                    });
                   }
                 },
               ),
-              CustomButton(
-                buttonText: 'Cancel',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Cancel',
                 onPressed: () => {
                   Navigator.pop(context),
                 },
-              ),
+              )
             ],
           ),
         ],

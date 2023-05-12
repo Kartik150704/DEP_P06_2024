@@ -129,7 +129,10 @@ class _AddEventFormState extends State<AddEventForm> {
           const SizedBox(
             height: 10,
           ),
-          const CustomisedText(text: 'Select the course', color: Colors.black),
+          const CustomisedText(
+            text: 'Select the course',
+            color: Colors.black,
+          ),
           FormBuilderDropdown(
             name: 'course',
             validator: (value) {

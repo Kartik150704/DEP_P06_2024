@@ -1,25 +1,18 @@
-import 'dart:html';
-import 'dart:math';
+// ignore: file_names
 import 'dart:convert';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
 import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:multiselect/multiselect.dart';
-import 'package:csv/csv.dart';
-import 'dart:io';
-
-import 'package:mutex/mutex.dart';
-
-import '../form_custom_text.dart';
 
 class CreatePanelFromCSVForm extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final refresh;
 
   const CreatePanelFromCSVForm({
@@ -32,10 +25,9 @@ class CreatePanelFromCSVForm extends StatefulWidget {
 }
 
 class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
+  int status = 0;
   final _formKey = GlobalKey<FormBuilderState>();
-  String selectedEvent = '';
-
-  String semester = '', year = '';
+  String selectedEvent = '', semester = '', year = '';
 
   void _onFormSubmitted() {
     _formKey.currentState?.save();
@@ -49,10 +41,8 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
         final bytes = file.bytes;
         final csvString = utf8.decode(bytes!);
         final csvData = csvString.split('\n');
-        print(csvData);
         for (var item in csvData) print(item);
-        // Do something with the CSV data
-        // ...
+
         int newpanelid = 0;
         FirebaseFirestore.instance
             .collection('panels')
@@ -98,8 +88,6 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
                 .get()
                 .then((value) {
               if (value.docs.length != emails.length) {
-                print(emails);
-                print('Multiple instructors with same email, unexpected error');
                 flag = false;
                 return;
               } else {
@@ -122,13 +110,12 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
 
                 var alldata = <String, dynamic>{};
                 alldata.addEntries([
-                  MapEntry('evaluator_names', names),
                   //TODO: validation of ids and names
+                  MapEntry('evaluator_names', names),
                   MapEntry('evaluator_ids', ids)
                 ]);
 
-                // TODO: change                newpanelid = value.docs.length + 1;;
-                print(newpanelid + i);
+                // TODO: change newpanelid = value.docs.length + 1;;
                 alldata.addEntries([
                   MapEntry('number_of_evaluators', emails.length.toString()),
                   MapEntry('panel_id', (newpanelid + i).toString()),
@@ -148,7 +135,7 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
                     .add(alldata);
               }
             });
-            //Update instuctor project_as_panel_ids array
+
             FirebaseFirestore.instance
                 .collection('instructors')
                 .where('email', whereIn: emails)
@@ -171,19 +158,24 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
 
           if (!flag) {
             showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Please verify inputted data'),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text('OK'))
-                    ],
-                  );
-                });
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text(
+                    'Please verify inputted data',
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'OK',
+                        ))
+                  ],
+                );
+              },
+            );
           }
         });
       }
@@ -233,9 +225,20 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (semester == '' || year == '') {
-      return FormCustomText(text: 'No ongoing session');
+    if (status == 1 || semester == '' || year == '') {
+      return const SizedBox(
+        width: 450,
+        height: 150,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+      );
+    } else if (status == 2) {
+      return const FormCustomText(text: 'Faculty added successfully');
     }
+
     return FormBuilder(
       key: _formKey,
       child: Column(

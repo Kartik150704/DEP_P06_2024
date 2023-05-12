@@ -1,15 +1,17 @@
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
+import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
+import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
-import '../data_tables/faculty/faculty_enrollments_data_table.dart';
-import '../data_tables/faculty/faculty_panel_teams_data_table.dart';
-import '../models/models.dart';
+// ignore: must_be_immutable
+class EvaluationSubmissionForm extends StatefulWidget {
+  final int totalMarks;
 
-class EvaluationSubmissionForm extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final StudentData1 studentdata;
   Function? updateEvaluation;
@@ -17,14 +19,63 @@ class EvaluationSubmissionForm extends StatelessWidget {
   EvaluationSubmissionForm({
     super.key,
     required this.studentdata,
+    // TODO: Make this required
+    this.totalMarks = 30,
     this.updateEvaluation,
   });
 
-  final _formKey = GlobalKey<FormBuilderState>();
+  @override
+  State<EvaluationSubmissionForm> createState() =>
+      _EvaluationSubmissionFormState();
+}
 
+class _EvaluationSubmissionFormState extends State<EvaluationSubmissionForm> {
+  int status = 0;
+
+  String? integerValidator(
+      String? value, String fieldName, int lowerLimit, int higherLimit) {
+    if (value == null) {
+      return 'Please enter valid $fieldName';
+    }
+
+    int? val = int.tryParse(value);
+    if (val == null) {
+      return 'Please enter valid $fieldName';
+    } else if (val > higherLimit || val < lowerLimit) {
+      return 'Please enter valid $fieldName';
+    }
+    return null;
+  }
+
+  InputDecoration getDecoration(String hintText) {
+    return InputDecoration(
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.black,
+        ),
+      ),
+      hintText: hintText,
+      hintStyle: const TextStyle(
+        color: Colors.grey,
+      ),
+    );
+  }
+
+  final _formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
-    Student student = studentdata.student;
+    if (status == 1) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Colors.black,
+        ),
+      );
+    } else if (status == 2) {
+      return const FormCustomText(
+        text: 'Marks uploaded successfully',
+      );
+    }
+
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -32,28 +83,43 @@ class EvaluationSubmissionForm extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          SizedBox(
-            width: 500,
-            child: CustomisedText(
-              text: 'Enter marks for ${student.name}',
-              color: Colors.black,
-              fontSize: 23,
-            ),
+          CustomisedText(
+            text: 'Enter the marks out of ${widget.totalMarks}',
+            color: const Color(0xff000000),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           FormBuilderTextField(
             name: 'studentMarks',
             cursorColor: Colors.black,
-            decoration: const InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              hintText: 'Marks',
-              hintStyle: TextStyle(
-                color: Colors.grey,
-              ),
+            decoration: getDecoration('Marks'),
+            validator: (value) {
+              return integerValidator(value, 'marks', 0, widget.totalMarks);
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const CustomisedText(
+            text: 'Enter the remarks',
+            color: Color(0xff000000),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          FormBuilderTextField(
+            name: 'remarks',
+            validator: FormBuilderValidators.required(
+              errorText: 'Please enter a remark',
             ),
+            cursorColor: Colors.black,
+            decoration: getDecoration('Remarks'),
+            // TODO: This is dummy, get it from parent page
+            controller: TextEditingController(),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           const SizedBox(
             height: 30,
@@ -62,61 +128,60 @@ class EvaluationSubmissionForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CustomisedButton(
-                text: 'Upload',
+                text: 'Submit',
                 onPressed: () async {
-                  print('Evaluation doc ${studentdata.evaluationObject.id}');
-                  print(studentdata.evaluationObject.type);
                   if (_formKey.currentState!.saveAndValidate()) {
+                    setState(() {
+                      status = 1;
+                    });
+
                     var data = _formKey.currentState!.value;
                     await FirebaseFirestore.instance
                         .collection('evaluations')
-                        .doc(studentdata.evaluationObject.id)
+                        .doc(widget.studentdata.evaluationObject.id)
                         .get()
                         .then((evaluationDoc) async {
                       if (evaluationDoc.exists) {
                         var doc = evaluationDoc.data() as Map<String, dynamic>;
-                        if (studentdata.evaluationObject.type == 'MidTerm') {
-                          var midsem_evaluation = doc['midsem_evaluation'];
-                          midsem_evaluation[
-                                  studentdata.evaluationObject.panelIndex][
-                              studentdata.evaluationObject.student
+                        if (widget.studentdata.evaluationObject.type ==
+                            'MidTerm') {
+                          var midsemEvaluation = doc['midsem_evaluation'];
+                          midsemEvaluation[widget
+                                  .studentdata.evaluationObject.panelIndex][
+                              widget.studentdata.evaluationObject.student
                                   .entryNumber] = data['studentMarks'];
                           await FirebaseFirestore.instance
                               .collection('evaluations')
-                              .doc(studentdata.evaluationObject.id)
+                              .doc(widget.studentdata.evaluationObject.id)
                               .update({
-                            'midsem_evaluation': midsem_evaluation,
+                            'midsem_evaluation': midsemEvaluation,
                           }).then((value) {
-                            // print(value);
-                            print('done');
                             Evaluation newEvaluation =
-                                studentdata.evaluationObject;
+                                widget.studentdata.evaluationObject;
                             newEvaluation.marks =
                                 double.parse(data['studentMarks']);
                             newEvaluation.done = true;
-                            updateEvaluation!(newEvaluation);
+                            widget.updateEvaluation!(newEvaluation);
                           });
-                        } else if (studentdata.evaluationObject.type ==
+                        } else if (widget.studentdata.evaluationObject.type ==
                             'EndTerm') {
-                          var endsem_evaluation = doc['endsem_evaluation'];
-                          endsem_evaluation[
-                                  studentdata.evaluationObject.panelIndex][
-                              studentdata.evaluationObject.student
+                          var endsemEvaluation = doc['endsem_evaluation'];
+                          endsemEvaluation[widget
+                                  .studentdata.evaluationObject.panelIndex][
+                              widget.studentdata.evaluationObject.student
                                   .entryNumber] = data['studentMarks'];
                           await FirebaseFirestore.instance
                               .collection('evaluations')
-                              .doc(studentdata.evaluationObject.id)
+                              .doc(widget.studentdata.evaluationObject.id)
                               .update({
-                            'endsem_evaluation': endsem_evaluation,
+                            'endsem_evaluation': endsemEvaluation,
                           }).then((value) {
-                            // print(value);
-                            print('done');
                             Evaluation newEvaluation =
-                                studentdata.evaluationObject;
+                                widget.studentdata.evaluationObject;
                             newEvaluation.marks =
                                 double.parse(data['studentMarks']);
                             newEvaluation.done = true;
-                            updateEvaluation!(newEvaluation);
+                            widget.updateEvaluation!(newEvaluation);
                           });
                         } else {
                           print(
@@ -127,8 +192,11 @@ class EvaluationSubmissionForm extends StatelessWidget {
                             'evaluation_submission_form.dart: evaluation doc does not exist');
                       }
                     });
+
+                    setState(() {
+                      status = 2;
+                    });
                   }
-                  Navigator.pop(context);
                 },
                 height: 50,
                 width: 70,
