@@ -1,12 +1,12 @@
 // ignore: file_names
 import 'dart:convert';
+import 'package:casper/comp/customised_overflow_text.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/form_custom_text.dart';
-import 'package:casper/utilities/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -32,6 +32,10 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
   void _onFormSubmitted() {
     _formKey.currentState?.save();
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        status = 1;
+      });
+
       final filePickerState = _formKey.currentState?.fields['file']
           as FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>;
       final formdata = _formKey.currentState?.value;
@@ -179,6 +183,10 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           }
         });
       }
+
+      setState(() {
+        status = 2;
+      });
     }
   }
 
@@ -218,7 +226,6 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getSession();
   }
@@ -236,21 +243,19 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
         ),
       );
     } else if (status == 2) {
-      return const FormCustomText(text: 'Faculty added successfully');
+      return const FormCustomText(text: 'Panels added successfully');
     }
 
     return FormBuilder(
       key: _formKey,
       child: Column(
         children: [
-          Text(
-            'Semester',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const SizedBox(
+            height: 10,
+          ),
+          const CustomisedText(
+            text: 'Semester',
+            color: Color(0xff000000),
           ),
           FormBuilderTextField(
             name: 'semester',
@@ -261,14 +266,9 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Year',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Year',
+            color: Color(0xff000000),
           ),
           FormBuilderTextField(
             name: 'year',
@@ -279,21 +279,19 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Enter the term',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
+          const CustomisedText(
+            text: 'Select the term',
+            color: Color(0xff000000),
           ),
           FormBuilderRadioGroup(
             name: 'term',
             activeColor: Colors.black,
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a term';
+              }
+              return null;
+            },
             options: const [
               // TODO: These are not static
               FormBuilderFieldOption(
@@ -307,48 +305,50 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
-          Text(
-            'Enter the course',
-            style: SafeGoogleFont(
-              'Ubuntu',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xff000000),
-            ),
+          const CustomisedText(
+            text: 'Select the course',
+            color: Colors.black,
           ),
-          FormBuilderTextField(
+          FormBuilderDropdown(
             name: 'course',
             validator: (value) {
-              if (['CP301', 'CP302', 'CP303'].contains(value)) {
-                return null;
+              if (value == null) {
+                return 'Please select a course';
               }
-              return 'enter a valid course. [CP301, CP302, CP303]';
+              return null;
             },
-          ),
-          const SizedBox(
-            height: 10,
+            items: List<String>.generate(3, (index) => 'CP30${index + 1}')
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(
             height: 10,
           ),
           const SizedBox(
             width: 400,
-            child: CustomisedText(
+            child: CustomisedOverflowText(
               text:
-                  'Format: \n panel1 email1, panel1 email2 ...\n panel2 email1, panel2 email2 ...\n ',
+                  '       Required format:\n          panel A email 1, panel A email 2, ...\n          panel B email 1, panel B email 2, ...\n          ..',
               color: Colors.black,
-              fontSize: 23,
+              fontSize: 20,
             ),
           ),
-          Container(
+          SizedBox(
             width: 200,
             height: 125,
             child: FormBuilderFilePicker(
               name: 'file',
               maxFiles: 1,
-              validator: FormBuilderValidators.required(errorText: 'Required'),
+              validator: FormBuilderValidators.required(
+                errorText: 'Please upload a CSV file',
+              ),
               allowedExtensions: const ['csv'],
               typeSelectors: [
                 TypeSelector(
@@ -372,15 +372,18 @@ class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                buttonText: 'Submit',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Submit',
                 onPressed: () => {
                   _onFormSubmitted(),
-                  Navigator.pop(context),
                 },
               ),
-              CustomButton(
-                buttonText: 'Cancel',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Cancel',
                 onPressed: () => {
                   Navigator.pop(context),
                 },

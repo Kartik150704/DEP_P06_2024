@@ -219,6 +219,15 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
                       CustomisedButton(
                         width: 200 * wfem,
                         height: 60,
+                        text: 'Download Transcripts',
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      CustomisedButton(
+                        width: 200 * wfem,
+                        height: 60,
                         text: 'Create Event',
                         onPressed: addEvent,
                       ),

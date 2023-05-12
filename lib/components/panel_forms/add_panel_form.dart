@@ -196,7 +196,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
               }
               return null;
             },
-            items: List<String>.generate(4, (index) => '${index + 1}')
+            items: List<String>.generate(3, (index) => '${index + 1}')
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
@@ -206,7 +206,7 @@ class _AddPanelFormState extends State<AddPanelForm> {
                 .toList(),
             onChanged: (value) {
               setState(() {
-                if (integerValidator(value, 'number between 1 and 4', 1, 4) ==
+                if (integerValidator(value, 'number between 1 and 3', 1, 4) ==
                     null) {
                   number_of_evaluators = int.parse(value!);
                 }

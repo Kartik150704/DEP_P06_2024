@@ -1,18 +1,13 @@
-import 'dart:math';
+// ignore: file_names
 import 'dart:convert';
-import 'package:casper/comp/customised_text.dart';
+import 'package:casper/comp/customised_overflow_text.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/form_custom_text.dart';
-import 'package:casper/utilities/utilites.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
-import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:multiselect/multiselect.dart';
-import 'package:csv/csv.dart';
 
 class AssignTeamsToPanelsFromCSVForm extends StatefulWidget {
   const AssignTeamsToPanelsFromCSVForm({
@@ -26,6 +21,7 @@ class AssignTeamsToPanelsFromCSVForm extends StatefulWidget {
 
 class _AssignTeamsToPanelsFromCSVFormState
     extends State<AssignTeamsToPanelsFromCSVForm> {
+  int status = 0;
   final _formKey = GlobalKey<FormBuilderState>();
   List<String> csvData = [];
   String currentSemester = '', currentYear = '';
@@ -54,12 +50,16 @@ class _AssignTeamsToPanelsFromCSVFormState
       return;
     }
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        status = 1;
+      });
+
       final filePickerState = _formKey.currentState?.fields['file']
           as FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>;
       final fileValue = filePickerState.value;
       if (fileValue != null && fileValue.isNotEmpty) {
         final file = fileValue.first as PlatformFile;
-        final bytes = await file.bytes;
+        final bytes = file.bytes;
         final csvString = utf8.decode(bytes!);
         final csvTable = csvString.split('\n');
         bool isCsvValid = true;
@@ -92,7 +92,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                 .get()
                 .then((teamValue) async {
               if (teamValue.docs.isEmpty) {
-                print('${assignmentData[1]} ${teamValue.docs.length}');
                 isCsvValid = false;
                 problems += 'Team ${assignmentData[1]} not found\n';
                 return;
@@ -172,6 +171,7 @@ class _AssignTeamsToPanelsFromCSVFormState
                 'Panel ${assignmentData[0]} and Team ${assignmentData[1]} combination invalid\n';
           }
           if (!isCsvValid) {
+            // ignore: use_build_context_synchronously
             Navigator.pop(context);
             showDialog(
                 context: context,
@@ -181,8 +181,6 @@ class _AssignTeamsToPanelsFromCSVFormState
                     content: FormCustomText(text: problems),
                   );
                 });
-            // int cnt = 1000000000;
-            // while (cnt-- > 0) {}
             return;
           }
         }
@@ -265,17 +263,17 @@ class _AssignTeamsToPanelsFromCSVFormState
               .then((value) async {
             if (value.docs.isNotEmpty) {
               for (var instructor in value.docs) {
-                int number_of_projects_as_panel =
+                int numberOfProjectsAsPanel =
                     instructor['number_of_projects_panel'];
-                var project_as_panel_ids = instructor['project_as_panel_ids'];
-                project_as_panel_ids.add(projectID);
-                number_of_projects_as_panel += 1;
+                var projectAsPanelIds = instructor['project_as_panel_ids'];
+                projectAsPanelIds.add(projectID);
+                numberOfProjectsAsPanel += 1;
                 await FirebaseFirestore.instance
                     .collection('instructors')
                     .doc(instructor.id)
                     .update({
-                  'number_of_projects_panel': number_of_projects_as_panel,
-                  'project_as_panel_ids': project_as_panel_ids
+                  'number_of_projects_panel': numberOfProjectsAsPanel,
+                  'project_as_panel_ids': projectAsPanelIds
                 });
               }
             }
@@ -287,12 +285,12 @@ class _AssignTeamsToPanelsFromCSVFormState
               .get()
               .then((projectValue) async {
             if (projectValue.exists) {
-              List panel_ids = projectValue['panel_ids'];
-              panel_ids.add(assignmentData[0]);
+              List panelIds = projectValue['panel_ids'];
+              panelIds.add(assignmentData[0]);
               await FirebaseFirestore.instance
                   .collection('projects')
                   .doc(projectID)
-                  .update({'panel_ids': panel_ids});
+                  .update({'panel_ids': panelIds});
             }
           });
 
@@ -303,13 +301,14 @@ class _AssignTeamsToPanelsFromCSVFormState
               .then((evaluationValue) async {
             if (evaluationValue.docs.isNotEmpty) {
               var evaluationDoc = evaluationValue.docs[0];
-              List assigned_panels = evaluationDoc['assigned_panels'];
-              assigned_panels.add(assignmentData[0]);
-              var dataToUpdate = {'assigned_panels': assigned_panels};
+              List assignedPanels = evaluationDoc['assigned_panels'];
+              assignedPanels.add(assignmentData[0]);
+              var dataToUpdate = {'assigned_panels': assignedPanels};
               var genericMap = {};
               for (var student in studentEntryNumbers) {
                 genericMap.addEntries([MapEntry(student, null)]);
               }
+              // ignore: non_constant_identifier_names
               List ArrayOfMap =
                   List.generate(evaluators.length, (index) => genericMap);
 
@@ -346,16 +345,16 @@ class _AssignTeamsToPanelsFromCSVFormState
                 .then((assignedPanelValue) async {
               if (assignedPanelValue.docs.isNotEmpty) {
                 var assignedPanelDoc = assignedPanelValue.docs[0];
-                List assigned_project_ids =
+                List assignedProjectIds =
                     assignedPanelDoc['assigned_project_ids'];
-                assigned_project_ids.add(projectID);
+                assignedProjectIds.add(projectID);
                 await FirebaseFirestore.instance
                     .collection('assigned_panel')
                     .doc(assignedPanelDoc.id)
                     .update({
-                  'assigned_project_ids': assigned_project_ids,
+                  'assigned_project_ids': assignedProjectIds,
                   'number_of_assigned_projects':
-                      assigned_project_ids.length.toString(),
+                      assignedProjectIds.length.toString(),
                 });
               }
             });
@@ -367,23 +366,25 @@ class _AssignTeamsToPanelsFromCSVFormState
                 .then((panelValue) {
               if (panelValue.docs.isNotEmpty) {
                 var panelDoc = panelValue.docs[0];
-                List assigned_project_ids = panelDoc['assigned_project_ids'];
-                assigned_project_ids.add(projectID);
+                List assignedProjectIds = panelDoc['assigned_project_ids'];
+                assignedProjectIds.add(projectID);
                 FirebaseFirestore.instance
                     .collection('panels')
                     .doc(panelDoc.id)
                     .update({
-                  'assigned_project_ids': assigned_project_ids,
+                  'assigned_project_ids': assignedProjectIds,
                   'number_of_assigned_projects':
-                      assigned_project_ids.length.toString(),
+                      assignedProjectIds.length.toString(),
                 });
               }
             });
           });
         }
       }
+      setState(() {
+        status = 2;
+      });
     }
-    Navigator.pop(context);
   }
 
   @override
@@ -395,6 +396,20 @@ class _AssignTeamsToPanelsFromCSVFormState
 
   @override
   Widget build(BuildContext context) {
+    if (status == 1) {
+      return const SizedBox(
+        width: 450,
+        height: 150,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+      );
+    } else if (status == 2) {
+      return const FormCustomText(text: 'Teams assigned successfully');
+    }
+
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -403,19 +418,23 @@ class _AssignTeamsToPanelsFromCSVFormState
             height: 10,
           ),
           const SizedBox(
-            width: 500,
-            child: CustomisedText(
-              text: 'Format: PanelID,TeamID...',
+            width: 400,
+            child: CustomisedOverflowText(
+              text:
+                  '       Required format:\n            panel id, team id\n            panel id, team id\n            ..',
               color: Colors.black,
-              fontSize: 23,
+              fontSize: 20,
             ),
           ),
-          Container(
+          SizedBox(
             width: 200,
             height: 125,
             child: FormBuilderFilePicker(
               name: 'file',
               maxFiles: 1,
+              validator: FormBuilderValidators.required(
+                errorText: 'Please upload a CSV file',
+              ),
               allowedExtensions: const ['csv'],
               typeSelectors: [
                 TypeSelector(
@@ -439,25 +458,18 @@ class _AssignTeamsToPanelsFromCSVFormState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                buttonText: 'Submit',
-                enabled: currentSemester != '' && currentYear != '',
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const Center(
-                          child: SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: CircularProgressIndicator()),
-                        );
-                      });
-                  _onFormSubmitted();
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Submit',
+                onPressed: () => {
+                  _onFormSubmitted(),
                 },
               ),
-              CustomButton(
-                buttonText: 'Cancel',
+              CustomisedButton(
+                width: 70,
+                height: 50,
+                text: 'Cancel',
                 onPressed: () => {
                   Navigator.pop(context),
                 },
