@@ -1,12 +1,15 @@
 import 'package:casper/comp/add_event_form.dart';
+import 'package:casper/comp/customised_text.dart';
 import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_sidebar_button.dart';
+import 'package:casper/components/downloadMarks.dart';
 import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_criteria_management_page.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_enrollments_page.dart';
 import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_panel_management_page.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_panel_teams_page.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_panels_page.dart';
 import 'package:casper/views/shared/project_page/project_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FacultyHomePage extends StatefulWidget {
@@ -161,6 +164,17 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
     );
   }
 
+  void downloadMarks() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const CustomisedText(text: 'Download Marks'),
+            content: DownloadMarksForm(),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -220,7 +234,9 @@ class _FacultyHomePageState extends State<FacultyHomePage> {
                         width: 200 * wfem,
                         height: 60,
                         text: 'Download Transcripts',
-                        onPressed: () {},
+                        onPressed: () {
+                          downloadMarks();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
