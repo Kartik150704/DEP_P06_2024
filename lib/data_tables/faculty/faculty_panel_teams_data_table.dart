@@ -209,6 +209,10 @@ class _FacultyPanelTeamsDataTableState
 
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 1440;
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
+        baseWidth;
     if (widget.assignedTeams.isEmpty) {
       return DataNotFound(message: 'No teams found');
     }
@@ -216,10 +220,19 @@ class _FacultyPanelTeamsDataTableState
       'Team ID',
       'Student Name',
       'Student Entry Number',
+      'Term',
       (widget.actionType == 1 ? 'Action' : 'Evaluation'),
     ];
     if (loading) {
-      return const LoadingPage();
+      return SizedBox(
+        width: double.infinity,
+        height: 500 * wfem,
+        child: const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ),
+        ),
+      );
     }
     return Theme(
       data: Theme.of(context).copyWith(
@@ -269,6 +282,11 @@ class _FacultyPanelTeamsDataTableState
         ),
         onSort: onSort,
       ),
+      DataColumn(
+        label: CustomisedText(
+          text: columns[4],
+        ),
+      ),
     ];
 
     return headings;
@@ -298,6 +316,14 @@ class _FacultyPanelTeamsDataTableState
               SizedBox(
                 child: CustomisedText(
                   text: data.student.entryNumber,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            DataCell(
+              SizedBox(
+                child: CustomisedText(
+                  text: data.type,
                   color: Colors.black,
                 ),
               ),
