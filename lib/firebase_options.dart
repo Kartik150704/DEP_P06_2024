@@ -21,7 +21,10 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
@@ -50,20 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAJidSq67JUGZcpjtSL5aw7p8mbTUPzyq0',
-    appId: '1:947103261582:web:955045bf7df6bd58f4fadf',
-    messagingSenderId: '947103261582',
-    projectId: 'caspertest-b247b',
-    authDomain: 'caspertest-b247b.firebaseapp.com',
-    storageBucket: 'caspertest-b247b.appspot.com',
-    measurementId: 'G-Y9HCBEL5DL',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBYC0-3RWRGgNYA9fT9tvEltEP6djsO4CQ',
-    appId: '1:947103261582:android:f9e798ad507eb508f4fadf',
-    messagingSenderId: '947103261582',
-    projectId: 'caspertest-b247b',
-    storageBucket: 'caspertest-b247b.appspot.com',
+    apiKey: 'AIzaSyBn2NZ7piUfROnRjEivT53sr4iEyz6YUp4',
+    appId: '1:360049245094:web:313c57430bae167cdaad67',
+    messagingSenderId: '360049245094',
+    projectId: 'casperbackup-c1093',
+    authDomain: 'casperbackup-c1093.firebaseapp.com',
+    storageBucket: 'casperbackup-c1093.appspot.com',
+    measurementId: 'G-Y9GF88SHX0',
   );
 }

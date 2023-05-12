@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_criteria_management_data_table.dart';
 import 'package:casper/models/models.dart';
@@ -32,24 +33,85 @@ class _CoordinatorCriteriaManagementPageState
     extends State<CoordinatorCriteriaManagementPage> {
   bool loading = true, searching = false;
   List<EvaluationCriteria> evaluationCriterias = [];
-  final courseController = TextEditingController(text: 'CP302'),
-      yearSmesterController = TextEditingController(text: '2023-1');
+  final courseController = TextEditingController(text: 'CP303'),
+      yearSmesterController = TextEditingController(text: '2022-1');
+  String course = 'CP303', yearSemester = '2022-1';
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
+  List<EvaluationCriteria> cachedEvaluationCriterias = [];
 
   // TODO: Implement this method
 
-  void getCriteria() {
+  bool updateSearchParameters() {
+    setState(() {
+      course = courseController.text.toString().toLowerCase().trim();
+      yearSemester = yearSmesterController.text.toString().toLowerCase().trim();
+    });
+    if (course == '' || yearSemester == '') {
+      return false;
+    }
+    return true;
+  }
+
+  void search() {
+    print('now searching');
+    setState(() {
+      searching = true;
+    });
+    if (!updateSearchParameters()) {
+      setState(() {
+        searching = false;
+      });
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              title: FormCustomText(
+                text: 'Course and Year Semester cannot be empty',
+              ),
+            );
+          });
+      return;
+    }
     setState(() {
       evaluationCriterias.clear();
     });
-    FirebaseFirestore.instance
+    print(cachedEvaluationCriterias.length);
+    for (EvaluationCriteria evaluationCriteria in cachedEvaluationCriterias) {
+      bool flag = true;
+      if (!evaluationCriteria.course.toLowerCase().contains(course)) {
+        flag = false;
+      }
+      print(flag);
+      String tempSemYear =
+          evaluationCriteria.year + '-' + evaluationCriteria.semester;
+      if (!tempSemYear.toLowerCase().contains(yearSemester)) {
+        flag = false;
+      }
+      print(flag);
+      if (flag) {
+        setState(() {
+          searching = false;
+          evaluationCriterias.add(evaluationCriteria);
+        });
+      }
+    }
+    setState(() {
+      searching = false;
+    });
+  }
+
+  Future<void> getCriteria() async {
+    setState(() {
+      evaluationCriterias = [];
+    });
+    await FirebaseFirestore.instance
         .collection('evaluation_criteria')
         .get()
-        .then((value) {
+        .then((value) async {
       for (var doc in value.docs) {
         setState(() {
-          evaluationCriterias.add(EvaluationCriteria(
+          cachedEvaluationCriterias.add(EvaluationCriteria(
               id: doc.id,
               weeksToConsider: int.parse(doc['weeksToConsider']),
               course: doc['course'],
@@ -65,21 +127,48 @@ class _CoordinatorCriteriaManagementPageState
         });
         setState(() {
           loading = false;
-          searching = false;
         });
       }
-      setState(() {
-        loading = false;
-        searching = false;
-      });
     });
+    print(evaluationCriterias.length);
+    print('got criteria');
+    setState(() {
+      loading = false;
+      print(cachedEvaluationCriterias.length);
+    });
+    search();
+  }
+
+  String currentSemester = '', currentYear = '';
+
+  void getSession() async {
+    await FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          currentSemester = doc['semester'];
+          currentYear = doc['year'];
+          yearSmesterController.text = '$currentYear-$currentSemester';
+        });
+      } else {
+        print('faculty_panels_page.dart: No current session found');
+      }
+    });
+    print('got session');
+    await getCriteria();
+    search();
   }
 
   @override
   void initState() {
     super.initState();
     evaluationCriterias = [];
-    getCriteria();
+    loading = true;
+    searching = true;
+    getSession();
   }
 
   @override
@@ -165,7 +254,9 @@ class _CoordinatorCriteriaManagementPageState
                               color: Colors.black,
                               size: 29,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              search();
+                            },
                           ),
                         ),
                       ],
