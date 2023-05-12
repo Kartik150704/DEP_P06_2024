@@ -84,7 +84,7 @@ class _FacultyPanelTeamsDataTableState
     });
   }
 
-  void uploadEvaluation(StudentData1 studentData) {
+  void uploadEvaluation(StudentData1 studentData, int marks) {
     // print(studentData.evaluationObject.id);
     showDialog(
       context: context,
@@ -94,6 +94,7 @@ class _FacultyPanelTeamsDataTableState
             child: EvaluationSubmissionForm(
               studentdata: studentData,
               updateEvaluation: updateEvaluation,
+              totalMarks: marks,
             ),
           ),
         );
@@ -322,6 +323,9 @@ class _FacultyPanelTeamsDataTableState
                               width: 50,
                               onPressed: () => uploadEvaluation(
                                 data,
+                                data.evaluationObject.type == 'MidTerm'
+                                    ? evaluationCriteria.midtermPanel
+                                    : evaluationCriteria.endtermPanel,
                               ),
                               elevation: 0,
                             )
@@ -346,7 +350,12 @@ class _FacultyPanelTeamsDataTableState
                           text: 'Upload',
                           height: 37,
                           width: double.infinity,
-                          onPressed: () => uploadEvaluation(data),
+                          onPressed: () => uploadEvaluation(
+                            data,
+                            (data.evaluationObject.type == 'MidTerm'
+                                ? evaluationCriteria.midtermPanel
+                                : evaluationCriteria.endtermPanel),
+                          ),
                           elevation: 0,
                         ))),
             ),
