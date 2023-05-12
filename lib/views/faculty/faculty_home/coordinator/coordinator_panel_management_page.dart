@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/components/panel_forms/add_panel_form.dart';
 import 'package:casper/components/panel_forms/add_teams_form.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_panel_management_data_table.dart';
@@ -39,10 +40,96 @@ class _CoordinatorPanelManagementPageState
   final panelIdController = TextEditingController(),
       evaluatorNameController = TextEditingController(),
       termController = TextEditingController(),
-      courseController = TextEditingController(text: 'CP302'),
-      yearSemesterController = TextEditingController(text: '2023-1');
+      courseController = TextEditingController(text: 'CP303'),
+      yearSemesterController = TextEditingController(text: '2022-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
+  late final cachedAssignedPanels;
+  String? panelId, evaluatorName, term, course, yearSemester;
+
+  bool updateSearchParameters() {
+    setState(() {
+      panelId = panelIdController.text.toString().toLowerCase().trim();
+      evaluatorName =
+          evaluatorNameController.text.toString().toLowerCase().trim();
+      term = termController.text.toString().toLowerCase().trim();
+      course = courseController.text.toString().toLowerCase().trim();
+      yearSemester =
+          yearSemesterController.text.toString().toLowerCase().trim();
+    });
+    if (course == '' || yearSemester == '') {
+      return false;
+    }
+    return true;
+  }
+
+  void search() {
+    if (!updateSearchParameters()) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+                title: FormCustomText(
+              text: 'Course and Year-Semester cannot be empty.',
+            ));
+          });
+      return;
+    }
+    setState(() {
+      searching = true;
+      assignedPanels = [];
+    });
+
+    for (AssignedPanel panel in cachedAssignedPanels) {
+      bool flag = true;
+      if (panelId != null && panelId != '') {
+        String temp = panel.id.toString().trim().toLowerCase();
+        flag = flag && temp.contains(panelId!);
+      }
+      // print(flag);
+      if (evaluatorName != null && evaluatorName != '') {
+        List<Faculty> temp = panel.panel.evaluators;
+        bool internalflag = false;
+        for (Faculty faculty in temp) {
+          String temp2 = faculty.name.toString().trim().toLowerCase();
+          internalflag = internalflag || temp2.contains(evaluatorName!);
+        }
+        flag = flag && internalflag;
+      }
+      // print(flag);
+
+      if (term != null && term != '') {
+        String temp = panel.term.toString().trim().toLowerCase();
+        flag = flag && temp.contains(term!);
+      }
+      // print(flag);
+
+      if (course != null && course != '') {
+        String temp = panel.course.toString().trim().toLowerCase();
+        flag = flag && temp.contains(course!);
+      }
+      // print(flag);
+
+      if (yearSemester != null && yearSemester != '') {
+        String sem = panel.semester.toString().trim().toLowerCase();
+        String year = panel.year.toString().trim().toLowerCase();
+        String temp = '$year-$sem';
+        flag = flag && temp.contains(yearSemester!);
+      }
+      // print(flag);
+
+      if (flag) {
+        setState(() {
+          assignedPanels.add(panel);
+          searching = false;
+        });
+      }
+    }
+    print(assignedPanels.length);
+    setState(() {
+      searching = false;
+    });
+  }
 
   void confirmAction() {
     showDialog(
@@ -59,12 +146,15 @@ class _CoordinatorPanelManagementPageState
     );
   }
 
-  void getPanels() {
+  void getPanels() async {
     setState(() {
       assignedPanels.clear();
     });
 
-    FirebaseFirestore.instance.collection('assigned_panel').get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('assigned_panel')
+        .get()
+        .then((value) {
       for (var doc in value.docs) {
         setState(() {
           assignedPanels.add(
@@ -97,17 +187,39 @@ class _CoordinatorPanelManagementPageState
           );
         });
       }
-      setState(() {
-        loading = false;
-        searching = false;
-      });
     });
+    setState(() {
+      loading = false;
+      cachedAssignedPanels = assignedPanels;
+    });
+    search();
+  }
+
+  String currentSemester = '', currentYear = '';
+
+  void getSession() async {
+    await FirebaseFirestore.instance
+        .collection('current_session')
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        var doc = value.docs[0];
+        setState(() {
+          currentSemester = doc['semester'];
+          currentYear = doc['year'];
+          yearSemesterController.text = '$currentYear-$currentSemester';
+        });
+      } else {
+        print('faculty_panels_page.dart: No current session found');
+      }
+    });
+    getPanels();
   }
 
   @override
   void initState() {
     super.initState();
-    getPanels();
+    getSession();
   }
 
   @override
@@ -227,7 +339,9 @@ class _CoordinatorPanelManagementPageState
                               color: Colors.black,
                               size: 29,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              search();
+                            },
                           ),
                         ),
                       ],
