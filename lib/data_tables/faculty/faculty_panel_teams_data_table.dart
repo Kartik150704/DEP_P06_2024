@@ -1,9 +1,9 @@
-import 'package:casper/comp/data_not_found.dart';
+import 'package:casper/components/data_not_found.dart';
 import 'package:casper/components/confirm_action.dart';
-import 'package:casper/components/customised_button.dart';
-import 'package:casper/comp/customised_overflow_text.dart';
-import 'package:casper/comp/customised_text.dart';
-import 'package:casper/components/evaluation_submission_form.dart';
+import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components/customised_overflow_text.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components/add_marks_panel_form.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';

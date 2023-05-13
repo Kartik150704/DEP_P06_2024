@@ -1,6 +1,5 @@
+import 'package:casper/utilities/utilites.dart';
 import 'package:flutter/material.dart';
-
-import '../utilities/utilites.dart';
 
 class FormCustomText extends StatelessWidget {
   final String text;

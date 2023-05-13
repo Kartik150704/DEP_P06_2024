@@ -1,4 +1,4 @@
-import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

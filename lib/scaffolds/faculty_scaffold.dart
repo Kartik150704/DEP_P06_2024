@@ -1,9 +1,8 @@
-import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/views/faculty/faculty_offerings/faculty_offerings_page.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_home_page.dart';
-import 'package:casper/views/faculty/faculty_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

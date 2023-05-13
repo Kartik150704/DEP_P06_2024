@@ -1,25 +1,24 @@
 import 'dart:convert';
-import 'package:casper/comp/customised_overflow_text.dart';
-import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/form_custom_text.dart';
+import 'package:casper/components/customised_overflow_text.dart';
+import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components_new/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-class AddFacultyForm extends StatefulWidget {
-  const AddFacultyForm({
+class AddStudentForm extends StatefulWidget {
+  const AddStudentForm({
     super.key,
   });
 
   @override
-  State<AddFacultyForm> createState() => _AddFacultyFormState();
+  State<AddStudentForm> createState() => _AddStudentFormState();
 }
 
-class _AddFacultyFormState extends State<AddFacultyForm> {
+class _AddStudentFormState extends State<AddStudentForm> {
   int status = 0;
-  bool loading = false;
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '';
   List<String> csvData = [];
@@ -39,6 +38,7 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
     return null;
   }
 
+  // TODO: Add checks
   Future<void> _onFormSubmitted() async {
     setState(() {
       status = 1;
@@ -50,42 +50,43 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
           as FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>;
       final fileValue = filePickerState.value;
       if (fileValue != null && fileValue.isNotEmpty) {
+        // Navigator.pop(context);
         final file = fileValue.first as PlatformFile;
-        final bytes = await file.bytes;
+        final bytes = file.bytes;
         final csvString = utf8.decode(bytes!);
         final csvTable = csvString.split('\n');
+
         setState(() {
           csvData = csvTable;
         });
 
         for (int i = 0; i < csvData.length; i++) {
-          List<String> instructor = csvData[i].split(',');
-          for (int j = 0; j < instructor.length; j++) {
-            instructor[j] = instructor[j].trim();
+          List<String> student = csvData[i].split(',');
+          for (int j = 0; j < student.length; j++) {
+            student[j] = student[j].trim();
           }
 
           UserCredential result = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
-                  email: instructor[2], password: instructor[3]);
+                  email: student[2], password: student[3]);
           User? user = result.user;
           await FirebaseFirestore.instance.collection('users').add({
             'uid': user!.uid,
-            'name': '${instructor[0]} ${instructor[1]}',
-            'role': 'supervisor',
+            'name': '${student[0]} ${student[1]}',
+            'role': 'student',
           });
 
-          await FirebaseFirestore.instance.collection('instructors').add({
-            'name': '${instructor[0]} ${instructor[1]}',
-            'email': instructor[2],
+          await FirebaseFirestore.instance.collection('student').add({
+            'name': '${student[0]} ${student[1]}',
+            'id': student[3],
             'uid': user.uid,
+            // TODO: Remove hardcoding
+            'cgpa': '8.66',
             'department': 'CS',
             'contact': '1234567890',
-            'number_of_projects_panel': 0,
-            'number_of_projects_as_head': 0,
-            'panel_ids': List.generate(0, (index) => null),
-            'project_as_head_ids': List.generate(0, (index) => null),
-            'project_as_panel_ids': List.generate(0, (index) => null),
+            'proj_id': List.generate(5, (index) => null),
           });
+
           setState(() {
             status = 2;
           });
@@ -111,7 +112,7 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
         ),
       );
     } else if (status == 2) {
-      return const FormCustomText(text: 'Faculty added successfully');
+      return const FormCustomText(text: 'Students added successfully');
     }
 
     return FormBuilder(
@@ -122,10 +123,10 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
             height: 10,
           ),
           const SizedBox(
-            width: 470,
+            width: 500,
             child: CustomisedOverflowText(
               text:
-                  '       Required format:\n          first name, last name, email, password\n          first name, last name, email, password\n          ..',
+                  '       Required format:\n          first name, last name, email, entry number\n          first name, last name, email, entry number\n          ..',
               color: Colors.black,
               fontSize: 20,
             ),
@@ -151,9 +152,13 @@ class _AddFacultyFormState extends State<AddFacultyForm> {
                   type: FileType.custom,
                   selector: Row(
                     children: const <Widget>[
-                      Icon(Icons.add_circle),
+                      Icon(
+                        Icons.add_circle,
+                      ),
                       Padding(
-                        padding: EdgeInsets.only(left: 35),
+                        padding: EdgeInsets.only(
+                          left: 35,
+                        ),
                         child: Text("Upload CSV"),
                       ),
                     ],

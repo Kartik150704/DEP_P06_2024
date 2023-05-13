@@ -1,8 +1,8 @@
-import 'package:casper/comp/add_event_form.dart';
-import 'package:casper/comp/customised_text.dart';
-import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/add_event_form.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components_new/customised_button.dart';
 import 'package:casper/components/customised_sidebar_button.dart';
-import 'package:casper/components/downloadMarks.dart';
+import 'package:casper/components/donwload_marks.dart';
 import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_criteria_management_page.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_enrollments_page.dart';
 import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_panel_management_page.dart';

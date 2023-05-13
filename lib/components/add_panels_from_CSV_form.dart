@@ -1,9 +1,9 @@
 // ignore: file_names
 import 'dart:convert';
-import 'package:casper/comp/customised_overflow_text.dart';
-import 'package:casper/comp/customised_text.dart';
-import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/form_custom_text.dart';
+import 'package:casper/components/customised_overflow_text.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components_new/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +11,21 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class CreatePanelFromCSVForm extends StatefulWidget {
+class CreatePanelsFromCSVForm extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final refresh;
 
-  const CreatePanelFromCSVForm({
+  const CreatePanelsFromCSVForm({
     super.key,
     required this.refresh,
   });
 
   @override
-  State<CreatePanelFromCSVForm> createState() => _CreatePanelFromCSVFormState();
+  State<CreatePanelsFromCSVForm> createState() =>
+      _CreatePanelsFromCSVFormState();
 }
 
-class _CreatePanelFromCSVFormState extends State<CreatePanelFromCSVForm> {
+class _CreatePanelsFromCSVFormState extends State<CreatePanelsFromCSVForm> {
   int status = 0;
   final _formKey = GlobalKey<FormBuilderState>();
   String selectedEvent = '', semester = '', year = '';

@@ -1,4 +1,4 @@
-import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:casper/views/admin/admin_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';

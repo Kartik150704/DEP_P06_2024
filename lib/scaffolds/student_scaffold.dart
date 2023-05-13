@@ -1,9 +1,8 @@
-import 'package:casper/comp/customised_text.dart';
+import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/customised_text_button.dart';
 import 'package:casper/utilities/utilites.dart';
 import 'package:casper/views/student/student_home_page.dart';
 import 'package:casper/views/student/student_offerings/student_offerings.dart';
-import 'package:casper/views/student/student_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ class _StudentScaffoldState extends State<StudentScaffold> {
   String userName = '';
   dynamic displayPage;
   final appBarOptions = [
-    // 'PROFILE',
     'HOME',
     'OFFERINGS',
   ];
@@ -37,11 +35,6 @@ class _StudentScaffoldState extends State<StudentScaffold> {
   void selectOption(option) {
     setState(() {
       switch (option) {
-        // case 0:
-        //   displayPage = StudentProfilePage(
-        //     uid: FirebaseAuth.instance.currentUser?.uid,
-        //   );
-        //   break;
         case 0:
           displayPage = StudentHomePage(
             selectOption: selectOption,

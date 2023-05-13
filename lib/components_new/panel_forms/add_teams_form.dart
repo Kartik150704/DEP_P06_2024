@@ -1,19 +1,11 @@
-import 'dart:math';
 import 'dart:convert';
-import 'package:casper/comp/customised_text.dart';
-import 'package:casper/utilities/utilites.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components_new/customised_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
-import 'package:casper/components/button.dart';
+import 'package:casper/components_new/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:multiselect/multiselect.dart';
-import 'package:csv/csv.dart';
-
-import '../customised_button.dart';
 
 class CreateTeamsForm extends StatefulWidget {
   const CreateTeamsForm({

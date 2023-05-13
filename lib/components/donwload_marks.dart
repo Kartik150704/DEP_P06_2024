@@ -1,16 +1,12 @@
-import 'package:casper/comp/customised_text.dart';
-import 'package:casper/components/customised_button.dart';
-import 'package:casper/components/form_custom_text.dart';
-import 'package:casper/utilities/utilites.dart';
+import 'package:casper/components/customised_text.dart';
+import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components_new/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:casper/components/text_field.dart';
-import 'package:casper/components/button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:multiselect/multiselect.dart';
+
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 class DownloadMarksForm extends StatefulWidget {
@@ -174,7 +170,7 @@ class _DownloadMarksFormState extends State<DownloadMarksForm> {
                           .collection('evaluation_criteria')
                           .where('semester', isEqualTo: semester)
                           .where('year', isEqualTo: year)
-                          .where('course', isEqualTo: data!['type'])
+                          .where('course', isEqualTo: data['type'])
                           .get()
                           .then((value) {
                         if (value.docs.isNotEmpty) {
