@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/form_custom_text.dart';
@@ -13,6 +12,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components/assign_teams_to_panels_from_CSV_form.dart';
 import 'package:csv/csv.dart';
+
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 class CoordinatorPanelManagementPage extends StatefulWidget {

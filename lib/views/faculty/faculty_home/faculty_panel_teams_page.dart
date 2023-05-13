@@ -1,12 +1,10 @@
 import 'dart:math';
-
 import 'package:casper/components_new/add_teams_form.dart';
 import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

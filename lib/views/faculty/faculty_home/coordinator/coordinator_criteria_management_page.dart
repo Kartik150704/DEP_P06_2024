@@ -1,16 +1,13 @@
 import 'dart:math';
-
+import 'package:casper/components/add_criteria_form.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_criteria_management_data_table.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/models/seeds.dart';
 import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../components/add_criteria_form.dart';
 
 class CoordinatorCriteriaManagementPage extends StatefulWidget {
   final String userRole;
@@ -40,8 +37,6 @@ class _CoordinatorCriteriaManagementPageState
       verticalScrollController = ScrollController();
   List<EvaluationCriteria> cachedEvaluationCriterias = [];
 
-  // TODO: Implement this method
-
   bool updateSearchParameters() {
     setState(() {
       course = courseController.text.toString().toLowerCase().trim();
@@ -54,7 +49,6 @@ class _CoordinatorCriteriaManagementPageState
   }
 
   void search() {
-    print('now searching');
     setState(() {
       searching = true;
     });
@@ -76,19 +70,16 @@ class _CoordinatorCriteriaManagementPageState
     setState(() {
       evaluationCriterias.clear();
     });
-    print(cachedEvaluationCriterias.length);
     for (EvaluationCriteria evaluationCriteria in cachedEvaluationCriterias) {
       bool flag = true;
       if (!evaluationCriteria.course.toLowerCase().contains(course)) {
         flag = false;
       }
-      print(flag);
       String tempSemYear =
-          evaluationCriteria.year + '-' + evaluationCriteria.semester;
+          '${evaluationCriteria.year}-${evaluationCriteria.semester}';
       if (!tempSemYear.toLowerCase().contains(yearSemester)) {
         flag = false;
       }
-      print(flag);
       if (flag) {
         setState(() {
           searching = false;
@@ -130,12 +121,10 @@ class _CoordinatorCriteriaManagementPageState
         });
       }
     });
-    print(evaluationCriterias.length);
-    print('got criteria');
     setState(() {
       loading = false;
-      print(cachedEvaluationCriterias.length);
     });
+
     search();
   }
 
@@ -354,38 +343,7 @@ class _CoordinatorCriteriaManagementPageState
                     color: Colors.black,
                     size: 35,
                   ),
-                  // TODO: Implement this method
                   onPressed: () {
-                    // FirebaseFirestore.instance
-                    //     .collection('instructors')
-                    //     .get()
-                    //     .then((value) {
-                    //   for (var item in value.docs) {
-                    //     FirebaseFirestore.instance
-                    //         .collection('instructors')
-                    //         .doc(item.id)
-                    //         .update({
-                    //       'number_of_projects_as_head': '0',
-                    //       'project_as_head_ids': [],
-                    //     });
-                    //   }
-                    // });
-                    //
-                    // FirebaseFirestore.instance
-                    //     .collection('student')
-                    //     .get()
-                    //     .then((value) {
-                    //   for (var item in value.docs) {
-                    //     FirebaseFirestore.instance
-                    //         .collection('student')
-                    //         .doc(item.id)
-                    //         .update({
-                    //       'proj_id': [null, null, null, null, null],
-                    //     });
-                    //   }
-                    // });
-
-                    //TODO: uncomment
                     showDialog(
                       context: context,
                       builder: (context) {

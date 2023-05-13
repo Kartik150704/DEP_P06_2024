@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/search_text_field.dart';

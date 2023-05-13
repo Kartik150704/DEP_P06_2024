@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:casper/components/alert_message.dart';
 import 'package:casper/components/add_project_form.dart';
 import 'package:casper/components/customised_text.dart';

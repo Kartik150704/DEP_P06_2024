@@ -6,7 +6,6 @@ import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/add_marks_panel_form.dart';
 import 'package:casper/models/models.dart';
 import 'package:casper/models/seeds.dart';
-import 'package:casper/views/shared/loading_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

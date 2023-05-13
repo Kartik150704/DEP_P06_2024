@@ -9,7 +9,6 @@ import 'package:casper/views/faculty/faculty_home/coordinator/coordinator_panel_
 import 'package:casper/views/faculty/faculty_home/faculty_panel_teams_page.dart';
 import 'package:casper/views/faculty/faculty_home/faculty_panels_page.dart';
 import 'package:casper/views/shared/project_page/project_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FacultyHomePage extends StatefulWidget {
