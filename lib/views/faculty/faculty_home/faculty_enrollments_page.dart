@@ -24,9 +24,7 @@ class FacultyEnrollmentsPage extends StatefulWidget {
 
 class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
   dynamic displayPage;
-  bool ischecked = false,
-      loading = true,
-      searching = false;
+  bool ischecked = false, loading = true, searching = false;
   final List<Enrollment> enrollments = [];
   String? projectTitle, teamId, studentName, courseCode, yearSemester;
   final projectTitleController = TextEditingController(),
@@ -36,7 +34,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       yearSemesterController = TextEditingController(text: '1999-1');
   final horizontalScrollController = ScrollController(),
       verticalScrollController = ScrollController();
-
+  late EvaluationCriteria evaluationCriteria;
   String currentYearSemester = '';
 
   void getSupervisorEnrollments() async {
@@ -49,7 +47,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then(
-          (snapshot) async {
+      (snapshot) async {
         if (snapshot.docs.isEmpty ||
             snapshot.docs[0]['project_as_head_ids'].length == 0) {
           setState(() {
@@ -62,12 +60,12 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
         await FirebaseFirestore.instance
             .collection('projects')
             .where(
-          FieldPath.documentId,
-          whereIn: snapshot.docs[0]['project_as_head_ids'],
-        )
+              FieldPath.documentId,
+              whereIn: snapshot.docs[0]['project_as_head_ids'],
+            )
             .get()
             .then(
-              (value) {
+          (value) {
             for (var doc in value.docs) {
               FirebaseFirestore.instance
                   .collection('evaluations')
@@ -104,7 +102,6 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
               }
               // print('here2');
 
-
               if (studentName != null) {
                 bool flag = false;
                 for (String name in val['student_name']) {
@@ -139,9 +136,8 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
               Map studentNames = {};
               var temp = List<MapEntry<String, String>>.generate(
                 val['student_name'].length,
-                    (index) =>
-                    MapEntry(
-                        val['student_ids'][index], val['student_name'][index]),
+                (index) => MapEntry(
+                    val['student_ids'][index], val['student_name'][index]),
               );
               // print(temp);
               studentNames.addEntries(temp);
@@ -150,7 +146,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   .where('project_id', isEqualTo: doc.id)
                   .get()
                   .then(
-                    (value) {
+                (value) {
                   if (value.docs.length == 0) {
                     setState(() {
                       loading = false;
@@ -160,15 +156,15 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                   }
                   var evaludationDoc = value.docs[0];
                   List<String> studentIds =
-                  evaludationDoc['weekly_evaluations'][0].keys.toList();
+                      evaludationDoc['weekly_evaluations'][0].keys.toList();
                   for (String studentId in studentIds) {
                     for (int week = 0;
-                    week <
-                        int.tryParse(
-                            evaludationDoc['number_of_evaluations'])!;
-                    week++) {
+                        week <
+                            int.tryParse(
+                                evaludationDoc['number_of_evaluations'])!;
+                        week++) {
                       if (evaludationDoc['weekly_evaluations'][week]
-                      [studentId] ==
+                              [studentId] ==
                           null) {
                         continue;
                       }
@@ -176,9 +172,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         id: '1',
                         marks: double.tryParse(
                             evaludationDoc['weekly_evaluations'][week]
-                            [studentId])!,
+                                [studentId])!,
                         remarks: evaludationDoc['weekly_comments'][week]
-                        [studentId],
+                            [studentId],
                         type: 'week-${week + 1}',
                         student: Student(
                             id: studentId,
@@ -204,7 +200,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         marks: double.tryParse(
                             evaludationDoc['midsem_supervisor'][studentId])!,
                         remarks: evaludationDoc['midsem_panel_comments'][ii]
-                        [studentId],
+                            [studentId],
                         type: 'midterm-supervisor',
                         student: Student(
                             id: studentId,
@@ -225,7 +221,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                         marks: double.tryParse(
                             evaludationDoc['endsem_supervisor'][studentId])!,
                         remarks: evaludationDoc['endsem_panel_comments'][ii]
-                        [studentId],
+                            [studentId],
                         type: 'endterm-supervisor',
                         student: Student(
                             id: studentId,
@@ -269,14 +265,13 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                           numberOfMembers: val['student_ids'].length,
                           students: List<Student>.generate(
                             val['student_ids'].length,
-                                (index) =>
-                                Student(
-                                  id: val['student_ids'][index],
-                                  name: val['student_name'][index],
-                                  entryNumber: val['student_ids'][index],
-                                  email:
+                            (index) => Student(
+                              id: val['student_ids'][index],
+                              name: val['student_name'][index],
+                              entryNumber: val['student_ids'][index],
+                              email:
                                   '${val['student_ids'][index]}@iitrpr.ac.in',
-                                ),
+                            ),
                           ),
                         ),
                         supervisorEvaluations: supervisorEvaluations,
@@ -302,8 +297,41 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
     // print(enrollments.length);
   }
 
-  void getSession() {
-    FirebaseFirestore.instance
+  Future<void> getEvaluationCriteria() async {
+    EvaluationCriteria evalcrit;
+    await FirebaseFirestore.instance
+        .collection('evaluation_criteria')
+        .where('course', isEqualTo: courseCodeController.text.trim())
+        .where('semester', isEqualTo: currentYearSemester.split('-')[1])
+        .where('year', isEqualTo: currentYearSemester.split('-')[0])
+        .get()
+        .then((evaluationCriteriaDocs) async {
+      var evaluationCriteriaDoc = evaluationCriteriaDocs.docs[0];
+      evalcrit = EvaluationCriteria(
+        id: evaluationCriteriaDoc.id,
+        weeksToConsider: int.parse(evaluationCriteriaDoc['weeksToConsider']),
+        course: evaluationCriteriaDoc['course'],
+        semester: evaluationCriteriaDoc['semester'],
+        year: evaluationCriteriaDoc['year'],
+        numberOfWeeks: int.parse(evaluationCriteriaDoc['numberOfWeeks']),
+        regular: int.parse(evaluationCriteriaDoc['regular']),
+        midtermSupervisor:
+            int.parse(evaluationCriteriaDoc['midtermSupervisor']),
+        midtermPanel: int.parse(evaluationCriteriaDoc['midtermPanel']),
+        endtermSupervisor:
+            int.parse(evaluationCriteriaDoc['endtermSupervisor']),
+        endtermPanel: int.parse(evaluationCriteriaDoc['endtermPanel']),
+        report: int.parse(evaluationCriteriaDoc['report']),
+      );
+      setState(() {
+        evaluationCriteria = evalcrit;
+      });
+    });
+  }
+
+
+  void getSession() async {
+    await FirebaseFirestore.instance
         .collection('current_session')
         .get()
         .then((value) {
@@ -321,7 +349,9 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
             'faculty_enrollment_requests_page.dart -> no valid session found');
       }
     });
+    await getEvaluationCriteria();
   }
+
 
   @override
   void initState() {
@@ -338,7 +368,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
           ? null
           : projectTitleController.text.trim();
       teamId =
-      teamIdController.text == '' ? null : teamIdController.text.trim();
+          teamIdController.text == '' ? null : teamIdController.text.trim();
       studentName = studentNameController.text == ''
           ? null
           : studentNameController.text.trim();
@@ -370,26 +400,17 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
       searching = true;
     });
     getSupervisorEnrollments();
+    getEvaluationCriteria();
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1440;
-    double wfem = (MediaQuery
-        .of(context)
-        .size
-        .width *
-        MediaQuery
-            .of(context)
-            .devicePixelRatio) /
+    double wfem = (MediaQuery.of(context).size.width *
+            MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
-    double hfem = (MediaQuery
-        .of(context)
-        .size
-        .height *
-        MediaQuery
-            .of(context)
-            .devicePixelRatio) /
+    double hfem = (MediaQuery.of(context).size.height *
+            MediaQuery.of(context).devicePixelRatio) /
         baseWidth;
 
     if (loading) {
@@ -499,7 +520,7 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           backgroundColor:
-                          const Color.fromARGB(255, 212, 203, 216),
+                              const Color.fromARGB(255, 212, 203, 216),
                           splashColor: Colors.black,
                           hoverColor: Colors.grey,
                           child: const Icon(
@@ -535,46 +556,48 @@ class _FacultyEnrollmentsPageState extends State<FacultyEnrollmentsPage> {
                       padding: const EdgeInsets.all(20),
                       child: (searching
                           ? SizedBox(
-                        width: double.infinity,
-                        height: 500 * wfem,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.black),
-                          ),
-                        ),
-                      )
+                              width: double.infinity,
+                              height: 500 * wfem,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
+                                ),
+                              ),
+                            )
                           : SizedBox(
-                        height: 500,
-                        width: 400,
-                        child: Scrollbar(
-                          controller: verticalScrollController,
-                          thumbVisibility: true,
-                          trackVisibility: true,
-                          child: Scrollbar(
-                            controller: horizontalScrollController,
-                            thumbVisibility: true,
-                            trackVisibility: true,
-                            notificationPredicate: (notif) =>
-                            notif.depth == 1,
-                            child: SingleChildScrollView(
-                              controller: verticalScrollController,
-                              child: SingleChildScrollView(
-                                controller: horizontalScrollController,
-                                scrollDirection: Axis.horizontal,
-                                child: SizedBox(
-                                  width: max(1217, 950 * wfem),
-                                  child: FacultyEnrollmentsDataTable(
-                                    enrollments: enrollments,
-                                    userRole: widget.userRole,
-                                    viewProject: widget.viewProject,
+                              height: 500,
+                              width: 400,
+                              child: Scrollbar(
+                                controller: verticalScrollController,
+                                thumbVisibility: true,
+                                trackVisibility: true,
+                                child: Scrollbar(
+                                  controller: horizontalScrollController,
+                                  thumbVisibility: true,
+                                  trackVisibility: true,
+                                  notificationPredicate: (notif) =>
+                                      notif.depth == 1,
+                                  child: SingleChildScrollView(
+                                    controller: verticalScrollController,
+                                    child: SingleChildScrollView(
+                                      controller: horizontalScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: SizedBox(
+                                        width: max(1217, 950 * wfem),
+                                        child: FacultyEnrollmentsDataTable(
+                                          enrollments: enrollments,
+                                          userRole: widget.userRole,
+                                          viewProject: widget.viewProject,
+                                          evaluationCriteria:
+                                              evaluationCriteria,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      )),
+                            )),
                     ),
                   ),
                   const SizedBox(

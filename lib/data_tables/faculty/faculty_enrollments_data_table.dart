@@ -3,19 +3,20 @@ import 'package:casper/components/customised_overflow_text.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/data_not_found.dart';
 import 'package:casper/models/models.dart';
-import 'package:casper/models/seeds.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FacultyEnrollmentsDataTable extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   final userRole, enrollments, viewProject;
+  final EvaluationCriteria evaluationCriteria;
 
   const FacultyEnrollmentsDataTable({
     super.key,
     required this.userRole,
     required this.enrollments,
     required this.viewProject,
+    required this.evaluationCriteria,
   });
 
   @override
@@ -28,14 +29,13 @@ class _FacultyEnrollmentsDataTableState
   int? sortColumnIndex;
   bool isAscending = false;
 
-  // TODO: Fetch these values
-  final int totalWeekly = evaluationCriteriasGLOBAL[0].regular,
-      totalMidterm = evaluationCriteriasGLOBAL[0].midtermSupervisor,
-      totalMidtermPanel = evaluationCriteriasGLOBAL[0].midtermPanel,
-      totalEndterm = evaluationCriteriasGLOBAL[0].endtermSupervisor,
-      totalEndtermPanel = evaluationCriteriasGLOBAL[0].endtermPanel,
-      totalReport = evaluationCriteriasGLOBAL[0].report,
-      totalWeeksToConsider = evaluationCriteriasGLOBAL[0].weeksToConsider;
+  int totalWeekly = 0,
+      totalMidterm = 0,
+      totalMidtermPanel = 0,
+      totalEndterm = 0,
+      totalEndtermPanel = 0,
+      totalReport = 0,
+      totalWeeksToConsider = 0;
 
   late List<StudentData> studentData = [];
   late List<AssignedPanel> assignedPanels = [];
@@ -191,26 +191,6 @@ class _FacultyEnrollmentsDataTableState
               evals.add(evaluation);
             }
           }
-          // for (Student student in students) {
-          //   for (int week = 0;
-          //   week < int.tryParse(doc['number_of_evaluations'])!;
-          //   week++) {
-          //     Evaluation evaluation = Evaluation(
-          //       id: '1',
-          //       marks: double.tryParse(
-          //           doc['weekly_evaluations'][week][student.entryNumber])!,
-          //       remarks: doc['weekly_comments'][week][student.entryNumber],
-          //       type: 'week-${week + 1}',
-          //       student: student,
-          //       //TODO: add name and email
-          //       faculty: Faculty(
-          //           id: doc['supervisor_id'],
-          //           name: 'temp',
-          //           email: 'temp@iitrpr.ac.iin'),
-          //     );
-          //     evals.add(evaluation);
-          //   }
-          // }
         }
         assignedPanel.evaluations.addAll(evals);
       });
@@ -301,6 +281,13 @@ class _FacultyEnrollmentsDataTableState
   void initState() {
     super.initState();
     getPanels();
+    totalWeekly = widget.evaluationCriteria.regular;
+    totalMidterm = widget.evaluationCriteria.midtermSupervisor;
+    totalMidtermPanel = widget.evaluationCriteria.midtermPanel;
+    totalEndterm = widget.evaluationCriteria.endtermSupervisor;
+    totalEndtermPanel = widget.evaluationCriteria.endtermPanel;
+    totalReport = widget.evaluationCriteria.report;
+    totalWeeksToConsider = widget.evaluationCriteria.weeksToConsider;
   }
 
   @override
