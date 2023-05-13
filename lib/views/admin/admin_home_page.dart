@@ -2,7 +2,7 @@ import 'package:casper/components/add_faculty_form.dart';
 import 'package:casper/components/add_student_form.dart';
 import 'package:casper/components/customised_text.dart';
 import 'package:casper/components/mark_semester_form.dart';
-import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:flutter/material.dart';
 
 class AdminHomePage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:casper/components_new/button.dart';

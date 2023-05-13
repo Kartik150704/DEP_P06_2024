@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:casper/components/confirm_action.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components_new/form_custom_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/components/add_panel_form.dart';
-import 'package:casper/components_new/panel_forms/add_teams_form.dart';
 import 'package:casper/data_tables/faculty/coordinator/coordinator_panel_management_data_table.dart';
 import 'package:casper/components/search_text_field.dart';
 import 'package:casper/components/add_panels_from_CSV_form.dart';
@@ -15,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:casper/components/assign_teams_to_panels_from_CSV_form.dart';
 import 'package:csv/csv.dart';
 import 'dart:html' as html;
-
-import '../../../../components_new/add_teams_form.dart';
 
 class CoordinatorPanelManagementPage extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables

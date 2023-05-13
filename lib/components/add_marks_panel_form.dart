@@ -1,6 +1,6 @@
-import 'package:casper/components_new/customised_button.dart';
+import 'package:casper/components/customised_button.dart';
 import 'package:casper/components/customised_text.dart';
-import 'package:casper/components_new/form_custom_text.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:casper/data_tables/faculty/faculty_panel_teams_data_table.dart';
 import 'package:casper/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

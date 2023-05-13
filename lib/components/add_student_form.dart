@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:casper/components/customised_overflow_text.dart';
-import 'package:casper/components_new/customised_button.dart';
-import 'package:casper/components_new/form_custom_text.dart';
+import 'package:casper/components/customised_button.dart';
+import 'package:casper/components/form_custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
