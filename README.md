@@ -43,7 +43,17 @@ The application is developed using the Flutter framework and the Dart programmin
 
 ## Getting Started
 
-To set up and run the application just follow this link: http://172.26.1.231:80 \
+The following are the requirements for running our project:
+- Flutter Version : 3.3.10
+- Google Chrome
+
+To run the Webapp:
+- Open app directory in terminal and type ‘flutter pub get’ to get all dependencies
+- Type ‘flutter run’ to run the website.
+
+Note: The above requirements are not strict and the app may run on other versions also but this version is preferred.
+
+You can also access the webapp using this link: http://172.26.1.231:80 \
 Note that this a private IP address and can only be accessed from the university network.
 
 ## Conclusion
