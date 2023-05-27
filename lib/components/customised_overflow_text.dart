@@ -1,4 +1,4 @@
-import 'package:casper/utilites.dart';
+import 'package:casper/utilities/utilites.dart';
 import 'package:flutter/material.dart';
 
 class CustomisedOverflowText extends StatelessWidget {
